@@ -128,12 +128,13 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
               Already contacted our team? You can continue to your dashboard.
             </p>
             <div className="flex justify-center">
-            <Button
-              onClick={onDashboard}
-              size="md"
-            >
-              Go to Dashboard
-            </Button>
+              <Button
+                onClick={onDashboard}
+                size="md"
+              >
+                Go to Dashboard
+              </Button>
+            </div>
           </div>
         </div>
       </motion.div>
