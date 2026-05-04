@@ -2,134 +2,109 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { useOnboardingStore, LeaseParams } from "@/store/onboarding";
+import { useOnboardingStore } from "@/store/onboarding";
 
-const schema = z.object({
-  totalArea:        z.string().min(1, "Total area is required"),
-  annualRent:       z.string().min(1, "Annual rent is required"),
-  commonAreaCost:   z.string().min(1, "Common area cost is required"),
-  targetHeadcount:  z.number().min(1, "At least 1 employee required"),
-  consultantsCount: z.number().optional(),
-  showConsultants:  z.boolean().optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
-
-// ─── Slider Row ───────────────────────────────────────────────────────────────
-interface SliderRowProps {
-  label:   string;
-  value:   number;
-  min:     number;
-  max:     number;
-  step:    number;
-  prefix?: string;
-  suffix?: string;
-  onChange: (v: number) => void;
+interface FormValues {
+  totalArea: string;
+  annualRent: string;
+  commonAreaCost: string;
+  targetHeadcount: number;
+  consultantsCount: number;
+  showConsultants: boolean;
+  consultantFTE: 0.5 | 1;
 }
 
-function SliderRow({ label, value, min, max, step, prefix, suffix, onChange }: SliderRowProps) {
-  const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+// ─── SVG icons ─────────────────────────────────────────────────────────────────
+function AreaIcon()       { return <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5" stroke="#2C7A53" strokeWidth="1.3"/><path d="M1.5 5.5h11M5.5 1.5v11" stroke="#2C7A53" strokeWidth=".9" strokeDasharray="2 1.5"/></svg>; }
+function RentIcon()       { return <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="4.5" width="12" height="8" rx="1.5" stroke="#3A6FB5" strokeWidth="1.3"/><path d="M4.5 4.5V3.5a2.5 2.5 0 0 1 5 0v1" stroke="#3A6FB5" strokeWidth="1.3"/><circle cx="7" cy="8.5" r="1.2" fill="#3A6FB5"/></svg>; }
+function CommonIcon()     { return <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L1.5 5v7.5h4V9h3v3.5h4V5L7 1.5z" stroke="#B06E0A" strokeWidth="1.3" strokeLinejoin="round"/></svg>; }
+function PeopleIcon()     { return <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="#2C7A53" strokeWidth="1.3"/><path d="M2 12.5c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#2C7A53" strokeWidth="1.3" strokeLinecap="round"/></svg>; }
+function ConsultantIcon() { return <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="4.5" cy="4.5" r="2" stroke="#6D5FAD" strokeWidth="1.3"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6D5FAD" strokeWidth="1.3" strokeLinecap="round"/><circle cx="10.5" cy="4.5" r="2" stroke="#6D5FAD" strokeWidth="1.3"/><path d="M10.5 8.5c1.4.4 2.5 1.7 2.5 3" stroke="#6D5FAD" strokeWidth="1.3" strokeLinecap="round"/></svg>; }
 
+// ─── Icon + label + full-width input ───────────────────────────────────────────
+function IconInput({
+  icon, iconBg, label, hint, prefix, suffix, value, onChange, placeholder,
+}: {
+  icon: React.ReactNode; iconBg: string; label: string;
+  hint?: string; prefix?: string; suffix?: string;
+  value: string; onChange: (raw: string) => void; placeholder?: string;
+}) {
   return (
-    <div className="space-y-2.5">
-      {/* Label + value readout */}
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-text font-body">{label}</span>
-        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-2 px-3 py-1.5">
-          {prefix && (
-            <span className="text-[11px] font-semibold text-text-muted font-mono select-none shrink-0">
-              {prefix}
-            </span>
-          )}
-          <input
-            type="number"
-            min={min}
-            max={max}
-            step={step}
-            value={value}
-            onChange={(e) => {
-              const v = parseFloat(e.target.value) || min;
-              onChange(Math.min(max, Math.max(min, v)));
-            }}
-            className="w-[72px] text-right text-sm font-bold text-text font-mono bg-transparent focus:outline-none min-w-0"
-          />
-          {suffix && (
-            <span className="text-[11px] font-semibold text-text-muted font-mono select-none shrink-0">
-              {suffix}
-            </span>
-          )}
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2">
+        <div className="w-[26px] h-[26px] rounded-[7px] flex items-center justify-center shrink-0" style={{ background: iconBg }}>
+          {icon}
         </div>
+        <label className="text-sm font-medium text-text font-body">{label}</label>
       </div>
-
-      {/* Slider track */}
-      <div className="relative flex items-center h-7">
-        {/* Track background */}
-        <div
-          className="absolute w-full h-1.5 rounded-full"
-          style={{ background: "var(--color-border)" }}
-        />
-        {/* Filled portion */}
-        <div
-          className="absolute h-1.5 rounded-full transition-all duration-75"
-          style={{ width: `${pct}%`, background: "var(--color-accent)" }}
-        />
-        {/* Native range input — transparent, handles all interaction */}
+      <div className="relative flex items-center">
+        {prefix && (
+          <span className="absolute left-3 text-[11px] font-semibold text-text-muted font-mono select-none pointer-events-none">
+            {prefix}
+          </span>
+        )}
         <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
+          type="text"
+          inputMode="numeric"
+          placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="absolute w-full h-full cursor-pointer"
-          style={{ opacity: 0, WebkitAppearance: "none", appearance: "none" }}
-        />
-        {/* Visual thumb */}
-        <div
-          className="absolute w-[18px] h-[18px] rounded-full bg-white border-2 pointer-events-none transition-all duration-75"
-          style={{
-            left: `calc(${pct}% - 9px)`,
-            borderColor: "var(--color-accent)",
-            boxShadow: "0 1px 6px rgba(0,201,167,0.3)",
+          onFocus={(e) => {
+            // show raw number on focus
+            e.target.value = value.replace(/[^\d]/g, "");
           }}
+          onChange={(e) => onChange(e.target.value.replace(/[^\d]/g, ""))}
+          onBlur={(e) => onChange(e.target.value.replace(/[^\d]/g, ""))}
+          className="w-full rounded-[10px] border border-border bg-surface px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 hover:border-primary/50 transition-all duration-200"
+          style={{ paddingLeft: prefix ? "40px" : undefined, paddingRight: suffix ? "44px" : undefined }}
         />
+        {suffix && (
+          <span className="absolute right-3 text-[11px] font-semibold text-text-muted font-mono select-none pointer-events-none">
+            {suffix}
+          </span>
+        )}
       </div>
+      {hint && <p className="text-xs text-text-muted font-body">{hint}</p>}
     </div>
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-interface Props {
-  onNext: () => void;
+// ─── Toggle ────────────────────────────────────────────────────────────────────
+function Toggle({ checked, onToggle, activeColor = "var(--color-primary)" }: {
+  checked: boolean; onToggle: () => void; activeColor?: string;
+}) {
+  return (
+    <button type="button" role="switch" aria-checked={checked} onClick={onToggle}
+      className="relative w-10 h-[22px] rounded-full transition-colors duration-200 focus:outline-none shrink-0"
+      style={{ background: checked ? activeColor : "var(--color-border)" }}>
+      <span className="absolute top-[3px] left-[3px] w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200"
+        style={{ transform: checked ? "translateX(18px)" : "translateX(0)" }} />
+    </button>
+  );
 }
+
+interface Props { onNext: () => void; }
 
 export function Step3Lease({ onNext }: Props) {
   const { leaseParams, setLeaseParams } = useOnboardingStore();
 
-  const { handleSubmit, watch, setValue } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      totalArea:        leaseParams.totalArea       || "760",
-      annualRent:       leaseParams.annualRent       || "2250000",
-      commonAreaCost:   leaseParams.commonAreaCost   || "300000",
-      targetHeadcount:  leaseParams.targetHeadcount  || 12,
-      consultantsCount: leaseParams.consultantsCount || 0,
-      showConsultants:  leaseParams.showConsultants  || false,
-    },
-  });
+  const defaults: FormValues = {
+    totalArea:        leaseParams.totalArea       || "",
+    annualRent:       leaseParams.annualRent       || "",
+    commonAreaCost:   leaseParams.commonAreaCost   || "",
+    targetHeadcount:  leaseParams.targetHeadcount  || 0,
+    consultantsCount: leaseParams.consultantsCount ?? 0,
+    showConsultants:  leaseParams.showConsultants  ?? false,
+    consultantFTE:    leaseParams.consultantFTE    ?? 0.5,
+  };
 
-  const totalArea      = parseFloat(watch("totalArea"))      || 760;
-  const annualRent     = parseFloat(watch("annualRent"))     || 2250000;
-  const commonAreaCost = parseFloat(watch("commonAreaCost")) || 300000;
-  const employees      = watch("targetHeadcount")            || 12;
-  const consultants    = watch("consultantsCount")           || 0;
-  const showConsultants = watch("showConsultants")           || false;
-  const effectiveTotal = employees + (showConsultants ? consultants * 0.5 : 0);
+  const { watch, setValue, handleSubmit } = useForm<FormValues>({ defaultValues: defaults });
 
-  // Sync to global store so right panel live preview reacts in real time
+  useEffect(() => {
+    setLeaseParams({ ...defaults });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const sub = watch((values) => {
       setLeaseParams({
@@ -139,153 +114,114 @@ export function Step3Lease({ onNext }: Props) {
         targetHeadcount:  Number(values.targetHeadcount) || 1,
         consultantsCount: Number(values.consultantsCount) || 0,
         showConsultants:  Boolean(values.showConsultants),
+        consultantFTE:    values.consultantFTE ?? 0.5,
       });
     });
     return () => sub.unsubscribe();
   }, [watch, setLeaseParams]);
 
-  const onSubmit = (data: FormValues) => {
-    setLeaseParams(data as LeaseParams);
-    onNext();
-  };
+  const totalArea       = watch("totalArea");
+  const annualRent      = watch("annualRent");
+  const commonAreaCost  = watch("commonAreaCost");
+  const employees       = watch("targetHeadcount");
+  const consultants     = watch("consultantsCount");
+  const showConsultants = watch("showConsultants");
+  const consultantFTE   = watch("consultantFTE");
+
+  const fmt = (n: string | number) => Number(n) > 0 ? Number(n).toLocaleString("nb-NO") : "";
 
   const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } };
-  const item = {
-    hidden:  { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] } },
-  };
+  const item = { hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.3 } } };
 
   return (
-    <motion.form
-      id="lease-form"
-      variants={stagger}
-      initial="hidden"
-      animate="visible"
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
-      <motion.p variants={item} className="text-xs italic text-text-muted font-body">
-        Slide or type — your cost overview updates as you go.
-      </motion.p>
+    <motion.form id="lease-form" variants={stagger} initial="hidden" animate="visible"
+      onSubmit={handleSubmit(onNext)} className="space-y-5">
 
       <motion.div variants={item}>
-        <SliderRow
-          label="Total area"
-          value={totalArea}
-          min={100}
-          max={10000}
-          step={10}
-          suffix="m²"
-          onChange={(v) => setValue("totalArea", String(v))}
+        <IconInput icon={<AreaIcon />} iconBg="#EAF5EE"
+          label="Total area" hint="m² — total leasable floor area"
+          placeholder="760" suffix="m²"
+          value={fmt(totalArea)}
+          onChange={(v) => setValue("totalArea", v)}
         />
       </motion.div>
 
       <motion.div variants={item}>
-        <SliderRow
-          label="Annual rent"
-          value={annualRent}
-          min={100000}
-          max={15000000}
-          step={50000}
-          prefix="NOK"
-          onChange={(v) => setValue("annualRent", String(v))}
+        <IconInput icon={<RentIcon />} iconBg="#EBF2FF"
+          label="Annual rent" hint="NOK per year"
+          placeholder="2 250 000" prefix="NOK"
+          value={fmt(annualRent)}
+          onChange={(v) => setValue("annualRent", v)}
         />
       </motion.div>
 
       <motion.div variants={item}>
-        <SliderRow
-          label="Common area cost"
-          value={commonAreaCost}
-          min={0}
-          max={3000000}
-          step={10000}
-          prefix="NOK"
-          onChange={(v) => setValue("commonAreaCost", String(v))}
+        <IconInput icon={<CommonIcon />} iconBg="#FDF0E4"
+          label="Common area cost" hint="NOK per year"
+          placeholder="300 000" prefix="NOK"
+          value={fmt(commonAreaCost)}
+          onChange={(v) => setValue("commonAreaCost", v)}
         />
       </motion.div>
 
       <motion.div variants={item}>
-        <SliderRow
-          label="Permanent employees"
-          value={employees}
-          min={1}
-          max={500}
-          step={1}
-          suffix="ppl"
-          onChange={(v) => setValue("targetHeadcount", v)}
+        <IconInput icon={<PeopleIcon />} iconBg="#EAF5EE"
+          label="Permanent employees" hint="Full-time staff headcount"
+          placeholder="12" suffix="ppl"
+          value={employees > 0 ? String(employees) : ""}
+          onChange={(v) => setValue("targetHeadcount", Math.min(5000, parseInt(v) || 0))}
         />
       </motion.div>
 
-      {/* Consultants toggle section */}
+      {/* ── Consultants ── */}
       <motion.div variants={item}>
-        <div
-          className="rounded-xl border p-4 space-y-4 transition-colors duration-300"
-          style={{
-            background:  showConsultants ? "rgba(0,201,167,0.04)"  : "var(--color-surface-2)",
-            borderColor: showConsultants ? "rgba(0,201,167,0.35)" : "var(--color-border)",
-          }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-text font-body leading-tight">Consultants</p>
-              <p className="text-xs text-text-muted font-body mt-0.5">counts as 0.5 per seat</p>
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <div className="w-[26px] h-[26px] rounded-[7px] flex items-center justify-center shrink-0" style={{ background: "#F0EEFF" }}>
+              <ConsultantIcon />
             </div>
-            <button
-              type="button"
-              onClick={() => setValue("showConsultants", !showConsultants)}
-              role="switch"
-              aria-checked={showConsultants}
-              className="relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-              style={{ background: showConsultants ? "var(--color-accent)" : "var(--color-border)" }}
-            >
-              <span
-                className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200"
-                style={{ transform: showConsultants ? "translateX(20px)" : "translateX(0)" }}
-              />
-            </button>
+            <span className="text-sm font-medium text-text font-body">Consultants</span>
           </div>
-
-          <AnimatePresence initial={false}>
-            {showConsultants && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-                className="overflow-hidden space-y-3"
-              >
-                <SliderRow
-                  label="How many?"
-                  value={consultants}
-                  min={0}
-                  max={100}
-                  step={1}
-                  suffix="ppl"
-                  onChange={(v) => setValue("consultantsCount", v)}
-                />
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-text-muted font-body">Effective headcount:</span>
-                  <motion.span
-                    key={effectiveTotal}
-                    initial={{ opacity: 0.5, y: 3 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-sm font-bold font-mono"
-                    style={{ color: "var(--color-accent)" }}
-                  >
-                    {effectiveTotal.toLocaleString("no-NO")}
-                  </motion.span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <Toggle checked={!!showConsultants} onToggle={() => setValue("showConsultants", !showConsultants)} />
         </div>
-      </motion.div>
 
-      <motion.div variants={item}>
-        <p className="text-[11px] italic text-text-muted font-body">
-          You can update these any time from your project settings.
-        </p>
+        <AnimatePresence initial={false}>
+          {showConsultants && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+              className="overflow-hidden">
+              <div className="mt-2 p-4 rounded-xl border" style={{ background: "#F0EEFF", borderColor: "#DDD8F7" }}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-semibold" style={{ color: "#6D5FAD" }}>External consultants</span>
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium" style={{ background: "rgba(109,95,173,0.14)", color: "#6D5FAD" }}>
+                    counts as {consultantFTE}
+                  </span>
+                </div>
+                <p className="text-[11px] mb-3" style={{ color: "rgba(109,95,173,0.65)" }}>
+                  Project-based staff — shared desks, rotational presence
+                </p>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm text-text-muted font-body">How many?</span>
+                  <div className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5" style={{ background: "rgba(255,255,255,0.7)", borderColor: "#DDD8F7" }}>
+                    <input type="text" inputMode="numeric" value={consultants} onFocus={(e) => e.target.select()}
+                      onChange={(e) => setValue("consultantsCount", Math.min(200, Math.max(0, parseInt(e.target.value.replace(/\D/g, "")) || 0)))}
+                      className="w-10 text-right text-sm font-bold bg-transparent focus:outline-none" style={{ color: "#6D5FAD" }} />
+                    <span className="text-[11px] font-semibold text-text-muted font-mono">ppl</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium" style={{ color: "#6D5FAD" }}>Count as 1 employee each</p>
+                    <p className="text-[10px] mt-0.5" style={{ color: "rgba(109,95,173,0.55)" }}>
+                      {consultantFTE === 1 ? "Each consultant occupies a dedicated seat" : "Default: 0.5 — shared desk, rotational presence"}
+                    </p>
+                  </div>
+                  <Toggle checked={consultantFTE === 1} onToggle={() => setValue("consultantFTE", consultantFTE === 1 ? 0.5 : 1)} activeColor="#6D5FAD" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.form>
   );

@@ -21,7 +21,7 @@ export default function NotFound() {
         </div>
 
         <div className="mb-2 flex justify-center">
-          <Logo size="sm" showText />
+          <Logo size="md" showText />
         </div>
 
         <h1

@@ -34,19 +34,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const base =
-      "inline-flex items-center justify-center gap-2 font-body font-medium rounded-[10px] transition-all duration-200 focus-ring select-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none";
+      "inline-flex items-center justify-center gap-2 font-body font-medium focus-ring select-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-all";
 
     const variants: Record<ButtonVariant, string> = {
       primary:
-        "bg-primary text-white hover:bg-primary-light active:scale-[0.98] shadow-md hover:shadow-lg hover:-translate-y-0.5",
+        "bg-primary text-white btn-3d rounded-full font-semibold",
       secondary:
-        "bg-surface-2 text-text hover:bg-border active:scale-[0.98] border border-border",
+        "bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full",
       ghost:
-        "bg-transparent text-primary hover:bg-surface-2 active:scale-[0.98]",
+        "bg-transparent text-primary hover:bg-surface-2 active:scale-[0.98] rounded-[10px]",
       danger:
-        "bg-accent-warm text-white hover:opacity-90 active:scale-[0.98] shadow-md hover:shadow-lg",
+        "bg-accent-warm text-white hover:opacity-90 active:scale-[0.98] shadow-md hover:shadow-lg rounded-[10px]",
       outline:
-        "bg-transparent border border-primary text-primary hover:bg-primary hover:text-white active:scale-[0.98]",
+        "bg-transparent border border-primary text-primary hover:bg-primary hover:text-white active:scale-[0.98] rounded-[10px]",
     };
 
     const sizes: Record<ButtonSize, string> = {

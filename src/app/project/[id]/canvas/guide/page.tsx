@@ -259,7 +259,7 @@ export default function CanvasGuidePage() {
         {/* Floor plan image — fills screen, blurred */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/mock/floorplan-oslo.svg"
+          src="/mock/floorplan-oslo.jpg"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: "blur(6px) brightness(0.55) saturate(0.7)", transform: "scale(1.05)" }}
@@ -282,7 +282,7 @@ export default function CanvasGuidePage() {
 
             {/* ── Modal header (inside card) ── */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#E5EAF0] bg-white">
-              <Logo size="sm" />
+              <Logo size="md" />
               <div className="flex items-center gap-4">
                 {/* Step dot progress */}
                 <div className="hidden sm:flex items-center gap-1.5">

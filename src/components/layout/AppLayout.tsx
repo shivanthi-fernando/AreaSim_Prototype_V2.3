@@ -48,7 +48,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <header className="sticky top-0 z-40 flex items-center gap-2 px-4 py-0 border-b border-border bg-surface/95 backdrop-blur-sm shrink-0 h-14">
         {/* Logo */}
         <Link href="/dashboard" className="shrink-0 mr-2">
-          <Logo size="sm" showText />
+          <Logo size="md" showText />
         </Link>
 
         {/* Separator */}

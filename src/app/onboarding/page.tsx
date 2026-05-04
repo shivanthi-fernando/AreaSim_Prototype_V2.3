@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Phone, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart } from "lucide-react";
+import { X, Phone, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
-import { StepIndicator } from "@/components/ui/StepIndicator";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Step1Project } from "@/components/onboarding/Step1Project";
 import { Step3Lease } from "@/components/onboarding/Step3Lease";
@@ -110,11 +109,13 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
                 </div>
                 <p className="text-xs text-text-muted font-body leading-relaxed mb-3">{c.bio}</p>
                 <div className="flex flex-wrap gap-2">
-                  <a href={`tel:${c.phone}`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 hover:bg-primary/5 hover:text-primary text-xs font-medium text-text-muted transition-colors border border-border">
-                    <Phone size={12} /> {c.phone}
+                  <a href={`tel:${c.phone}`}
+                    className="inline-flex items-center justify-center gap-2 font-body font-medium select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full text-sm px-5 py-2.5 h-10 transition-all">
+                    <Phone size={14} /> {c.phone}
                   </a>
-                  <a href={`mailto:${c.email}`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white hover:bg-primary-light text-xs font-medium transition-colors">
-                    <Mail size={12} /> {c.email}
+                  <a href={`mailto:${c.email}`}
+                    className="inline-flex items-center justify-center gap-2 font-body font-medium select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full text-sm px-5 py-2.5 h-10 transition-all">
+                    <Mail size={14} /> {c.email}
                   </a>
                 </div>
               </div>
@@ -126,12 +127,13 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
             <p className="text-xs text-text-muted font-body text-center">
               Already contacted our team? You can continue to your dashboard.
             </p>
-            <button
+            <div className="flex justify-center">
+            <Button
               onClick={onDashboard}
-              className="mx-auto flex items-center gap-2 px-5 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-light transition-colors font-body"
+              size="md"
             >
               Go to Dashboard
-            </button>
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -145,31 +147,8 @@ const STEPS = [
   { label: "Add floor plans",  description: "Add floor plans" },
 ];
 
-const stepMeta: Record<number, { title: string; subtitle: string; illuBg: string }> = {
-  0: { title: "Create Your First Project",   subtitle: "Tell us about your building and location.",     illuBg: "from-blue-50 to-sky-100" },
-  1: { title: "Add Lease Parameters",        subtitle: "Enter your area and cost details.",              illuBg: "from-blue-50 to-sky-100" },
-  2: { title: "Add Floor Plans",             subtitle: "Upload and verify your floor plan layouts.",    illuBg: "from-indigo-50 to-blue-100" },
-  3: { title: "Great you're all set!",       subtitle: "Your setup is complete.",                        illuBg: "from-green-50 to-teal-100" },
-};
 
-// ─── Shared Metric component ─────────────────────────────────────────────────
 
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-[10px] text-text-muted font-body">{label}</p>
-      <motion.p
-        key={value}
-        initial={{ opacity: 0.5, y: 3 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-        className="text-sm font-bold font-mono text-text leading-tight mt-0.5"
-      >
-        {value}
-      </motion.p>
-    </div>
-  );
-}
 
 // ─── Step 1 — Create Project Panel ───────────────────────────────────────────
 
@@ -349,265 +328,479 @@ function _CreateProjectPanel() {
   );
 }
 
-// ─── Step 2 — Lease Visual Panel ─────────────────────────────────────────────
+// ─── Step 1 — City Illustration Panel ────────────────────────────────────────
 
-// Floor-specific window colors (floor 3 = violet, floor 2 = amber, floor 1 = coral)
-
-function LeaseVisualPanel() {
-  const { leaseParams } = useOnboardingStore();
-
-  const annualRent      = parseFloat(leaseParams.annualRent     || "0");
-  const commonArea      = parseFloat(leaseParams.commonAreaCost || "0");
-  const totalArea       = parseFloat(leaseParams.totalArea      || "0");
-  const baseEmployees   = Math.max(leaseParams.targetHeadcount  || 1, 1);
-  const consultants     = leaseParams.consultantsCount          || 0;
-  const showConsultants = leaseParams.showConsultants           || false;
-  const effectiveHead   = Math.max(baseEmployees + (showConsultants ? consultants * 0.5 : 0), 1);
-  const totalCost       = annualRent + commonArea;
-  const costPerSeat     = totalCost   / effectiveHead;
-  const areaPerPerson   = totalArea   / effectiveHead;
-  const hasData         = totalCost > 0 || totalArea > 0;
-
-  const fmtNOK = (v: number) =>
-    v > 0 ? `NOK ${Math.round(v).toLocaleString("no-NO")}` : "—";
-  const fmtM2  = (v: number) =>
-    v > 0 ? `${v.toFixed(1)} m²` : "—";
-
+function CityIllusPanel() {
   return (
-    <div className="w-full space-y-4">
-      {/* ── Flat illustration ── */}
-      <div className="relative rounded-2xl overflow-hidden border border-border">
-        <svg viewBox="0 0 320 210" className="w-full block" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="lp-bg" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#E6F4F1" />
-              <stop offset="100%" stopColor="#EEF6FB" />
-            </linearGradient>
-            <marker id="lp-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-              <path d="M0,0 L5,2.5 L0,5 Z" fill="#A8C4CE" />
-            </marker>
-            <marker id="lp-arr-l" markerWidth="5" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
-              <path d="M0,0 L5,2.5 L0,5 Z" fill="#A8C4CE" />
-            </marker>
-          </defs>
+    <div className="relative w-full h-full flex flex-col justify-end" style={{ background: "linear-gradient(160deg, #EBF7F2 0%, #DFF0E8 60%, #D5EBE0 100%)", minHeight: 480 }}>
+      <svg viewBox="0 0 560 540" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full" style={{ objectFit: "cover" }}>
+        <defs>
+          <linearGradient id="ci-skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#EBF7F2"/>
+            <stop offset="100%" stopColor="#DFF0E8"/>
+          </linearGradient>
+          <linearGradient id="ci-groundGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#C8E8D8"/>
+            <stop offset="100%" stopColor="#B8DED0"/>
+          </linearGradient>
+          <radialGradient id="ci-glow1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#139485" stopOpacity=".15"/>
+            <stop offset="100%" stopColor="#139485" stopOpacity="0"/>
+          </radialGradient>
+          <radialGradient id="ci-glow2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#1BA896" stopOpacity=".12"/>
+            <stop offset="100%" stopColor="#1BA896" stopOpacity="0"/>
+          </radialGradient>
+          <radialGradient id="ci-glow3" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#6D5FAD" stopOpacity=".1"/>
+            <stop offset="100%" stopColor="#6D5FAD" stopOpacity="0"/>
+          </radialGradient>
+          <filter id="ci-blur4"><feGaussianBlur stdDeviation="4"/></filter>
+          <filter id="ci-blur2"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
 
-          {/* Background */}
-          <rect width="320" height="210" fill="url(#lp-bg)" />
+        <rect width="560" height="480" fill="url(#ci-skyGrad)"/>
+        <rect x="0" y="340" width="560" height="140" fill="url(#ci-groundGrad)"/>
+        <line x1="0" y1="342" x2="560" y2="342" stroke="rgba(19,148,133,.15)" strokeWidth="1"/>
 
-          {/* Dot grid */}
-          {[0,1,2,3,4,5,6,7].map(row =>
-            [0,1,2,3,4,5,6,7,8,9,10,11].map(col => (
-              <circle key={`d-${row}-${col}`} cx={16 + col * 27} cy={16 + row * 27} r={1.4} fill="#B4D4CB" opacity={0.45} />
-            ))
-          )}
+        {/* Road */}
+        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#B8D0C0" strokeWidth="36"/>
+        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#C4D8CC" strokeWidth="32"/>
+        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="rgba(19,148,133,.3)" strokeWidth="1.5" strokeDasharray="22 14"/>
+        <path d="M -20,366 C 80,356 140,346 200,341 S 320,336 400,331 S 510,326 580,321" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1"/>
+        <path d="M -20,394 C 80,384 140,374 200,369 S 320,364 400,359 S 510,354 580,349" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1"/>
 
-          {/* ── Floor plan document ── */}
-          {/* Paper shadow */}
-          <rect x={122} y={48} width={162} height={130} rx={9} fill="rgba(0,0,0,0.06)" transform="translate(3,4)" />
-          {/* Paper */}
-          <rect x={122} y={48} width={162} height={130} rx={9} fill="white" stroke="#D4E2E8" strokeWidth={1.5} />
+        {/* Glow pools */}
+        <ellipse cx="110" cy="340" rx="70" ry="25" fill="url(#ci-glow1)" filter="url(#ci-blur4)"/>
+        <ellipse cx="290" cy="335" rx="80" ry="22" fill="url(#ci-glow2)" filter="url(#ci-blur4)"/>
+        <ellipse cx="450" cy="335" rx="65" ry="20" fill="url(#ci-glow3)" filter="url(#ci-blur4)"/>
 
-          {/* Zone: Collaboration (teal) */}
-          <rect x={129} y={55} width={70} height={56} rx={5} fill="#00C9A7" opacity={0.18} />
-          <rect x={129} y={55} width={70} height={56} rx={5} fill="none" stroke="#00C9A7" strokeWidth={1} opacity={0.5} />
-          {/* Desk dots in zone */}
-          <circle cx={152} cy={74} r={4} fill="#00C9A7" opacity={0.5} />
-          <circle cx={165} cy={83} r={4} fill="#00C9A7" opacity={0.5} />
-          <circle cx={178} cy={74} r={4} fill="#00C9A7" opacity={0.5} />
-          <text x={164} y={103} textAnchor="middle" fontSize={7} fill="#007A65" fontWeight="700" fontFamily="monospace" letterSpacing="0.5">COLLAB</text>
+        {/* Building Group 1 */}
+        <rect x="34" y="210" width="52" height="130" fill="#A8D4BC" rx="2"/>
+        <rect x="34" y="210" width="52" height="4" fill="#5BAA7A" rx="1"/>
+        <g fill="rgba(56,134,94,.35)">
+          <rect x="41" y="220" width="10" height="13" rx="1"/><rect x="57" y="220" width="10" height="13" rx="1"/><rect x="73" y="220" width="7" height="13" rx="1"/>
+          <rect x="41" y="240" width="10" height="13" rx="1"/><rect x="57" y="240" width="10" height="13" rx="1"/><rect x="73" y="240" width="7" height="13" rx="1"/>
+          <rect x="41" y="260" width="10" height="13" rx="1"/><rect x="57" y="260" width="10" height="13" rx="1"/><rect x="73" y="260" width="7" height="13" rx="1"/>
+          <rect x="41" y="280" width="10" height="13" rx="1"/><rect x="57" y="280" width="10" height="13" rx="1"/><rect x="73" y="280" width="7" height="13" rx="1"/>
+          <rect x="41" y="300" width="10" height="13" rx="1"/><rect x="57" y="300" width="10" height="13" rx="1"/>
+        </g>
+        <rect x="73" y="260" width="7" height="13" rx="1" fill="#139485" opacity=".5"/>
+        <rect x="41" y="280" width="10" height="13" rx="1" fill="#139485" opacity=".4"/>
+        <rect x="92" y="255" width="36" height="85" fill="#B8DCCB" rx="2"/>
+        <rect x="92" y="255" width="36" height="3" fill="#5BAA7A"/>
+        <g fill="rgba(56,134,94,.3)">
+          <rect x="98" y="264" width="8" height="10" rx="1"/><rect x="112" y="264" width="8" height="10" rx="1"/>
+          <rect x="98" y="282" width="8" height="10" rx="1"/><rect x="112" y="282" width="8" height="10" rx="1"/>
+          <rect x="98" y="300" width="8" height="10" rx="1"/><rect x="112" y="300" width="8" height="10" rx="1"/>
+        </g>
+        <rect x="50" y="315" width="20" height="25" rx="10" fill="#8CC4A8"/>
 
-          {/* Zone: Focus (blue) */}
-          <rect x={205} y={55} width={72} height={56} rx={5} fill="#1A7FA8" opacity={0.13} />
-          <rect x={205} y={55} width={72} height={56} rx={5} fill="none" stroke="#1A7FA8" strokeWidth={1} opacity={0.4} />
-          <circle cx={227} cy={76} r={3.5} fill="#1A7FA8" opacity={0.45} />
-          <circle cx={241} cy={76} r={3.5} fill="#1A7FA8" opacity={0.45} />
-          <circle cx={255} cy={76} r={3.5} fill="#1A7FA8" opacity={0.45} />
-          <text x={241} y={103} textAnchor="middle" fontSize={7} fill="#0D5F80" fontWeight="700" fontFamily="monospace" letterSpacing="0.5">FOCUS</text>
+        {/* Building Group 2: Amber */}
+        <rect x="152" y="165" width="44" height="175" fill="#F0DFB8" rx="2"/>
+        <rect x="152" y="165" width="44" height="4" fill="#D4920A" rx="1"/>
+        <g fill="rgba(176,110,10,.35)">
+          <rect x="158" y="175" width="9" height="12" rx="1"/><rect x="172" y="175" width="9" height="12" rx="1"/><rect x="183" y="175" width="7" height="12" rx="1"/>
+          <rect x="158" y="195" width="9" height="12" rx="1"/><rect x="172" y="195" width="9" height="12" rx="1"/><rect x="183" y="195" width="7" height="12" rx="1"/>
+          <rect x="158" y="215" width="9" height="12" rx="1"/><rect x="172" y="215" width="9" height="12" rx="1"/>
+          <rect x="158" y="235" width="9" height="12" rx="1"/><rect x="172" y="235" width="9" height="12" rx="1"/>
+          <rect x="158" y="255" width="9" height="12" rx="1"/><rect x="172" y="255" width="9" height="12" rx="1"/>
+          <rect x="158" y="275" width="9" height="12" rx="1"/><rect x="172" y="275" width="9" height="12" rx="1"/>
+          <rect x="158" y="295" width="9" height="12" rx="1"/><rect x="172" y="295" width="9" height="12" rx="1"/>
+          <rect x="158" y="315" width="9" height="12" rx="1"/><rect x="172" y="315" width="9" height="12" rx="1"/>
+        </g>
+        <rect x="183" y="195" width="7" height="12" rx="1" fill="#B06E0A" opacity=".5"/>
+        <rect x="158" y="235" width="9" height="12" rx="1" fill="#B06E0A" opacity=".4"/>
+        <line x1="174" y1="165" x2="174" y2="148" stroke="#D4920A" strokeWidth="1.5"/>
+        <circle cx="174" cy="146" r="3" fill="#D4920A" opacity=".8"/>
 
-          {/* Zone: Meeting (coral/warm) */}
-          <rect x={129} y={117} width={148} height={53} rx={5} fill="#FF6B6B" opacity={0.1} />
-          <rect x={129} y={117} width={148} height={53} rx={5} fill="none" stroke="#FF6B6B" strokeWidth={1} opacity={0.4} />
-          {/* Meeting table */}
-          <ellipse cx={203} cy={144} rx={28} ry={14} fill="#FF6B6B" opacity={0.2} />
-          <ellipse cx={203} cy={144} rx={28} ry={14} fill="none" stroke="#FF6B6B" strokeWidth={1.5} opacity={0.5} />
-          <circle cx={179} cy={144} r={4} fill="#FF6B6B" opacity={0.45} />
-          <circle cx={203} cy={130} r={4} fill="#FF6B6B" opacity={0.45} />
-          <circle cx={227} cy={144} r={4} fill="#FF6B6B" opacity={0.45} />
-          <text x={203} y={164} textAnchor="middle" fontSize={7} fill="#CC4444" fontWeight="700" fontFamily="monospace" letterSpacing="0.5">MEETING</text>
+        {/* Building Group 2b: Blue */}
+        <rect x="200" y="250" width="34" height="90" fill="#C0D5F0" rx="2"/>
+        <rect x="200" y="250" width="34" height="3" fill="#3A6FB5" rx="1"/>
+        <g fill="rgba(58,111,181,.35)">
+          <rect x="206" y="260" width="8" height="10" rx="1"/><rect x="219" y="260" width="8" height="10" rx="1"/>
+          <rect x="206" y="278" width="8" height="10" rx="1"/><rect x="219" y="278" width="8" height="10" rx="1"/>
+          <rect x="206" y="296" width="8" height="10" rx="1"/><rect x="219" y="296" width="8" height="10" rx="1"/>
+          <rect x="206" y="314" width="8" height="10" rx="1"/><rect x="219" y="314" width="8" height="10" rx="1"/>
+        </g>
+        <rect x="219" y="278" width="8" height="10" rx="1" fill="#3A6FB5" opacity=".5"/>
 
-          {/* Measurement line bottom */}
-          <line x1={122} y1={186} x2={284} y2={186} stroke="#A8C4CE" strokeWidth={1}
-            markerEnd="url(#lp-arr)" markerStart="url(#lp-arr-l)" />
-          <text x={203} y={197} textAnchor="middle" fontSize={8} fill="#7A9BAA" fontFamily="monospace">
-            {totalArea > 0 ? `${totalArea.toFixed(0)} m²` : "— m²"}
-          </text>
+        {/* Building Group 3: Orange tower */}
+        <rect x="264" y="135" width="56" height="205" fill="#F0DFB8" rx="2"/>
+        <rect x="264" y="135" width="56" height="5" fill="#D4920A" rx="1"/>
+        <g fill="rgba(176,110,10,.3)">
+          <rect x="272" y="148" width="10" height="14" rx="1"/><rect x="288" y="148" width="10" height="14" rx="1"/><rect x="304" y="148" width="9" height="14" rx="1"/>
+          <rect x="272" y="170" width="10" height="14" rx="1"/><rect x="288" y="170" width="10" height="14" rx="1"/><rect x="304" y="170" width="9" height="14" rx="1"/>
+          <rect x="272" y="192" width="10" height="14" rx="1"/><rect x="288" y="192" width="10" height="14" rx="1"/><rect x="304" y="192" width="9" height="14" rx="1"/>
+          <rect x="272" y="214" width="10" height="14" rx="1"/><rect x="288" y="214" width="10" height="14" rx="1"/><rect x="304" y="214" width="9" height="14" rx="1"/>
+          <rect x="272" y="236" width="10" height="14" rx="1"/><rect x="288" y="236" width="10" height="14" rx="1"/>
+          <rect x="272" y="258" width="10" height="14" rx="1"/><rect x="288" y="258" width="10" height="14" rx="1"/>
+          <rect x="272" y="280" width="10" height="14" rx="1"/><rect x="288" y="280" width="10" height="14" rx="1"/>
+          <rect x="272" y="302" width="10" height="14" rx="1"/><rect x="288" y="302" width="10" height="14" rx="1"/>
+          <rect x="272" y="324" width="10" height="14" rx="1"/>
+        </g>
+        <rect x="304" y="148" width="9" height="14" rx="1" fill="#B06E0A" opacity=".5"/>
+        <rect x="288" y="170" width="10" height="14" rx="1" fill="#B06E0A" opacity=".4"/>
+        <rect x="272" y="192" width="10" height="14" rx="1" fill="#B06E0A" opacity=".45"/>
+        <line x1="292" y1="135" x2="292" y2="110" stroke="rgba(176,110,10,.3)" strokeWidth="1"/>
+        <circle cx="292" cy="108" r="5" fill="#D4920A" opacity=".4" filter="url(#ci-blur2)"/>
+        <circle cx="292" cy="108" r="2.5" fill="#D4920A" opacity=".7"/>
 
-          {/* ── Person figure (flat design) ── */}
-          {/* Shadow */}
-          <ellipse cx={76} cy={186} rx={26} ry={6} fill="rgba(0,0,0,0.08)" />
-          {/* Legs */}
-          <rect x={66} y={155} width={11} height={32} rx={5} fill="#1B4354" />
-          <rect x={81} y={158} width={11} height={30} rx={5} fill="#1B4354" />
-          {/* Clothing (teal shirt) */}
-          <rect x={60} y={116} width={36} height={42} rx={11} fill="#00C9A7" />
-          {/* Torso overlap for neck */}
-          <rect x={67} y={112} width={22} height={12} rx={4} fill="#00C9A7" />
-          {/* Arm reaching toward plan */}
-          <path d="M 95 126 Q 112 121 122 128" stroke="#1B4354" strokeWidth={11} strokeLinecap="round" fill="none" />
-          <path d="M 95 126 Q 112 121 122 128" stroke="#00C9A7" strokeWidth={7} strokeLinecap="round" fill="none" opacity={0.5} />
-          {/* Other arm (at side) */}
-          <path d="M 61 126 Q 48 134 46 148" stroke="#1B4354" strokeWidth={10} strokeLinecap="round" fill="none" />
-          {/* Head */}
-          <circle cx={78} cy={96} r={19} fill="#1B4354" />
-          {/* Face highlight */}
-          <ellipse cx={78} cy={103} rx={13} ry={10} fill="#F4C49A" />
-          {/* Hair */}
-          <path d="M 59 90 Q 78 72 97 90 Q 97 78 78 74 Q 59 78 59 90 Z" fill="#0D2B3C" />
-          {/* Eyes */}
-          <circle cx={72} cy={102} r={2} fill="#1B4354" />
-          <circle cx={84} cy={102} r={2} fill="#1B4354" />
-          {/* Smile */}
-          <path d="M 73 108 Q 78 112 83 108" stroke="#1B4354" strokeWidth={1.5} fill="none" strokeLinecap="round" />
+        {/* Building Group 3b: Purple */}
+        <rect x="326" y="200" width="38" height="140" fill="#D0CAF0" rx="2"/>
+        <rect x="326" y="200" width="38" height="4" fill="#6D5FAD" rx="1"/>
+        <g fill="rgba(109,95,173,.3)">
+          <rect x="333" y="212" width="8" height="11" rx="1"/><rect x="347" y="212" width="9" height="11" rx="1"/>
+          <rect x="333" y="231" width="8" height="11" rx="1"/><rect x="347" y="231" width="9" height="11" rx="1"/>
+          <rect x="333" y="250" width="8" height="11" rx="1"/><rect x="347" y="250" width="9" height="11" rx="1"/>
+          <rect x="333" y="269" width="8" height="11" rx="1"/><rect x="347" y="269" width="9" height="11" rx="1"/>
+          <rect x="333" y="288" width="8" height="11" rx="1"/><rect x="347" y="288" width="9" height="11" rx="1"/>
+          <rect x="333" y="307" width="8" height="11" rx="1"/><rect x="347" y="307" width="9" height="11" rx="1"/>
+        </g>
+        <rect x="347" y="231" width="9" height="11" rx="1" fill="#6D5FAD" opacity=".5"/>
 
-          {/* ── Decorative plant (bottom left) ── */}
-          <rect x={17} y={168} width={7} height={26} rx={3} fill="#7BC4A8" />
-          <ellipse cx={20} cy={164} rx={11} ry={12} fill="#4DAF88" />
-          <ellipse cx={11} cy={170} rx={8} ry={9} fill="#4DAF88" opacity={0.85} />
-          <ellipse cx={29} cy={170} rx={8} ry={9} fill="#4DAF88" opacity={0.85} />
-          <circle cx={20} cy={156} r={5} fill="#3A9F78" />
+        {/* Building Group 4: Right destination */}
+        <rect x="390" y="230" width="80" height="110" fill="#A8D4BC" rx="3"/>
+        <rect x="390" y="230" width="80" height="5" fill="#5BAA7A" rx="1"/>
+        <g fill="rgba(19,148,133,.3)">
+          <rect x="397" y="243" width="12" height="16" rx="1"/><rect x="415" y="243" width="12" height="16" rx="1"/><rect x="433" y="243" width="12" height="16" rx="1"/><rect x="451" y="243" width="12" height="16" rx="1"/>
+          <rect x="397" y="267" width="12" height="16" rx="1"/><rect x="415" y="267" width="12" height="16" rx="1"/><rect x="433" y="267" width="12" height="16" rx="1"/><rect x="451" y="267" width="12" height="16" rx="1"/>
+          <rect x="397" y="291" width="12" height="16" rx="1"/><rect x="415" y="291" width="12" height="16" rx="1"/><rect x="433" y="291" width="12" height="16" rx="1"/><rect x="451" y="291" width="12" height="16" rx="1"/>
+          <rect x="469" y="243" width="14" height="16" rx="1"/><rect x="469" y="267" width="14" height="16" rx="1"/><rect x="469" y="291" width="14" height="16" rx="1"/>
+        </g>
+        <rect x="397" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5"/>
+        <rect x="415" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".45"/>
+        <rect x="433" y="267" width="12" height="16" rx="1" fill="#139485" opacity=".4"/>
+        <rect x="451" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5"/>
+        <rect x="397" y="291" width="12" height="16" rx="1" fill="#139485" opacity=".4"/>
+        <rect x="469" y="267" width="14" height="16" rx="1" fill="#139485" opacity=".45"/>
+        <rect x="476" y="190" width="36" height="150" fill="#B0D4C0" rx="2"/>
+        <rect x="476" y="190" width="36" height="4" fill="#5BAA7A" rx="1"/>
+        <g fill="rgba(19,148,133,.3)">
+          <rect x="482" y="202" width="8" height="12" rx="1"/><rect x="495" y="202" width="9" height="12" rx="1"/>
+          <rect x="482" y="222" width="8" height="12" rx="1"/><rect x="495" y="222" width="9" height="12" rx="1"/>
+          <rect x="482" y="242" width="8" height="12" rx="1"/><rect x="495" y="242" width="9" height="12" rx="1"/>
+          <rect x="482" y="262" width="8" height="12" rx="1"/><rect x="495" y="262" width="9" height="12" rx="1"/>
+          <rect x="482" y="282" width="8" height="12" rx="1"/><rect x="495" y="282" width="9" height="12" rx="1"/>
+          <rect x="482" y="302" width="8" height="12" rx="1"/><rect x="495" y="302" width="9" height="12" rx="1"/>
+        </g>
+        <rect x="482" y="202" width="8" height="12" rx="1" fill="#139485" opacity=".5"/>
+        <rect x="495" y="242" width="9" height="12" rx="1" fill="#139485" opacity=".4"/>
 
-          {/* ── Floating metric chips ── */}
-          {/* Chip: cost per seat */}
-          <motion.g animate={{ y: [0, -5, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-            <rect x={148} y={10} width={108} height={28} rx={14} fill="white" stroke="#00C9A7" strokeWidth={1.5}
-              style={{ filter: "drop-shadow(0 2px 6px rgba(0,201,167,0.18))" }} />
-            <circle cx={166} cy={24} r={8} fill="#00C9A7" opacity={0.15} />
-            <text x={166} y={28} textAnchor="middle" fontSize={8} fill="#00796B" fontWeight="800" fontFamily="monospace">NOK</text>
-            <text x={248} y={28} textAnchor="end" fontSize={11} fill="#00796B" fontWeight="800" fontFamily="monospace">
-              {hasData ? Math.round(costPerSeat).toLocaleString("no-NO") : "—"}
-            </text>
-            <text x={253} y={20} textAnchor="start" fontSize={6.5} fill="#7ACBBC" fontFamily="monospace">/seat</text>
-          </motion.g>
+        {/* Trees */}
+        <rect x="135" y="312" width="4" height="28" fill="#6A9E7A"/>
+        <circle cx="137" cy="305" r="14" fill="#4DAF7C"/>
+        <circle cx="137" cy="300" r="10" fill="#3A9E6A" opacity=".7"/>
+        <rect x="242" y="318" width="4" height="22" fill="#6A9E7A"/>
+        <circle cx="244" cy="312" r="12" fill="#4DAF7C"/>
+        <circle cx="244" cy="307" r="8" fill="#3A9E6A" opacity=".6"/>
+        <rect x="375" y="320" width="4" height="20" fill="#6A9E7A"/>
+        <circle cx="377" cy="315" r="11" fill="#4DAF7C"/>
+        <circle cx="377" cy="310" r="7.5" fill="#3A9E6A" opacity=".6"/>
+        <rect x="524" y="318" width="3" height="22" fill="#6A9E7A"/>
+        <circle cx="526" cy="312" r="10" fill="#4DAF7C"/>
 
-          {/* Chip: area per person */}
-          <motion.g animate={{ y: [0, -4, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}>
-            <rect x={45} y={14} width={82} height={24} rx={12} fill="white" stroke="#1A7FA8" strokeWidth={1.5}
-              style={{ filter: "drop-shadow(0 2px 6px rgba(26,127,168,0.15))" }} />
-            <text x={86} y={30} textAnchor="middle" fontSize={9.5} fill="#0D5F80" fontWeight="700" fontFamily="monospace">
-              {hasData ? `${areaPerPerson.toFixed(1)} m²` : "— m²"}
-            </text>
-          </motion.g>
-        </svg>
+        {/* Journey path */}
+        <path d="M 85,162 Q 185,115 292,92 Q 390,95 430,193" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1.5" strokeDasharray="8 6"/>
+        <path d="M 185,133 l 5,-4 l 0,8" fill="rgba(19,148,133,.25)"/>
+        <path d="M 335,98 l 5,-2 l -1,8" fill="rgba(19,148,133,.25)"/>
 
-        {/* Legend row */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-3">
-          {[
-            { color: "#00C9A7", label: "Collab" },
-            { color: "#1A7FA8", label: "Focus" },
-            { color: "#FF6B6B", label: "Meeting" },
-          ].map((z) => (
-            <div key={z.label} className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-sm" style={{ background: z.color, opacity: 0.8 }} />
-              <span className="text-[8px] font-bold font-mono" style={{ color: z.color }}>{z.label}</span>
-            </div>
-          ))}
-        </div>
+        {/* Step markers — moved up to create gap above buildings */}
+        <circle cx="85" cy="163" r="32" fill="rgba(19,148,133,.12)" filter="url(#ci-blur4)"/>
+        <circle cx="85" cy="163" r="22" fill="#139485"/>
+        <circle cx="85" cy="163" r="22" fill="none" stroke="#4DAF7C" strokeWidth="2"/>
+        <text x="85" y="167" textAnchor="middle" fontSize="14" fontWeight="700" fill="white" fontFamily="-apple-system,sans-serif">1</text>
+        <line x1="85" y1="141" x2="85" y2="126" stroke="#139485" strokeWidth="1.5"/>
+        <rect x="64" y="118" width="82" height="16" fill="#139485" rx="4"/>
+        <text x="105" y="129" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="white" fontFamily="-apple-system,sans-serif">YOU ARE HERE</text>
 
-        {/* Live badge */}
-        <span
-          className="absolute top-3 right-3 text-[9px] font-bold font-mono tracking-widest uppercase rounded-full px-2.5 py-1"
-          style={{ background: "rgba(0,201,167,0.1)", color: "#00796B", border: "1px solid rgba(0,201,167,0.3)" }}
-        >
-          Live preview
-        </span>
-      </div>
+        <circle cx="292" cy="92" r="18" fill="rgba(176,110,10,.1)" filter="url(#ci-blur2)"/>
+        <circle cx="292" cy="92" r="14" fill="#FDF3E0"/>
+        <circle cx="292" cy="92" r="14" fill="none" stroke="#B06E0A" strokeWidth="1.8"/>
+        <text x="292" y="96.5" textAnchor="middle" fontSize="11" fontWeight="700" fill="#8A5000" fontFamily="-apple-system,sans-serif">2</text>
 
-      {/* ── Cost metrics card ── */}
-      <div
-        className="rounded-xl p-4 space-y-3 border-2 transition-colors duration-300"
-        style={{
-          borderColor: hasData ? "#00C896"               : "var(--color-border)",
-          background:  hasData ? "rgba(0,200,150,0.04)"  : "var(--color-surface-2)",
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full"
-            style={{ background: hasData ? "#00C896" : "var(--color-text-muted)" }} />
-          <p className="text-[10px] font-bold uppercase tracking-widest font-mono text-text-muted">
-            Cost overview
-          </p>
-        </div>
+        <circle cx="430" cy="193" r="14" fill="#F0EEFF"/>
+        <circle cx="430" cy="193" r="14" fill="none" stroke="#6D5FAD" strokeWidth="1.5" strokeDasharray="4 3"/>
+        <text x="430" y="197.5" textAnchor="middle" fontSize="11" fontWeight="600" fill="rgba(109,95,173,.7)" fontFamily="-apple-system,sans-serif">3</text>
 
-        {!hasData ? (
-          <p className="text-xs text-text-muted font-body italic leading-relaxed">
-            Slide or type to see your cost overview.
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            <Metric label="Cost per seat / year" value={fmtNOK(costPerSeat)} />
-            <Metric label="Area per person"       value={fmtM2(areaPerPerson)} />
-            <div className="col-span-2 pt-2 border-t border-dashed"
-              style={{ borderColor: "rgba(0,200,150,0.25)" }}>
-              <Metric label="Total annual cost" value={fmtNOK(totalCost)} />
-            </div>
+        <text x="85" y="200" textAnchor="middle" fontSize="8" fill="#1F6644" fontWeight="600" fontFamily="-apple-system,sans-serif">CREATE PROJECT</text>
+        <text x="292" y="132" textAnchor="middle" fontSize="8" fill="rgba(176,110,10,.7)" fontWeight="600" fontFamily="-apple-system,sans-serif">LEASE PARAMETERS</text>
+        <text x="430" y="224" textAnchor="middle" fontSize="8" fill="rgba(109,95,173,.6)" fontWeight="600" fontFamily="-apple-system,sans-serif">FLOOR PLAN</text>
+
+        <ellipse cx="190" cy="365" rx="8" ry="3" fill="rgba(19,148,133,.08)"/>
+        <ellipse cx="350" cy="358" rx="8" ry="3" fill="rgba(19,148,133,.08)"/>
+      </svg>
+
+      {/* Caption overlay */}
+      <div className="relative z-10 p-8" style={{ background: "linear-gradient(to top, rgba(235,247,242,0.95) 60%, transparent)" }}>
+        <h2 className="text-2xl leading-snug mb-2" style={{ fontFamily: "var(--font-manrope)", color: "#1C2A24", letterSpacing: "-0.02em", fontWeight: 400 }}>
+          Start your<br /><strong style={{ fontWeight: 600, color: "#1F6644" }}>workspace journey.</strong>
+        </h2>
+        <p className="text-sm leading-relaxed max-w-xs" style={{ color: "#4A6650" }}>
+          Map where you are today — so we can show you where you could be tomorrow.
+        </p>
+        <div className="flex gap-2.5 mt-5 flex-wrap">
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium" style={{ background: "#139485", color: "#fff" }}>
+            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(255,255,255,.25)" }}>1</div>
+            Create project
           </div>
-        )}
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border" style={{ background: "rgba(19,148,133,.08)", color: "#4A6650", borderColor: "rgba(19,148,133,.2)" }}>
+            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.1)" }}>2</div>
+            Lease parameters
+          </div>
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border" style={{ background: "rgba(19,148,133,.05)", color: "#6A8070", borderColor: "rgba(19,148,133,.15)" }}>
+            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.07)" }}>3</div>
+            Floor plan
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function IlluStep6() {
+// ─── Step 2 — Lease Visual Panel ─────────────────────────────────────────────
+
+// Floor-specific window colors (floor 3 = violet, floor 2 = amber, floor 1 = coral)
+
+
+// ─── Custom onboarding stepper ────────────────────────────────────────────────
+// Orange = current step (amber from illustration), Primary = completed
+
+function OnboardingStepIndicator({ steps, currentStep, onStepClick }: {
+  steps: { label: string; description?: string }[];
+  currentStep: number;
+  onStepClick?: (i: number) => void;
+}) {
   return (
-    <svg viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full max-h-60">
-      {[
-        { x: 60,  y: 50,  color: "#60A5FA", size: 8 },
-        { x: 100, y: 35,  color: "#34D399", size: 6 },
-        { x: 180, y: 40,  color: "#F59E0B", size: 7 },
-        { x: 230, y: 60,  color: "#A78BFA", size: 9 },
-        { x: 240, y: 120, color: "#F472B6", size: 6 },
-        { x: 55,  y: 140, color: "#34D399", size: 8 },
-        { x: 80,  y: 200, color: "#60A5FA", size: 5 },
-        { x: 210, y: 200, color: "#F59E0B", size: 7 },
-        { x: 250, y: 170, color: "#A78BFA", size: 6 },
-      ].map((p, i) => (
-        <motion.rect key={i} x={p.x} y={p.y} width={p.size} height={p.size} rx={p.size / 3} fill={p.color}
-          animate={{ y: [p.y, p.y + 12, p.y], rotate: [0, 180, 360], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.15 }} />
-      ))}
-      <motion.circle cx="150" cy="120" r="60" fill="white" stroke="#D1FAE5" strokeWidth="2.5"
-        style={{ filter: "drop-shadow(0 8px 24px rgba(0,201,167,0.2))" }}
-        animate={{ scale: [1, 1.03, 1] }} transition={{ duration: 2, repeat: Infinity }} />
-      <text x="150" y="145" textAnchor="middle" fontSize="11" fill="#0D1B2A" fontWeight="800">Setup Complete!</text>
-      {["Map Rooms", "Count Occupants", "Analyse & Report"].map((s, i) => (
-        <motion.g key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 + i * 0.18 }}>
-          <rect x="76" y={198 + i * 18} width="148" height="14" rx="7"
-            fill={["#DBEAFE", "#D1FAE5", "#FEF9C3"][i]} />
-          <text x="150" y={208 + i * 18} textAnchor="middle" fontSize="8" fontWeight="600"
-            fill={["#1D4ED8", "#15803D", "#854D0E"][i]}>
-            {i + 1}. {s}
-          </text>
-        </motion.g>
-      ))}
-    </svg>
+    <div className="flex items-center w-full">
+      {steps.map((step, i) => {
+        const done = i < currentStep;
+        const active = i === currentStep;
+        return (
+          <div key={i} className="flex items-center flex-1 last:flex-none">
+            <button
+              onClick={() => onStepClick?.(i)}
+              className="flex items-center gap-2.5 outline-none group shrink-0"
+            >
+              <div
+                className="w-[34px] h-[34px] rounded-full flex items-center justify-center text-sm font-semibold shrink-0 transition-all duration-200"
+                style={{
+                  background: done ? "var(--color-primary)" : active ? "#139485" : "var(--color-surface)",
+                  border: (!done && !active) ? "1.5px solid var(--color-border)" : "none",
+                  color: (done || active) ? "#fff" : "var(--color-text-muted)",
+                  boxShadow: active ? "0 3px 12px rgba(19,148,133,.28)" : "none",
+                }}
+              >
+                {done ? <Check size={14} strokeWidth={2.5} /> : <span>{i + 1}</span>}
+              </div>
+              <div className="flex flex-col items-start">
+                <span
+                  className="text-xs font-semibold leading-tight"
+                  style={{ color: done ? "var(--color-primary)" : active ? "#139485" : "var(--color-text-muted)" }}
+                >
+                  {step.label}
+                </span>
+                {step.description && (
+                  <span className="text-[10px] leading-tight" style={{ color: "var(--color-text-muted)" }}>
+                    {step.description}
+                  </span>
+                )}
+              </div>
+            </button>
+            {i < steps.length - 1 && (
+              <div className="flex-1 mx-2.5 h-0.5 rounded overflow-hidden" style={{ background: "var(--color-border)" }}>
+                <div
+                  className="h-full transition-all duration-500"
+                  style={{ background: "var(--color-primary)", width: done ? "100%" : "0%" }}
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
-const ILLUSTRATIONS = [
-  null,                  // Step 1 (create project) — right column hidden, no illustration needed
-  null,                  // Step 2 uses LeaseBenchmarkPanel (rendered separately)
-  null,                  // Step 3 (floor plans) has no illustration
-  <IlluStep6 key={3} />, // Done illustration
-];
 
-const slideVariants = {
-  enterRight: { opacity: 0, x: 32 },
-  center:     { opacity: 1, x: 0 },
-  exitLeft:   { opacity: 0, x: -32 },
-  enterLeft:  { opacity: 0, x: -32 },
-  exitRight:  { opacity: 0, x: 32 },
-};
+// ─── Market averages (Norway commercial office benchmarks) ───────────────────
+const MKT_SPACE = 13;    // m² per person
+const MKT_COST  = 60000; // NOK per person per year
+
+function barColor(value: number, marketAvg: number): string {
+  const ratio = marketAvg > 0 ? value / marketAvg : 1;
+  if (ratio > 1.1)  return "#E46A6A"; // red — above market avg
+  if (ratio < 0.9)  return "#4FBF9F"; // green — below market avg
+  return "#F4C66E";                    // yellow — at market avg
+}
+
+function fmtNOK(n: number) {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(".0", "") + "M";
+  if (n >= 1_000)     return Math.round(n / 1_000) + "k";
+  return String(Math.round(n));
+}
+
+// ─── Single bar chart with x/y axes ─────────────────────────────────────────
+function BarChart({ label, value, marketAvg, formatValue }: {
+  label: string;
+  value: number;
+  marketAvg: number;
+  formatValue: (n: number) => string;
+}) {
+  const color = barColor(value, marketAvg);
+  const maxVal = Math.max(value * 1.3, marketAvg * 1.5);
+  const barPct = maxVal > 0 ? Math.min(100, Math.max(4, (value / maxVal) * 100)) : 4;
+  const refPct = maxVal > 0 ? Math.min(100, (marketAvg / maxVal) * 100) : 50;
+  const midVal = maxVal / 2;
+
+  return (
+    <div className="flex-1 flex flex-col">
+      <p className="text-[11px] font-semibold text-text-muted uppercase tracking-wide font-mono mb-2.5 shrink-0">{label}</p>
+      <div className="flex gap-2 flex-1">
+        {/* Y-axis */}
+        <div className="flex flex-col justify-between items-end shrink-0 pb-[22px]" style={{ width: 36, fontSize: 9, color: "var(--color-text-muted)", fontFamily: "var(--font-jetbrains-mono)" }}>
+          <span>{formatValue(maxVal)}</span>
+          <span>{formatValue(midVal)}</span>
+          <span>0</span>
+        </div>
+        {/* Chart body + x-axis */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="relative flex-1 min-h-[100px] rounded-t-lg overflow-visible">
+            {/* Dashed market avg line */}
+            <div
+              className="absolute left-0 right-0 border-t border-dashed opacity-50"
+              style={{ bottom: `${refPct}%`, borderColor: "var(--color-text-muted)" }}
+            />
+            {/* Bar */}
+            <div
+              className="absolute bottom-0 left-1/2 rounded-t-lg transition-all duration-500"
+              style={{ width: 52, height: `${barPct}%`, background: color, transform: "translateX(-50%)", opacity: 0.88 }}
+            />
+            {/* Value above bar */}
+            <motion.p
+              key={value}
+              initial={{ opacity: 0.5, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute left-1/2 font-bold font-mono text-[13px]"
+              style={{ color, bottom: `calc(${barPct}% + 6px)`, transform: "translateX(-50%)", whiteSpace: "nowrap" }}
+            >
+              {formatValue(value)}
+            </motion.p>
+          </div>
+          {/* X-axis */}
+          <div className="flex items-center justify-between pt-1.5 mt-1" style={{ borderTop: "1px solid var(--color-border)", fontSize: 9, color: "var(--color-text-muted)", fontFamily: "var(--font-jetbrains-mono)" }}>
+            <span>your company</span>
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-1">
+                <div className="w-[8px] h-[8px] rounded-[2px]" style={{ background: color }} />
+                <span>you</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-[8px] h-[8px] rounded-[2px]" style={{ border: "1.5px dashed var(--color-text-muted)" }} />
+                <span>market avg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Live lease preview content (left card of step 2) ────────────────────────
+// ─── Shared hook for lease derived values ─────────────────────────────────────
+function useLeaseMetrics() {
+  const { leaseParams } = useOnboardingStore();
+  const totalArea      = parseFloat(leaseParams.totalArea)      || 0;
+  const annualRent     = parseFloat(leaseParams.annualRent)     || 0;
+  const commonAreaCost = parseFloat(leaseParams.commonAreaCost) || 0;
+  const employees      = leaseParams.targetHeadcount            || 0;
+  const consultants    = leaseParams.consultantsCount           || 0;
+  const showCon        = leaseParams.showConsultants            || false;
+  const consultantFTE  = leaseParams.consultantFTE              ?? 0.5;
+  const effectiveHC    = employees + (showCon ? consultants * consultantFTE : 0);
+  const hcDisplay      = Math.round(effectiveHC * 10) / 10;
+  const spacePerPerson = effectiveHC > 0 ? totalArea / effectiveHC : 0;
+  const costPerPerson  = effectiveHC > 0 ? (annualRent + commonAreaCost) / effectiveHC : 0;
+  const spaceColor     = barColor(spacePerPerson, MKT_SPACE);
+  const costColor      = barColor(costPerPerson,  MKT_COST);
+  const hasPotential   = spaceColor === "#E46A6A" || costColor === "#E46A6A";
+  return { employees, consultants, showCon, consultantFTE, hcDisplay, spacePerPerson, costPerPerson, hasPotential };
+}
+
+// ─── Headcount card ───────────────────────────────────────────────────────────
+function HeadcountCard() {
+  const { employees, consultants, showCon, consultantFTE, hcDisplay } = useLeaseMetrics();
+  const maxIcons = 30;
+  const empIcons = Math.min(employees, maxIcons);
+  const conIcons = showCon ? Math.min(consultants, maxIcons - empIcons) : 0;
+
+  return (
+    <div className="rounded-[14px] p-5 border" style={{ background: "linear-gradient(135deg, #E8F5EE 0%, #EDE9FA 100%)", borderColor: "#C8DED0" }}>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-medium text-text font-body">Effective headcount</p>
+        <motion.p key={hcDisplay} initial={{ opacity: 0.5, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+          className="text-2xl font-bold font-mono leading-none" style={{ color: "#139485" }}>
+          {hcDisplay % 1 === 0 ? hcDisplay.toFixed(0) : hcDisplay.toFixed(1)}
+        </motion.p>
+      </div>
+      <div className="flex flex-wrap gap-[3px] mb-3 min-h-[22px]">
+        {Array.from({ length: empIcons }).map((_, i) => (
+          <svg key={`e${i}`} width="16" height="18" viewBox="0 0 16 18" fill="none">
+            <circle cx="8" cy="5" r="3.5" fill="#139485"/><path d="M1 17c0-3.87 3.13-7 7-7s7 3.13 7 7" fill="#139485"/>
+          </svg>
+        ))}
+        {Array.from({ length: conIcons }).map((_, i) => (
+          <svg key={`c${i}`} width="16" height="18" viewBox="0 0 16 18" fill="none" style={{ opacity: 0.4 }}>
+            <circle cx="8" cy="5" r="3.5" fill="#9B8FD0"/><path d="M1 17c0-3.87 3.13-7 7-7s7 3.13 7 7" fill="#9B8FD0"/>
+          </svg>
+        ))}
+        {(employees > maxIcons || (showCon && consultants > maxIcons - empIcons)) && (
+          <span className="text-[10px] font-bold font-mono" style={{ color: "#139485" }}>+more</span>
+        )}
+      </div>
+      <p className="text-[11px]" style={{ color: "#1F5C3C" }}>
+        <span className="font-bold font-mono">{employees}</span>
+        {showCon && consultants > 0 && (<> + <span className="font-bold font-mono">{consultants}</span> × {consultantFTE}</>)}
+        <span className="ml-1 opacity-60">permanent{showCon && consultants > 0 ? " + consultants" : " employees"}</span>
+      </p>
+    </div>
+  );
+}
+
+// ─── Efficiency charts + opportunity card ─────────────────────────────────────
+function EfficiencyCard() {
+  const { spacePerPerson, costPerPerson, hasPotential } = useLeaseMetrics();
+
+  return (
+    <div className="flex-1 rounded-[14px] border border-border bg-surface p-5 flex flex-col">
+      <p className="text-sm font-medium text-text font-body mb-4">Efficiency charts</p>
+      <div className="flex-1 flex flex-col gap-6">
+        <BarChart label="Space efficiency · m² per person" value={spacePerPerson} marketAvg={MKT_SPACE} formatValue={(n) => `${n.toFixed(1)} m²`} />
+        <BarChart label="Cost per employee · NOK / year"   value={costPerPerson}  marketAvg={MKT_COST}  formatValue={(n) => fmtNOK(n) + " NOK"} />
+      </div>
+      <div className="mt-6 rounded-[10px] border p-4 shrink-0"
+        style={hasPotential ? { background: "#F9F6EF", borderColor: "#F6DFA0" } : { background: "#EAF5EE", borderColor: "#C4E3D2" }}>
+        <div className="flex items-center gap-2 mb-1.5">
+          {hasPotential ? (
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1L9.5 5.5H14L10.5 8.5 11.5 13 7.5 10.5 3.5 13 4.5 8.5 1 5.5H5.5Z" fill="#B06E0A"/></svg>
+          ) : (
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" fill="#139485"/><path d="M4.5 7.5L6.5 9.5 10.5 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          )}
+          <p className="text-sm font-semibold" style={{ color: hasPotential ? "#B06E0A" : "#139485" }}>
+            {hasPotential ? "You have optimization potential." : "You have no optimization potential."}
+          </p>
+        </div>
+        <p className="text-xs leading-relaxed" style={{ color: hasPotential ? "#8A5E1A" : "#1F5C3C" }}>
+          {hasPotential
+            ? "Your space or cost per person is above the market average. Aligning closer could free up budget and space for your team."
+            : "Your space and cost per person are at or below the market benchmark — great efficiency."}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -615,224 +808,138 @@ export default function OnboardingPage() {
   const [showConsultantModal, setShowConsultantModal] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const isLastStep = currentStep === 3;
-  const isStep3 = currentStep === 2;    // Add Floor Plans step
   const isLeaseStep = currentStep === 1; // Add Lease Parameters step
   const isCreateStep = currentStep === 0; // Create Project step
-  const meta = stepMeta[currentStep];
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
+    <div className="h-screen bg-bg flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface">
-        <Logo size="sm" />
+      <header className="flex items-center justify-between px-6 py-4 bg-surface" style={{ borderBottom: "1px solid #EAE5DC" }}>
+        <Logo size="md" />
         <LanguageSelector />
       </header>
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 sm:py-12">
-        <div className="w-full max-w-5xl space-y-7">
-          {/* Step indicator */}
-          {!isLastStep && <StepIndicator steps={STEPS} currentStep={currentStep} onStepClick={setStep} />}
+      {/* ── Centered fixed stepper ─────────────────────────────────────────── */}
+      {!isLastStep && (
+        <div className="shrink-0 bg-surface px-6 py-3.5" style={{ borderBottom: "1px solid #EAE5DC" }}>
+          <div className="max-w-xl mx-auto">
+            <OnboardingStepIndicator steps={STEPS} currentStep={currentStep} onStepClick={setStep} />
+          </div>
+        </div>
+      )}
 
-          {/* Split card */}
-          <div className="rounded-2xl border border-border bg-surface shadow-card overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        {isLastStep ? (
+          // ── Done step: centred ────────────────────────────────────────────────
+          <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+            <Step6Done />
+          </div>
+        ) : isLeaseStep ? (
+          // ── Step 2: multi-card scrollable layout ─────────────────────────────
+          <div className="flex-1 overflow-y-auto" style={{ background: "var(--color-bg)" }}>
+            <div className="w-full max-w-[1080px] mx-auto px-8 py-10 space-y-5">
 
-            {/* Full-width header: create project + lease steps */}
-            {(isCreateStep || isLeaseStep) && !isLastStep && (
-              <div className="px-6 sm:px-8 pt-7 pb-5 border-b border-border">
-                <p className="text-xs font-semibold text-text-muted font-mono uppercase tracking-widest mb-1">
-                  Step {currentStep + 1} of {STEPS.length}
-                </p>
-                <h1 className="text-xl sm:text-2xl text-text"
-                  style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
-                  {meta.title}
-                </h1>
-                <p className="text-sm text-text-muted font-body mt-1">{meta.subtitle}</p>
+              {/* Page header */}
+              <div>
+                <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 2 of 3</p>
+                <h2 className="text-2xl mb-0.5" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Lease parameters</h2>
+                <p className="text-sm text-text-muted leading-relaxed">Type your figures — the preview updates live.</p>
               </div>
-            )}
 
-            <div className={`grid grid-cols-1 ${isLastStep || isStep3 || isCreateStep ? "" : "lg:grid-cols-2"}`}>
+              {/* Main grid: inputs left, preview cards right */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
 
-              {/* ── Left: form ────────────────────────────────────────── */}
-              <div className={`flex flex-col ${isLastStep || isStep3 || isLeaseStep || isCreateStep ? "" : "border-b lg:border-b-0 lg:border-r border-border"}`}>
-                {/* Step header — only for step 3 (floor plans) which still uses the in-column header */}
-                {!isLastStep && !isLeaseStep && !isCreateStep && (
-                  <div className="px-6 sm:px-8 pt-7 pb-5 border-b border-border">
-                    <p className="text-xs font-semibold text-text-muted font-mono uppercase tracking-widest mb-1">
-                      Step {currentStep + 1} of {STEPS.length}
-                    </p>
-                    <div className="flex items-center justify-between gap-4">
-                      <h1 className="text-xl sm:text-2xl font-700 text-text"
-                        style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
-                        {meta.title}
-                      </h1>
-                      {isStep3 && (
-                        <button
-                          type="button"
-                          onClick={() => setShowConsultantModal(true)}
-                          className="shrink-0 text-sm font-medium text-text-muted hover:text-primary underline underline-offset-2 transition-colors font-body"
-                        >
-                          Don&apos;t have a floor plan?
-                        </button>
-                      )}
-                    </div>
-                    <p className="text-sm text-text-muted font-body mt-1">{meta.subtitle}</p>
+                {/* Left card: form inputs & upload */}
+                <div className="flex flex-col gap-5">
+                  <div className="rounded-[18px] border border-border bg-surface shadow-card p-8">
+                    <Step3Lease onNext={nextStep} />
                   </div>
-                )}
 
-                {/* Form content */}
-                <div className="px-6 sm:px-8 py-7 flex-1 overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentStep}
-                      variants={slideVariants}
-                      initial="enterRight"
-                      animate="center"
-                      exit="exitLeft"
-                      transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-                    >
-                      {/* Create project: centered form, no right column */}
-                      {currentStep === 0 && (
-                        <div className="max-w-lg mx-auto">
-                          <Step1Project onNext={nextStep} />
-                        </div>
-                      )}
-                      {currentStep === 1 && <Step3Lease onNext={nextStep} />}
-                      {currentStep === 2 && <Step3FloorPlans onNext={nextStep} onBack={prevStep} />}
-                      {currentStep === 3 && <Step6Done />}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* ── Right: illustration or live preview (hidden for create, last, step3) ── */}
-              <div className={`${isLastStep || isStep3 || isCreateStep ? "hidden" : "hidden lg:flex"} ${
-                isLeaseStep
-                  ? "bg-bg items-start p-6 overflow-y-auto"
-                  : `items-center justify-center bg-gradient-to-br ${meta.illuBg} px-8 py-10 min-h-[420px]`
-              }`}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-                    className="w-full"
-                  >
-                    {isLeaseStep ? (
-                      <LeaseVisualPanel />
-                    ) : (
-                      <>
-                        <div className="max-w-xs mx-auto">
-                          {ILLUSTRATIONS[currentStep]}
-                        </div>
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3 }}
-                          className="mt-5 text-center"
-                        >
-                          <span className="inline-block rounded-full bg-white/70 border border-white/60 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold text-text/70 font-body">
-                            {meta.subtitle}
-                          </span>
-                        </motion.div>
-                      </>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Full-width upload + button footer for lease step */}
-            {isLeaseStep && (
-              <>
-                {/* Upload area */}
-                <div className="px-6 sm:px-8 pt-2 pb-6 border-t border-border">
-                  <label className="text-sm font-medium text-text font-body block mb-1.5 pt-5">
-                    Add lease contract and additional agreements (e.g. parking, storage)
-                  </label>
-                  <label className="flex flex-col items-center justify-center gap-3 py-7 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/[0.02] transition-all cursor-pointer group">
-                    <div className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Upload size={20} className="text-text-muted" />
+                  <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[18px] border-2 border-dashed border-primary/30 bg-surface hover:border-[#C4BAED] hover:bg-[#F0EEFF] transition-all cursor-pointer group">
+                    <div className="w-12 h-12 rounded-full border border-[#DDD8F7] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#F0EEFF" }}>
+                      <Upload size={22} style={{ color: "#6D5FAD" }} />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-medium text-text">Click to upload PDFs</p>
-                      <p className="text-xs text-text-muted mt-0.5">or drag and drop · multiple files supported</p>
+                      <p className="text-sm font-semibold text-text">Drop your lease & floor plans — we&apos;ll auto-fill what we can</p>
+                      <p className="text-xs text-text-muted mt-1 font-body">PDF · multiple files supported</p>
                     </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".pdf"
-                      multiple
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files ?? []);
-                        if (files.length) setUploadedFiles((prev) => [...prev, ...files]);
-                        e.target.value = "";
-                      }}
-                    />
+                    <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
                   </label>
-
-                  {/* Uploaded files list */}
                   {uploadedFiles.length > 0 && (
-                    <div className="mt-3 space-y-1.5">
+                    <div className="space-y-1.5">
                       {uploadedFiles.map((file, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-surface-2/60 group"
-                        >
+                        <div key={idx} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-surface-2/60 group">
                           <FileText size={14} className="text-primary shrink-0" />
                           <span className="flex-1 text-xs font-medium text-text truncate min-w-0">{file.name}</span>
-                          <span className="text-[10px] text-text-muted font-mono shrink-0">
-                            {(file.size / 1024).toFixed(0)} KB
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))}
-                            className="text-text-muted hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"
-                          >
-                            <X size={13} />
-                          </button>
+                          <span className="text-[10px] text-text-muted font-mono shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
+                          <button type="button" onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))} className="text-text-muted hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><X size={13} /></button>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* Navigation buttons */}
-                <div className="px-6 sm:px-8 py-5 border-t border-border flex items-center justify-between">
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    type="button"
-                    onClick={prevStep}
-                    icon={<ArrowLeft size={16} />}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    size="lg"
-                    type="submit"
-                    form="lease-form"
-                    icon={<ArrowRight size={16} />}
-                    iconPosition="right"
-                  >
-                    Continue
-                  </Button>
+                {/* Right column: two stacked cards */}
+                <div className="flex flex-col gap-5 h-full">
+                  <HeadcountCard />
+                  <EfficiencyCard />
                 </div>
-              </>
-            )}
-          </div>
+              </div>
 
-          {/* Progress dots (mobile only) */}
-          <div className="lg:hidden flex justify-center gap-2">
-            {STEPS.map((_, i) => (
-              <div key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === currentStep ? "w-6 bg-primary" : i < currentStep ? "w-2 bg-accent" : "w-2 bg-border"
-                }`} />
-            ))}
+              {/* Nav */}
+              <div className="flex items-center justify-between pb-4">
+                <Button variant="secondary" size="lg" type="button" onClick={prevStep} icon={<ArrowLeft size={16} />}>Back</Button>
+                <Button size="lg" type="submit" form="lease-form" icon={<ArrowRight size={16} />} iconPosition="right">Continue</Button>
+              </div>
+
+            </div>
           </div>
-        </div>
+        ) : isCreateStep ? (
+          // ── Step 1: illustration + form card ─────────────────────────────────
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 min-h-0">
+
+            {/* Left: illustration panel */}
+            <div className="hidden lg:block relative overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div key={currentStep} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="absolute inset-0">
+                  <CityIllusPanel />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right: form card */}
+            <div className="flex flex-col overflow-y-auto" style={{ background: "var(--color-bg)" }}>
+              <div className="flex flex-col w-full max-w-[540px] mx-auto px-8 py-10 gap-8 min-h-full">
+                <div className="rounded-[18px] border border-border bg-surface shadow-card flex-1" style={{ padding: "34px 36px" }}>
+                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1.5" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 1 of 3</p>
+                  <h2 className="text-2xl mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Create your first project</h2>
+                  <p className="text-sm text-text-muted mb-7 leading-relaxed">Tell us about your building and location.</p>
+                  <Step1Project onNext={nextStep} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        ) : (
+          // ── Step 3: full-width form card ──────────────────────────────────────
+          <div className="flex-1 overflow-y-auto" style={{ background: "var(--color-bg)" }}>
+            <div className="w-full max-w-[1080px] mx-auto px-8 py-10">
+              <div className="rounded-[18px] border border-border bg-surface shadow-card" style={{ padding: "34px 36px" }}>
+                <div className="flex items-start justify-between gap-4 mb-1">
+                  <div>
+                    <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 3 of 3</p>
+                    <h2 className="text-2xl" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Add floor plans</h2>
+                  </div>
+                  <button type="button" onClick={() => setShowConsultantModal(true)} className="shrink-0 text-sm font-medium text-text-muted hover:text-primary underline underline-offset-2 transition-colors font-body mt-1">
+                    Don&apos;t have one?
+                  </button>
+                </div>
+                <p className="text-sm text-text-muted mb-6 leading-relaxed">Upload and verify your floor plan layouts.</p>
+                <Step3FloorPlans onNext={nextStep} onBack={prevStep} />
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Consultant Modal */}

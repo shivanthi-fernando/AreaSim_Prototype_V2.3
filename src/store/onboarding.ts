@@ -20,6 +20,7 @@ export interface LeaseParams {
   targetHeadcount: number;
   consultantsCount?: number;
   showConsultants?: boolean;
+  consultantFTE?: 0.5 | 1;
 }
 
 export interface ProjectDetails {
@@ -68,9 +69,10 @@ const defaultLeaseParams: LeaseParams = {
   totalArea: "",
   annualRent: "",
   commonAreaCost: "",
-  targetHeadcount: 1,
+  targetHeadcount: 0,
   consultantsCount: 0,
   showConsultants: false,
+  consultantFTE: 0.5,
 };
 
 export const useOnboardingStore = create<OnboardingState>()(

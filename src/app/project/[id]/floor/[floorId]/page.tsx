@@ -44,7 +44,7 @@ export default function FloorPage() {
       <header className="flex items-center gap-3 px-3 py-2 border-b border-border bg-surface shrink-0">
         {/* Logo — navigates to dashboard */}
         <button onClick={() => router.push("/dashboard")} className="shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
-          <Logo size="sm" showText={false} />
+          <Logo size="md" showText={false} />
         </button>
 
         <div className="w-px h-5 bg-border" />

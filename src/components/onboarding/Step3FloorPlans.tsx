@@ -166,9 +166,9 @@ function SortableFloorCard({
                 )}
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center gap-3 aspect-[4/3] rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/[0.02] transition-all cursor-pointer group/upload">
-                <div className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center group-hover/upload:scale-110 transition-transform">
-                  <Upload size={20} className="text-text-muted" />
+              <label className="flex flex-col items-center justify-center gap-3 aspect-[4/3] rounded-xl border-2 border-dashed border-[#C4BAED] bg-[#F0EEFF] hover:border-[#9B8FD0]/60 hover:bg-[#EAE5FF] transition-all cursor-pointer group/upload">
+                <div className="w-10 h-10 rounded-full bg-white border border-[#DDD8F7] shadow-sm flex items-center justify-center group-hover/upload:scale-110 transition-transform">
+                  <Upload size={20} style={{ color: "#6D5FAD" }} />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-medium text-text">Upload floor plan</p>
@@ -194,11 +194,13 @@ function ConsultantCards() {
           <p className="text-xs font-semibold mb-1" style={{ color: "#0A4F6E" }}>{c.title}</p>
           <p className="text-xs text-text-muted font-body leading-relaxed mb-3">{c.bio}</p>
           <div className="flex flex-wrap gap-2">
-            <a href={`tel:${c.phone}`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 hover:bg-primary/5 hover:text-primary text-xs font-medium text-text-muted transition-colors border border-border">
-              <Phone size={12} /> {c.phone}
+            <a href={`tel:${c.phone}`}
+              className="inline-flex items-center justify-center gap-2 font-body font-medium focus-ring select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full text-sm px-5 py-2.5 h-10 transition-all">
+              <Phone size={14} /> {c.phone}
             </a>
-            <a href={`mailto:${c.email}`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white hover:bg-primary-light text-xs font-medium transition-colors">
-              <Mail size={12} /> {c.email}
+            <a href={`mailto:${c.email}`}
+              className="inline-flex items-center justify-center gap-2 font-body font-medium focus-ring select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full text-sm px-5 py-2.5 h-10 transition-all">
+              <Mail size={14} /> {c.email}
             </a>
           </div>
         </div>

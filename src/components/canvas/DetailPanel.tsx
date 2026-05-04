@@ -21,8 +21,8 @@ interface DetailPanelProps {
 }
 
 const STATUS_ICON: Record<string, React.ReactNode> = {
-  counted:   <CheckCircle2 size={13} className="text-accent shrink-0" />,
-  counting:  <Loader2 size={13} className="text-amber-500 shrink-0 animate-spin" />,
+  counted: <CheckCircle2 size={13} className="text-accent shrink-0" />,
+  counting: <Loader2 size={13} className="text-amber-500 shrink-0 animate-spin" />,
   unvisited: <Circle size={13} className="text-[#C8D8E4] shrink-0" />,
 };
 
@@ -55,7 +55,7 @@ export function DetailPanel({ floorId: _initialFloorId }: DetailPanelProps) {
       id: `floor-${Date.now()}`,
       name: `Floor ${floors.length + 1}`,
       level: `${floors.length}`,
-      imageUrl: "/mock/floorplan-oslo.svg",
+      imageUrl: "/mock/floorplan-oslo.jpg",
       rooms: [],
       zones: [],
       detectedRooms: [],
@@ -298,7 +298,7 @@ export function DetailPanel({ floorId: _initialFloorId }: DetailPanelProps) {
               className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full"
             >
               <div className="flex items-center justify-between px-5 py-3 border-b border-[#E5EAF0]">
-                <Logo size="sm" />
+                <Logo size="md" />
                 <button onClick={() => setShowVerifyModal(false)} className="text-[#5C7A8A] hover:text-[#0D1B2A]">
                   <X size={18} />
                 </button>

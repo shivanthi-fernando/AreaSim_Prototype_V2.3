@@ -117,35 +117,33 @@ export function Step1Project({ onNext }: Props) {
 
 
 
-      {/* Postal code — city auto-detected and shown inline after a comma */}
+      {/* Postal code + City — side by side */}
       <motion.div variants={item}>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-text font-body">Postal code</label>
-          <div
-            className="flex items-center w-full rounded-[10px] border border-border bg-surface transition-all duration-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 hover:border-primary/50 overflow-hidden"
-          >
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-text font-body">Postal code</label>
             <input
               type="text"
               inputMode="numeric"
               maxLength={4}
               placeholder="e.g. 0123"
-              className="flex-1 bg-transparent px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none min-w-0"
+              className="w-full rounded-[10px] border border-border bg-surface px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 hover:border-primary/50 transition-all duration-200"
               {...register("postalCode")}
             />
-            {detectedCity && (
-              <motion.span
-                initial={{ opacity: 0, x: 6 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.2 }}
-                className="pr-4 text-sm text-text-muted font-body whitespace-nowrap shrink-0 pointer-events-none"
-              >
-                , {detectedCity}
-              </motion.span>
+            {errors.postalCode && (
+              <p className="text-xs text-accent-warm font-body">{errors.postalCode.message}</p>
             )}
           </div>
-          {errors.postalCode && (
-            <p className="text-xs text-accent-warm font-body">{errors.postalCode.message}</p>
-          )}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-text font-body">City</label>
+            <input
+              type="text"
+              placeholder="Oslo"
+              readOnly
+              value={detectedCity || ""}
+              className="w-full rounded-[10px] border border-border bg-surface-2/60 px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 cursor-default transition-all duration-200"
+            />
+          </div>
         </div>
       </motion.div>
 
@@ -169,11 +167,10 @@ export function Step1Project({ onNext }: Props) {
         />
       </motion.div>
 
-      <motion.div variants={item} className="pt-2">
+      <motion.div variants={item} className="pt-2 flex justify-end">
         <Button
           type="submit"
           size="lg"
-          className="w-full"
           icon={<ArrowRight size={16} />}
           iconPosition="right"
         >

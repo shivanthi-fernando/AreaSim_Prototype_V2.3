@@ -66,8 +66,9 @@ export default function VerifyEmailPage() {
       <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 15 }} className="flex justify-center">
         <motion.div animate={{ y: [-4, 4, -4] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-xl shadow-primary/25">
-          <Mail size={36} className="text-white" />
+          className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-[#139485]/10"
+          style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
+          <Mail size={36} color="#139485" />
         </motion.div>
       </motion.div>
 
@@ -92,10 +93,12 @@ export default function VerifyEmailPage() {
         ))}
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-        <Button className="w-full" size="lg" onClick={() => handleVerify()} loading={verifying}>
-          Verify email
-        </Button>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex justify-center">
+        <div className="w-full max-w-[338px]">
+          <Button className="w-full" size="lg" onClick={() => handleVerify()} loading={verifying}>
+            Verify email
+          </Button>
+        </div>
       </motion.div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>

@@ -5,17 +5,17 @@
 /* ─── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Colors — Nordic palette for architects & space professionals */
-  --color-primary: #0A4F6E;
-  --color-primary-light: #1A7FA8;
-  --color-accent: #00C9A7;
-  --color-accent-text: #00C9A7;
-  --color-accent-warm: #FF6B6B;
-  --color-bg: #F7F9FC;
+  --color-primary: #139485;
+  --color-primary-light: #043a1f;
+  --color-accent: #C47A2C;
+  --color-accent-text: #C47A2C;
+  --color-accent-warm: #C47A2C;
+  --color-bg: #F9F6EF;
   --color-surface: #FFFFFF;
-  --color-surface-2: #EEF3F8;
-  --color-text: #0D1B2A;
-  --color-text-muted: #5C7A8A;
-  --color-border: #D0DDE6;
+  --color-surface-2: #E7E1D7;
+  --color-text: #1F2A24;
+  --color-text-muted: #6B7C73;
+  --color-border: #ececec;
 
   /* Typography */
   --font-manrope: 'Manrope', sans-serif;
@@ -112,7 +112,12 @@ body {
 }
 
 /* ─── Typography ────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-manrope);
   font-weight: 700;
   line-height: 1.2;
@@ -164,6 +169,62 @@ p {
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* 3D glowing effect for primary buttons */
+  .btn-3d {
+    box-shadow:
+      0 2px 0 rgba(255, 255, 255, 0.25) inset,
+      0 -2px 0 rgba(0, 0, 0, 0.15) inset,
+      0 0 16px rgba(19, 148, 133, 0.6);
+    background: linear-gradient(180deg, #1ab09f 0%, #139485 100%);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transform: translateY(0);
+    transition: all 0.15s ease;
+  }
+
+  .btn-3d:hover {
+    filter: brightness(1.1);
+    box-shadow:
+      0 2px 0 rgba(255, 255, 255, 0.35) inset,
+      0 -2px 0 rgba(0, 0, 0, 0.15) inset,
+      0 0 16px rgba(19, 148, 133, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .btn-3d:active {
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.3) inset,
+      0 0 10px rgba(19, 148, 133, 0.4);
+    transform: translateY(1px);
+    filter: brightness(0.95);
+  }
+
+  /* 3D effect for secondary buttons */
+  .btn-3d-secondary {
+    box-shadow:
+      0 2px 0 rgba(255, 255, 255, 0.8) inset,
+      0 -2px 0 rgba(0, 0, 0, 0.05) inset,
+      0 2px 4px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-2) 100%);
+    transform: translateY(0);
+    transition: all 0.15s ease;
+  }
+
+  .btn-3d-secondary:hover {
+    filter: brightness(0.98);
+    box-shadow:
+      0 2px 0 rgba(255, 255, 255, 0.9) inset,
+      0 -2px 0 rgba(0, 0, 0, 0.05) inset,
+      0 4px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .btn-3d-secondary:active {
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.05) inset,
+      0 1px 2px rgba(0, 0, 0, 0.05);
+    transform: translateY(1px);
+  }
 }
 
 /* ─── Animated Gradient Background ─────────────────────────── */
@@ -186,9 +247,19 @@ p {
 }
 
 @keyframes meshShift {
-  0%, 100% { background-position: 0% 50%; }
-  33% { background-position: 50% 0%; }
-  66% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  33% {
+    background-position: 50% 0%;
+  }
+
+  66% {
+    background-position: 100% 50%;
+  }
 }
 
 /* ─── Focus Ring ────────────────────────────────────────────── */
@@ -200,20 +271,23 @@ p {
 
 /* ─── Loading Skeleton ──────────────────────────────────────── */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-surface-2) 25%,
-    var(--color-border) 50%,
-    var(--color-surface-2) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--color-surface-2) 25%,
+      var(--color-border) 50%,
+      var(--color-surface-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-md);
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ─── Page Transitions ──────────────────────────────────────── */

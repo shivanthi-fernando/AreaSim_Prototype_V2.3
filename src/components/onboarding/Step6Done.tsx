@@ -35,9 +35,10 @@ export function Step6Done() {
         initial={{ scale: 0.5, rotate: -10 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
-        className="w-20 h-20 rounded-3xl bg-gradient-to-br from-accent to-emerald-400 flex items-center justify-center shadow-xl shadow-accent/25"
+        className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-accent/10"
+        style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
       >
-        <CheckCircle2 size={36} className="text-white" />
+        <CheckCircle2 size={36} color="#139485" />
       </motion.div>
 
       <div className="space-y-3">
@@ -79,9 +80,9 @@ export function Step6Done() {
               initial={{ scale: 0 }}
               animate={visibleItems > i ? { scale: 1 } : { scale: 0 }}
               transition={{ duration: 0.25, delay: 0.1 }}
-              className="w-6 h-6 rounded-full bg-accent/15 flex items-center justify-center shrink-0"
+              className="w-6 h-6 rounded-full bg-[#B7ACE1]/15 flex items-center justify-center shrink-0"
             >
-              <span className="text-accent text-sm">✦</span>
+              <span className="text-sm" style={{ color: "#B7ACE1" }}>✦</span>
             </motion.span>
             <span className="text-sm font-medium text-text font-body">{item}</span>
           </motion.div>
@@ -93,11 +94,11 @@ export function Step6Done() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.8 }}
-        className="w-full max-w-sm"
+        className="w-full flex justify-center"
       >
         <Button
           size="lg"
-          className="w-full shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25"
+          className="px-10 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25"
           icon={<ArrowRight size={18} />}
           iconPosition="right"
           onClick={() => router.push("/project/proj-1/canvas/guide")}
