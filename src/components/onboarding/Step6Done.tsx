@@ -101,7 +101,7 @@ export function Step6Done() {
           className="px-10 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25"
           icon={<ArrowRight size={18} />}
           iconPosition="right"
-          onClick={() => router.push("/project/proj-1/canvas/guide")}
+          onClick={() => router.push("/project/proj-1/floor/floor-1")}
         >
           Continue
         </Button>
