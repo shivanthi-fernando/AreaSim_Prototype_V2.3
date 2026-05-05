@@ -79,7 +79,7 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
   const activeImageUrl = customImageUrl ?? imageUrl;
   const [bgImage] = useImage(activeImageUrl);
 
-  // Image resize state (screen-pixel bounds; null = auto-fit)
+  // Image resize state (world coordinates; null = auto-fit)
   const [customImgBounds, setCustomImgBounds] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [bgImgSelected, setBgImgSelected] = useState(false);
 
@@ -118,8 +118,8 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
   const [showGroupBar, setShowGroupBar] = useState(false);
   const [uploadHint, setUploadHint] = useState(false);
 
-  // Inline guide state
-  const [showGuide, setShowGuide] = useState(false);
+  // Inline guide state — open on first mount
+  const [showGuide, setShowGuide] = useState(true);
   const [guideStep, setGuideStep] = useState(0);
 
   useEffect(() => {
@@ -144,13 +144,8 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
     return { x: (width - w) / 2, y: (height - h) / 2, w, h };
   }, [bgImage, width, height]);
 
-  // Effective bounds
+  // Effective bounds (world coordinates)
   const eff = customImgBounds ?? autoFitBounds;
-  const effScaleX = bgImage ? eff.w / bgImage.width : 1;
-  const effScaleY = bgImage ? eff.h / bgImage.height : 1;
-
-  const scaledPoints = (pts: number[]) =>
-    pts.map((v, i) => (i % 2 === 0 ? v * effScaleX + eff.x : v * effScaleY + eff.y));
 
   const getPointerPos = () => {
     const stage = stageRef.current;
@@ -306,25 +301,25 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
               <KImage
                 ref={bgImageRef}
                 image={bgImage}
-                x={eff.x / scale}
-                y={eff.y / scale}
-                width={eff.w / scale}
-                height={eff.h / scale}
+                x={eff.x}
+                y={eff.y}
+                width={eff.w}
+                height={eff.h}
                 draggable
                 onClick={(e) => { e.cancelBubble = true; setBgImgSelected(true); }}
                 onDragEnd={(e) => {
-                  setCustomImgBounds({ x: e.target.x() * scale, y: e.target.y() * scale, w: eff.w, h: eff.h });
+                  setCustomImgBounds({ x: e.target.x(), y: e.target.y(), w: eff.w, h: eff.h });
                 }}
                 onTransformEnd={() => {
                   const node = bgImageRef.current;
                   if (!node) return;
-                  const newW = node.width() * node.scaleX() * scale;
-                  const newH = node.height() * node.scaleY() * scale;
-                  setCustomImgBounds({ x: node.x() * scale, y: node.y() * scale, w: newW, h: newH });
+                  const newW = node.width() * node.scaleX();
+                  const newH = node.height() * node.scaleY();
+                  setCustomImgBounds({ x: node.x(), y: node.y(), w: newW, h: newH });
                   node.scaleX(1);
                   node.scaleY(1);
-                  node.width(newW / scale);
-                  node.height(newH / scale);
+                  node.width(newW);
+                  node.height(newH);
                 }}
               />
             )}
@@ -332,7 +327,7 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
             {/* Existing rooms */}
             {rooms.map((room) => {
               if (room.points.length === 0) return null;
-              const pts = scaledPoints(room.points).map((v) => v / scale);
+              const pts = room.points;
               const isSelected = selectedRoomIds.includes(room.id);
               const xs = pts.filter((_, i) => i % 2 === 0);
               const ys = pts.filter((_, i) => i % 2 !== 0);
@@ -344,10 +339,8 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
                   draggable={activeTool === "select"}
                   onClick={() => handleRoomClick(room)}
                   onDragEnd={(e) => {
-                    const gx = e.target.x();
-                    const gy = e.target.y();
-                    const dx = gx * scale / (effScaleX || 1);
-                    const dy = gy * scale / (effScaleY || 1);
+                    const dx = e.target.x();
+                    const dy = e.target.y();
                     updateRoomPoints(floorId, room.id, dx, dy);
                     e.target.position({ x: 0, y: 0 });
                   }}
@@ -392,7 +385,7 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
             {zones.map((zone) => {
               const zoneRooms = rooms.filter((r) => zone.roomIds.includes(r.id));
               if (!zoneRooms.length) return null;
-              const allPts = zoneRooms.flatMap((r) => scaledPoints(r.points).map((v) => v / scale));
+              const allPts = zoneRooms.flatMap((r) => r.points);
               const allX = allPts.filter((_, i) => i % 2 === 0);
               const allY = allPts.filter((_, i) => i % 2 !== 0);
               const minX = Math.min(...allX) - 12;
