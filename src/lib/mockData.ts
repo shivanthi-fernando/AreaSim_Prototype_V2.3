@@ -116,7 +116,7 @@ export const mockProject: Project = {
       id: "floor-1",
       name: "Ground Floor",
       level: "Ground",
-      imageUrl: "/mock/floorplan-oslo.svg",
+      imageUrl: "/buerogrundriss.png",
       rooms: [
         { id: "r1", name: "Conference Room A", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 45, verified: false },
         { id: "r2", name: "Conference Room B", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 32, verified: false },

@@ -1,29 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, ChevronLeft } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import {
+  X,
+  ArrowRight,
+  ChevronLeft,
+  PenLine,
+  MousePointer2,
+  Group as GroupIcon,
+  Eraser,
+  SlidersHorizontal,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// ─── Per-step animated illustrations — UNCHANGED ──────────────────────────────
+// ─── Step 1: welcome illustration (centered modal only) ─────────────────────
 
 function IllustrationWelcome() {
   return (
     <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <motion.rect x="30" y="20" width="260" height="145" rx="6"
+      <motion.rect
+        x="30" y="20" width="260" height="145" rx="6"
         stroke="#1A7FA8" strokeWidth="2.5" fill="#EEF3F8"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-        transition={{ duration: 1, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }} />
+        transition={{ duration: 1, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+      />
       {[
         { d: "M 30 90 L 180 90" },
         { d: "M 180 20 L 180 90" },
         { d: "M 180 90 L 180 165" },
         { d: "M 180 90 L 290 90" },
       ].map((p, i) => (
-        <motion.path key={i} d={p.d} stroke="#374151" strokeWidth="1.5"
+        <motion.path
+          key={i} d={p.d} stroke="#374151" strokeWidth="1.5"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 + i * 0.2, repeat: Infinity, repeatDelay: 3 }} />
+          transition={{ duration: 0.6, delay: 0.8 + i * 0.2, repeat: Infinity, repeatDelay: 3 }}
+        />
       ))}
       {[
         { x: 95, y: 52, text: "Meeting A" },
@@ -31,18 +44,22 @@ function IllustrationWelcome() {
         { x: 95, y: 130, text: "Break Room" },
         { x: 230, y: 130, text: "Focus" },
       ].map((l, i) => (
-        <motion.text key={i} x={l.x} y={l.y} textAnchor="middle" fontSize="10"
+        <motion.text
+          key={i} x={l.x} y={l.y} textAnchor="middle" fontSize="10"
           fill="#1A7FA8" fontWeight="600"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 1.6 + i * 0.18, duration: 0.4, repeat: Infinity, repeatDelay: 2 }}>
+          transition={{ delay: 1.6 + i * 0.18, duration: 0.4, repeat: Infinity, repeatDelay: 2 }}
+        >
           {l.text}
         </motion.text>
       ))}
       {[{ x: 60, y: 30 }, { x: 270, y: 25 }, { x: 155, y: 155 }].map((s, i) => (
-        <motion.text key={i} x={s.x} y={s.y} textAnchor="middle" fontSize="12" fill="#00C9A7"
+        <motion.text
+          key={i} x={s.x} y={s.y} textAnchor="middle" fontSize="12" fill="#00C9A7"
           animate={{ scale: [0, 1.2, 0], rotate: [0, 180, 360], opacity: [0, 1, 0] }}
           transition={{ duration: 1.5, delay: 2 + i * 0.3, repeat: Infinity, repeatDelay: 2 }}
-          style={{ transformOrigin: `${s.x}px ${s.y}px` }}>
+          style={{ transformOrigin: `${s.x}px ${s.y}px` }}
+        >
           ✦
         </motion.text>
       ))}
@@ -50,143 +67,341 @@ function IllustrationWelcome() {
   );
 }
 
-function IllustrationDrawRoom() {
-  const points = [
-    { x: 80, y: 130 }, { x: 80, y: 50 }, { x: 200, y: 50 }, { x: 240, y: 90 }, { x: 240, y: 130 },
-  ];
+// ─── Mock toolbar (matches FloorCanvas bottom bar layout) ───────────────────
+
+const MOCK_TOOLS: { id: string; icon: typeof MousePointer2; label: string }[] = [
+  { id: "select", icon: MousePointer2, label: "Select" },
+  { id: "pen", icon: PenLine, label: "Draw" },
+  { id: "group", icon: GroupIcon, label: "Group" },
+  { id: "eraser", icon: Eraser, label: "Erase" },
+];
+
+function MockFloatingToolbar({ highlightPen }: { highlightPen: boolean }) {
   return (
-    <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {[80, 120, 160, 200, 240].map((x) => (
-        <line key={x} x1={x} y1="20" x2={x} y2="165" stroke="#E5E7EB" strokeWidth="0.8" />
-      ))}
-      {[50, 90, 130, 165].map((y) => (
-        <line key={y} x1="40" y1={y} x2="280" y2={y} stroke="#E5E7EB" strokeWidth="0.8" />
-      ))}
-      <motion.polygon
-        points={points.map(p => `${p.x},${p.y}`).join(" ")}
-        fill="rgba(10,79,110,0.12)" stroke="#0A4F6E" strokeWidth="2"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.4, repeat: Infinity, repeatDelay: 2.5 }} />
-      {points.map((pt, i) => {
-        const next = points[(i + 1) % points.length];
+    <div
+      className="pointer-events-none flex items-center gap-1 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/15 px-2 py-1.5"
+      aria-hidden
+    >
+      {MOCK_TOOLS.map(({ id, icon: Icon, label }) => {
+        const isPen = id === "pen";
+        const active = isPen && highlightPen;
         return (
-          <motion.line key={i} x1={pt.x} y1={pt.y} x2={next.x} y2={next.y}
-            stroke="#0A4F6E" strokeWidth="2" strokeLinecap="round"
-            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-            transition={{ delay: 0.3 + i * 0.28, duration: 0.25, repeat: Infinity, repeatDelay: 2.5 }} />
+          <div
+            key={id}
+            className={cn(
+              "relative flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-150",
+              active
+                ? "bg-primary text-white shadow-md shadow-primary/30 ring-2 ring-primary ring-offset-2 ring-offset-surface"
+                : "text-text-muted",
+            )}
+            title={label}
+          >
+            <Icon size={17} />
+            {isPen && highlightPen && (
+              <motion.span
+                className="pointer-events-none absolute inset-0 rounded-xl border-2 border-accent"
+                initial={{ opacity: 0.6, scale: 1 }}
+                animate={{ opacity: 0, scale: 1.35 }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeOut" }}
+              />
+            )}
+          </div>
         );
       })}
-      {points.map((pt, i) => (
-        <motion.circle key={i} cx={pt.x} cy={pt.y} r={i === 0 ? 6 : 4}
-          fill={i === 0 ? "#00C9A7" : "#0A4F6E"} stroke="white" strokeWidth="1.5"
-          initial={{ scale: 0 }} animate={{ scale: 1 }}
-          transition={{ delay: 0.3 + i * 0.28, duration: 0.18, type: "spring", repeat: Infinity, repeatDelay: 2.5 }} />
-      ))}
-      <motion.g
-        animate={{ x: [0, ...points.map(p => p.x - points[0].x)], y: [0, ...points.map(p => p.y - points[0].y)] }}
-        initial={{ x: points[0].x - 10, y: points[0].y - 10 }}
-        transition={{ duration: points.length * 0.28 + 0.3, times: [0, 0.15, 0.3, 0.5, 0.7, 0.9], ease: "easeInOut", repeat: Infinity, repeatDelay: 1.5 }}>
-        <motion.path
-          d="M 0 0 L 0 14 L 4 10 L 8 17 L 10 16 L 6 9 L 11 9 Z"
-          fill="white" stroke="#374151" strokeWidth="1"
-          style={{ transform: `translate(${points[0].x - 2}px, ${points[0].y - 2}px)` }} />
-      </motion.g>
-    </svg>
+      <div className="mx-1 h-6 w-px bg-border" />
+      <div className="h-9 w-9 rounded-xl bg-surface-2/50" />
+    </div>
   );
 }
 
-function IllustrationNameCount() {
+/** `public/mock/floorplan-oslo.svg` viewBox — highlight geometry must match this space */
+const FLOOR_VB = { w: 1600, h: 720 } as const;
+
+/** SVG-space rect → CSS % inside a box with the same aspect ratio as the floor SVG */
+function svgRectToPct(x: number, y: number, width: number, height: number) {
+  const { w: vw, h: vh } = FLOOR_VB;
+  return {
+    left: `${(x / vw) * 100}%`,
+    top: `${(y / vh) * 100}%`,
+    width: `${(width / vw) * 100}%`,
+    height: `${(height / vh) * 100}%`,
+  } as const;
+}
+
+function svgPointToPct(cx: number, cy: number) {
+  const { w: vw, h: vh } = FLOOR_VB;
+  return { left: `${(cx / vw) * 100}%`, top: `${(cy / vh) * 100}%` } as const;
+}
+
+/** Adjacent rooms from SVG: 23 Annen leietager + 30 Trapp (share vertical wall at x=840) */
+const DEMO_GROUP_ROOM_A = { x: 560, y: 200, w: 280, h: 140 } as const;
+const DEMO_GROUP_ROOM_B = { x: 840, y: 200, w: 100, h: 140 } as const;
+const DEMO_GROUP_HULL  = { x: 560, y: 200, w: 380, h: 140 } as const;
+
+/** Single-room demo: Samtalerom forsterket (rect in SVG) */
+const DEMO_SINGLE_ROOM = { x: 220, y: 480, w: 130, h: 120 } as const;
+
+/** Stage width below this: stack guide card under highlights instead of beside */
+const CARD_BESIDE_STAGE_MIN_PX = 520;
+
+function FloorPlanStage({
+  children,
+  interactiveOverlay,
+}: {
+  children: React.ReactNode;
+  interactiveOverlay?: React.ReactNode;
+}) {
   return (
-    <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect x="40" y="30" width="130" height="130" rx="6" fill="rgba(10,79,110,0.08)" stroke="#0A4F6E" strokeWidth="1.5" />
-      <text x="105" y="100" textAnchor="middle" fontSize="10" fill="#0A4F6E" fontWeight="600">Conference A</text>
-      <motion.rect x="140" y="45" width="158" height="110" rx="10"
-        fill="white" stroke="#D0DDE6" strokeWidth="1.5"
-        style={{ filter: "drop-shadow(0 4px 16px rgba(10,79,110,0.12))" }}
-        initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.4, type: "spring", repeat: Infinity, repeatDelay: 2.5 }} />
-      <motion.rect x="152" y="72" width="134" height="22" rx="5"
-        fill="#F7F9FC" stroke="#D0DDE6" strokeWidth="1"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, repeat: Infinity, repeatDelay: 2.5 }} />
-      <motion.text x="162" y="87" fontSize="9" fill="#374151"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, repeat: Infinity, repeatDelay: 2.5 }}>
-        Conference A
-      </motion.text>
-      <motion.line x1="218" y1="76" x2="218" y2="90" stroke="#1A7FA8" strokeWidth="1.5"
-        animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-      <motion.rect x="152" y="102" width="50" height="14" rx="7" fill="#BFDBFE"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, repeat: Infinity, repeatDelay: 2.5 }} />
-      <motion.text x="177" y="113" textAnchor="middle" fontSize="8" fill="#1D4ED8"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, repeat: Infinity, repeatDelay: 2.5 }}>
-        Meeting
-      </motion.text>
-      <motion.rect x="152" y="126" width="134" height="22" rx="6" fill="#0A4F6E"
-        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.3, duration: 0.3, repeat: Infinity, repeatDelay: 2.5 }} />
-      <motion.text x="219" y="141" textAnchor="middle" fontSize="9" fill="white" fontWeight="600"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, repeat: Infinity, repeatDelay: 2.5 }}>
-        Start Room Counting →
-      </motion.text>
-    </svg>
+    <div
+      className={cn(
+        "relative w-full max-w-5xl rounded-2xl border border-white/20 shadow-xl",
+        interactiveOverlay ? "overflow-visible" : "overflow-hidden",
+      )}
+      style={{ aspectRatio: `${FLOOR_VB.w} / ${FLOOR_VB.h}` }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/mock/floorplan-oslo.svg"
+        alt=""
+        className="absolute inset-0 h-full w-full object-contain"
+        style={{ filter: "brightness(0.92) saturate(0.85)" }}
+      />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-t from-[#0A1929]/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">{children}</div>
+      {interactiveOverlay ? (
+        <div className="pointer-events-none absolute inset-0 z-30 overflow-visible">{interactiveOverlay}</div>
+      ) : null}
+    </div>
   );
 }
 
-function IllustrationGroupZones() {
+// ─── Floor demo: two rooms + grouping (step 4) ──────────────────────────────
+
+function FloorGroupDemo({ cardSlot }: { cardSlot: React.ReactNode }) {
+  const a    = svgRectToPct(DEMO_GROUP_ROOM_A.x, DEMO_GROUP_ROOM_A.y, DEMO_GROUP_ROOM_A.w, DEMO_GROUP_ROOM_A.h);
+  const b    = svgRectToPct(DEMO_GROUP_ROOM_B.x, DEMO_GROUP_ROOM_B.y, DEMO_GROUP_ROOM_B.w, DEMO_GROUP_ROOM_B.h);
+  const hull = svgRectToPct(DEMO_GROUP_HULL.x,  DEMO_GROUP_HULL.y,  DEMO_GROUP_HULL.w,  DEMO_GROUP_HULL.h);
+  const cxA  = DEMO_GROUP_ROOM_A.x + DEMO_GROUP_ROOM_A.w / 2;
+  const cxB  = DEMO_GROUP_ROOM_B.x + DEMO_GROUP_ROOM_B.w / 2;
+  const midY = DEMO_GROUP_ROOM_A.y + DEMO_GROUP_ROOM_A.h / 2;
+  const linkLeft  = cxA / FLOOR_VB.w;
+  const linkWidth = (cxB - cxA) / FLOOR_VB.w;
+
+  const hx = DEMO_GROUP_HULL.x;
+  const hy = DEMO_GROUP_HULL.y;
+  const hw = DEMO_GROUP_HULL.w;
+  const hh = DEMO_GROUP_HULL.h;
+  const hullCx = hx + hw / 2;
+  const hullCy = hy + hh / 2;
+
+  const stageWrapRef = useRef<HTMLDivElement>(null);
+  const [narrowStage, setNarrowStage] = useState(true);
+
+  useLayoutEffect(() => {
+    const el = stageWrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      setNarrowStage(el.getBoundingClientRect().width < CARD_BESIDE_STAGE_MIN_PX);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const cardAnchorStyle: React.CSSProperties = narrowStage
+    ? {
+        left: `${(hullCx / FLOOR_VB.w) * 100}%`,
+        top: `${((hy + hh + 8) / FLOOR_VB.h) * 100}%`,
+        transform: "translateX(-50%)",
+      }
+    : {
+        left: `${((hx + hw + 10) / FLOOR_VB.w) * 100}%`,
+        top: `${(hullCy / FLOOR_VB.h) * 100}%`,
+        transform: "translateY(-50%)",
+      };
+
   return (
-    <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <motion.rect x="50" y="35" width="95" height="110" rx="6" stroke="#374151" strokeWidth="1.5"
-        animate={{ fill: ["rgba(10,79,110,0.08)", "rgba(0,201,167,0.2)", "rgba(10,79,110,0.08)"] }}
-        transition={{ duration: 2, delay: 0.3, repeat: Infinity, repeatDelay: 1 }} />
-      <text x="98" y="97" textAnchor="middle" fontSize="10" fill="#374151" fontWeight="600">Conference A</text>
-      <motion.rect x="175" y="35" width="95" height="110" rx="6" stroke="#374151" strokeWidth="1.5"
-        animate={{ fill: ["rgba(10,79,110,0.08)", "rgba(0,201,167,0.2)", "rgba(10,79,110,0.08)"] }}
-        transition={{ duration: 2, delay: 0.5, repeat: Infinity, repeatDelay: 1 }} />
-      <text x="223" y="97" textAnchor="middle" fontSize="10" fill="#374151" fontWeight="600">Conference B</text>
-      <motion.rect x="35" y="22" width="250" height="136" rx="10"
-        stroke="#0F7663" strokeWidth="2" strokeDasharray="8 5" fill="transparent"
-        initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.8, repeat: Infinity, repeatDelay: 2 }} />
-      <motion.rect x="100" y="14" width="120" height="18" rx="9" fill="#0F7663"
-        initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.6, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2 }}
-        style={{ transformOrigin: "160px 23px" }} />
-      <motion.text x="160" y="26" textAnchor="middle" fontSize="9" fill="white" fontWeight="700"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, repeat: Infinity, repeatDelay: 2 }}>
-        Meeting Zone
-      </motion.text>
-    </svg>
+    <div className="relative flex h-full min-h-[280px] w-full flex-1 items-center justify-center p-6 pb-12 pt-6 md:p-10 md:pb-14">
+      <div ref={stageWrapRef} className="relative w-full max-w-5xl">
+        <FloorPlanStage
+          interactiveOverlay={
+            <div
+              className="pointer-events-auto absolute w-[min(22rem,calc(100%-0.75rem))] max-w-[calc(100vw-2rem)]"
+              style={cardAnchorStyle}
+            >
+              {cardSlot}
+            </div>
+          }
+        >
+          <motion.div
+            className="absolute box-border border-2 border-[#0A4F6E]/90 bg-[rgba(10,79,110,0.2)]"
+            style={{ ...a, borderRadius: 2 }}
+            animate={{
+              boxShadow: [
+                "0 0 0 0 rgba(0,201,167,0.35)",
+                "0 0 0 10px rgba(0,201,167,0)",
+                "0 0 0 0 rgba(0,201,167,0.35)",
+              ],
+            }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span
+            className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-[10px] font-bold leading-tight text-[#0A4F6E] drop-shadow-sm sm:text-[11px]"
+            style={svgPointToPct(cxA, DEMO_GROUP_ROOM_A.y + DEMO_GROUP_ROOM_A.h / 2)}
+          >
+            23 · Annen leietager
+          </span>
+
+          <motion.div
+            className="absolute box-border border-2 border-[#0A4F6E]/90 bg-[rgba(10,79,110,0.2)]"
+            style={{ ...b, borderRadius: 2 }}
+            animate={{
+              boxShadow: [
+                "0 0 0 0 rgba(0,201,167,0.35)",
+                "0 0 0 10px rgba(0,201,167,0)",
+                "0 0 0 0 rgba(0,201,167,0.35)",
+              ],
+            }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
+          />
+          <span
+            className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-[10px] font-bold leading-tight text-[#0A4F6E] drop-shadow-sm sm:text-[11px]"
+            style={svgPointToPct(cxB, DEMO_GROUP_ROOM_B.y + DEMO_GROUP_ROOM_B.h / 2)}
+          >
+            30 · Trapp
+          </span>
+
+          <motion.div
+            className="absolute box-border border-2 border-dashed border-[#0F7663] bg-[rgba(15,118,99,0.07)]"
+            style={{ ...hull, borderRadius: 3 }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: [0, 1, 1, 0.88, 1], scale: [0.98, 1, 1, 0.99, 1] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div
+            className="absolute flex justify-center"
+            style={{
+              left: `${((DEMO_GROUP_HULL.x + DEMO_GROUP_HULL.w / 2) / FLOOR_VB.w) * 100}%`,
+              top: `${((DEMO_GROUP_HULL.y - 8) / FLOOR_VB.h) * 100}%`,
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            <motion.div
+              className="rounded-full bg-[#0F7663] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white shadow-md sm:px-3 sm:text-[10px]"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: [0, 1, 1, 1, 0], y: [4, 0, 0, 0, 2] }}
+              transition={{ duration: 3, repeat: Infinity, times: [0, 0.12, 0.5, 0.85, 1] }}
+            >
+              Meeting zone
+            </motion.div>
+          </div>
+
+          <div
+            className="absolute h-[3px] sm:h-1"
+            style={{
+              left: `${linkLeft * 100}%`,
+              top: `${(midY / FLOOR_VB.h) * 100}%`,
+              width: `${linkWidth * 100}%`,
+              transform: "translateY(-50%)",
+            }}
+          >
+            <motion.div
+              className="h-full w-full origin-left rounded-full bg-accent"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: [0, 1, 1, 0], opacity: [0, 1, 0.85, 0] }}
+              transition={{ duration: 3, repeat: Infinity, times: [0, 0.2, 0.55, 0.75] }}
+            />
+          </div>
+        </FloorPlanStage>
+      </div>
+    </div>
   );
 }
 
-function IllustrationSingleZone() {
+// ─── Floor demo: single room zone (step 5) ───────────────────────────────────
+
+function FloorSingleRoomDemo({ cardSlot }: { cardSlot: React.ReactNode }) {
+  const { x, y, w, h } = DEMO_SINGLE_ROOM;
+  const room = svgRectToPct(x, y, w, h);
+  const pad  = 6;
+  const zone = svgRectToPct(x - pad, y - pad, w + pad * 2, h + pad * 2);
+  const cx   = x + w / 2;
+  const cy   = y + h / 2;
+
+  const stageWrapRef = useRef<HTMLDivElement>(null);
+  const [narrowStage, setNarrowStage] = useState(true);
+
+  useLayoutEffect(() => {
+    const el = stageWrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      setNarrowStage(el.getBoundingClientRect().width < CARD_BESIDE_STAGE_MIN_PX);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const cardAnchorStyle: React.CSSProperties = narrowStage
+    ? {
+        left: `${(cx / FLOOR_VB.w) * 100}%`,
+        top: `${((y + h + 8) / FLOOR_VB.h) * 100}%`,
+        transform: "translateX(-50%)",
+      }
+    : {
+        left: `${((x + w + 10) / FLOOR_VB.w) * 100}%`,
+        top: `${(cy / FLOOR_VB.h) * 100}%`,
+        transform: "translateY(-50%)",
+      };
+
   return (
-    <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect x="95" y="40" width="130" height="100" rx="6" stroke="#374151" strokeWidth="1.5" fill="rgba(10,79,110,0.08)" />
-      <text x="160" y="95" textAnchor="middle" fontSize="11" fill="#374151" fontWeight="600">Reception</text>
-      <motion.rect x="78" y="26" width="164" height="128" rx="10"
-        stroke="#8B5CF6" strokeWidth="2.5" strokeDasharray="7 5" fill="rgba(139,92,246,0.05)"
-        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-        transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }} />
-      <motion.rect x="115" y="19" width="90" height="16" rx="8" fill="#8B5CF6"
-        initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1, type: "spring", repeat: Infinity, repeatDelay: 2 }}
-        style={{ transformOrigin: "160px 27px" }} />
-      <motion.text x="160" y="30" textAnchor="middle" fontSize="8.5" fill="white" fontWeight="700"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, repeat: Infinity, repeatDelay: 2 }}>
-        Standalone Zone
-      </motion.text>
-      <motion.g
-        animate={{ x: [0, 50, 100, 100, 0, 0], y: [0, 0, 0, 50, 50, 0] }}
-        initial={{ x: 78, y: 154 }}
-        transition={{ duration: 3, ease: "linear", repeat: Infinity, repeatDelay: 0.5 }}>
-        <circle cx="78" cy="154" r="5" fill="#8B5CF6" opacity="0.7" />
-      </motion.g>
-    </svg>
+    <div className="relative flex h-full min-h-[280px] w-full flex-1 items-center justify-center p-6 pb-12 pt-6 md:p-10 md:pb-14">
+      <div ref={stageWrapRef} className="relative w-full max-w-5xl">
+        <FloorPlanStage
+          interactiveOverlay={
+            <div
+              className="pointer-events-auto absolute w-[min(22rem,calc(100%-0.75rem))] max-w-[calc(100vw-2rem)]"
+              style={cardAnchorStyle}
+            >
+              {cardSlot}
+            </div>
+          }
+        >
+          <motion.div
+            className="absolute box-border border-2 border-[#6D28D9]/90 bg-[rgba(109,40,217,0.12)]"
+            style={{ ...room, borderRadius: 2 }}
+            animate={{
+              borderColor: ["rgba(109,40,217,0.95)", "rgba(91,33,182,0.75)", "rgba(109,40,217,0.95)"],
+              boxShadow: [
+                "0 0 0 0 rgba(139,92,246,0.45)",
+                "0 0 0 10px rgba(139,92,246,0)",
+                "0 0 0 0 rgba(139,92,246,0.45)",
+              ],
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute box-border border-2 border-dashed border-violet-500 bg-[rgba(139,92,246,0.06)]"
+            style={{ ...zone, borderRadius: 3 }}
+            animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.008, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span
+            className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-[10px] font-bold leading-tight text-[#5B21B6] drop-shadow-sm sm:text-[11px]"
+            style={svgPointToPct(cx, cy)}
+          >
+            4 · Samtalerom
+          </span>
+        </FloorPlanStage>
+      </div>
+    </div>
   );
 }
 
-// ─── Step definitions — UNCHANGED ─────────────────────────────────────────────
+// ─── Step copy ───────────────────────────────────────────────────────────────
+
 interface GuideStep {
   id: number;
   title: string;
@@ -199,41 +414,103 @@ const steps: GuideStep[] = [
   {
     id: 1,
     title: "Welcome to Your Canvas!",
-    description: "We'll guide you step by step to create your first project. You'll learn how to mark rooms, group zones, and start counting — the core of AreaSim's workspace analysis.",
+    description:
+      "We'll guide you step by step to create your first project. You'll learn how to mark rooms, group zones, and start counting — the core of AreaSim's workspace analysis.",
     illustration: <IllustrationWelcome />,
     illustrationBg: "bg-gradient-to-br from-[#EEF3F8] to-[#E0ECF5]",
   },
   {
     id: 2,
     title: "Mark Rooms with the Pen Tool",
-    description: "Select the Draw Room tool in the floating toolbar. Click on the canvas to place polygon points — each click adds a corner. Double-click or click the first point to close the shape.",
-    illustration: <IllustrationDrawRoom />,
-    illustrationBg: "bg-gradient-to-br from-blue-50 to-indigo-50",
+    description:
+      "Select the Draw Room tool in the floating toolbar (bottom center). Click on the canvas to place polygon points — each click adds a corner. Double-click or click the first point to close the shape.",
+    illustration: null,
+    illustrationBg: "",
   },
   {
     id: 3,
     title: "Name & Count Each Room",
-    description: "Once you close a polygon, a modal appears. Give the room a name and category, set its seat capacity, then hit 'Start Room Counting' to go to the dedicated counting screen.",
-    illustration: <IllustrationNameCount />,
-    illustrationBg: "bg-gradient-to-br from-sky-50 to-blue-50",
+    description:
+      "Open the Rooms list from the header to name rooms, set categories, and track counting progress. After you close a polygon, you can also use the modal on the canvas to start room counting.",
+    illustration: null,
+    illustrationBg: "",
   },
   {
     id: 4,
     title: "Group Rooms into Zones",
-    description: "Select the Group tool, then click multiple room polygons to select them. A 'Group as Zone' bar appears — type a zone name and group them under a shared dashed boundary.",
-    illustration: <IllustrationGroupZones />,
-    illustrationBg: "bg-gradient-to-br from-teal-50 to-emerald-50",
+    description:
+      "Use the Group tool, select multiple room shapes, then name your zone. Selected rooms share a dashed boundary — here, rooms 23 and 30 on the Oslo sample plan.",
+    illustration: null,
+    illustrationBg: "",
   },
   {
     id: 5,
     title: "Single-Room Zones",
-    description: "A single room can also be its own zone. Use the Zone Draw tool to mark a standalone area — ideal for reception desks, server rooms, or any space that stands alone.",
-    illustration: <IllustrationSingleZone />,
-    illustrationBg: "bg-gradient-to-br from-violet-50 to-purple-50",
+    description:
+      "One room can be its own zone — ideal for reception, server rooms, or small meeting rooms. The highlight follows room 4 (Samtalerom) on this sample plan; your zone outline wraps that footprint.",
+    illustration: null,
+    illustrationBg: "",
   },
 ];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Guide card chrome (shared wrapper) ─────────────────────────────────────
+
+function GuideCardChrome({
+  step,
+  total,
+  onDot,
+  onSkip,
+  children,
+  compact,
+}: {
+  step: number;
+  total: number;
+  onDot: (i: number) => void;
+  onSkip: () => void;
+  children: React.ReactNode;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "pointer-events-auto overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl",
+        compact ? "max-w-sm" : "w-full max-w-2xl",
+      )}
+    >
+      <div className="flex items-center justify-between border-b border-[#E5EAF0] bg-white px-5 py-3">
+        <div className="hidden items-center gap-1.5 sm:flex">
+          {Array.from({ length: total }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => onDot(i)}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-300",
+                i === step ? "w-6 bg-[#5B21B6]" : i < step ? "w-2 bg-[#C4B5FD]" : "w-2 bg-[#D0DDE6]",
+              )}
+            />
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="font-body text-xs text-[#5C7A8A]">
+            {step + 1} / {total}
+          </span>
+          <button
+            type="button"
+            onClick={onSkip}
+            className="flex items-center gap-1.5 font-body text-sm text-[#5C7A8A] transition-colors hover:text-[#0D1B2A]"
+          >
+            <X size={14} /> Skip
+          </button>
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─── Page ───────────────────────────────────────────────────────────────────
+
 export default function CanvasGuidePage() {
   const router = useRouter();
   const params = useParams();
@@ -241,122 +518,192 @@ export default function CanvasGuidePage() {
   const [step, setStep] = useState(0);
   const current = steps[step];
   const isFirst = step === 0;
-  const isLast = step === steps.length - 1;
+  const isLast  = step === steps.length - 1;
 
   const goNext = () => {
     if (isLast) router.push(`/project/${projectId}/floor/floor-1`);
     else setStep((s) => s + 1);
   };
   const goPrev = () => setStep((s) => Math.max(0, s - 1));
-  const skip = () => router.push(`/project/${projectId}/floor/floor-1`);
+  const skip   = () => router.push(`/project/${projectId}/floor/floor-1`);
+
+  const navFooter = (
+    <div className="flex items-center justify-between px-7 py-5">
+      <div>
+        {!isFirst && (
+          <button
+            type="button"
+            onClick={goPrev}
+            className="flex items-center gap-1.5 font-body text-sm text-[#5C7A8A] transition-colors hover:text-[#0D1B2A]"
+          >
+            <ChevronLeft size={15} /> Back
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-1.5 sm:hidden">
+        {steps.map((_, i) => (
+          <div
+            key={i}
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-300",
+              i === step ? "w-5 bg-[#5B21B6]" : i < step ? "w-1.5 bg-[#C4B5FD]" : "w-1.5 bg-[#D0DDE6]",
+            )}
+          />
+        ))}
+      </div>
+      <motion.button
+        whileTap={{ scale: 0.96 }}
+        type="button"
+        onClick={goNext}
+        className="btn-3d flex items-center gap-2 rounded-full px-6 py-2.5 font-body text-sm font-semibold text-white"
+      >
+        {isLast ? "Start Annotating" : "Next"}
+        <ArrowRight size={15} />
+      </motion.button>
+    </div>
+  );
+
+  const bodyBlock = (
+    <div className="px-7 pt-5 pb-1">
+      <div className="mb-2 inline-flex rounded-full border border-[#D0DDE6] bg-[#F7F9FC] px-2.5 py-0.5 font-body text-[11px] font-semibold text-[#5C7A8A]">
+        Step {step + 1}
+      </div>
+      <h2
+        className="mb-2 text-xl font-bold text-[#0D1B2A]"
+        style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}
+      >
+        {current.title}
+      </h2>
+      <p className="mb-1 font-body text-sm leading-relaxed text-[#5C7A8A]">{current.description}</p>
+      {navFooter}
+    </div>
+  );
 
   return (
-    /* Full-screen overlay — canvas floor plan shows as blurred background */
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
-
-      {/* ── Blurred canvas background ── */}
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Background floor */}
       <div className="absolute inset-0">
-        {/* Floor plan image — fills screen, blurred */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/mock/floorplan-oslo.jpg"
+          src="/mock/floorplan-oslo.svg"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "blur(6px) brightness(0.55) saturate(0.7)", transform: "scale(1.05)" }}
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-[filter] duration-500",
+            step === 0 && "scale-105",
+            step === 0
+              ? "blur-md brightness-[0.5] saturate-[0.7]"
+              : "blur-[2px] brightness-[0.72] saturate-[0.8]",
+          )}
         />
-        {/* Extra dark tint so modal stands out */}
-        <div className="absolute inset-0 bg-[#0A1929]/60" />
+        <div className={cn("absolute inset-0", step === 0 ? "bg-[#0A1929]/60" : "bg-[#0A1929]/45")} />
       </div>
 
-      {/* ── Modal card ── */}
       <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 28, scale: 0.94 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -16, scale: 0.97 }}
-          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-          className="relative z-10 w-full max-w-2xl"
-        >
-          <div className="rounded-3xl border border-white/10 bg-white shadow-2xl overflow-hidden">
-
-            {/* ── Modal header (inside card) ── */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-[#E5EAF0] bg-white">
-              <Logo size="md" />
-              <div className="flex items-center gap-4">
-                {/* Step dot progress */}
-                <div className="hidden sm:flex items-center gap-1.5">
-                  {steps.map((_, i) => (
-                    <button key={i} onClick={() => setStep(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === step ? "w-6 bg-primary" : i < step ? "w-2 bg-accent" : "w-2 bg-[#D0DDE6]"
-                      }`} />
-                  ))}
+        {/* ── Step 1: centred modal ── */}
+        {step === 0 ? (
+          <motion.div
+            key="welcome"
+            initial={{ opacity: 0, y: 28, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.97 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            className="relative z-10 flex h-full items-center justify-center p-4"
+          >
+            <GuideCardChrome step={step} total={steps.length} onDot={setStep} onSkip={skip}>
+              <div
+                className={`${current.illustrationBg} relative overflow-hidden border-b border-[#D0DDE6]`}
+                style={{ height: "200px" }}
+              >
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  {current.illustration}
                 </div>
-                <span className="text-xs text-[#5C7A8A] font-body">{step + 1} / {steps.length}</span>
-                <button onClick={skip}
-                  className="flex items-center gap-1.5 text-sm text-[#5C7A8A] hover:text-[#0D1B2A] transition-colors font-body">
-                  <X size={14} /> Skip
-                </button>
-              </div>
-            </div>
-
-            {/* ── Illustration area ── */}
-            <div className={`${current.illustrationBg} border-b border-[#D0DDE6] relative overflow-hidden`}
-              style={{ height: "200px" }}>
-              <div className="absolute inset-0 flex items-center justify-center p-4">
-                {current.illustration}
-              </div>
-              {/* Step badge */}
-              <div className="absolute top-3 left-3 rounded-full bg-white/90 border border-[#D0DDE6] px-3 py-1 text-xs font-semibold text-[#5C7A8A] shadow-sm">
-                Step {step + 1}
-              </div>
-            </div>
-
-            {/* ── Content ── */}
-            <div className="px-7 py-5">
-              <h2 className="text-xl font-bold text-[#0D1B2A] mb-2"
-                style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
-                {current.title}
-              </h2>
-              <p className="text-sm text-[#5C7A8A] font-body leading-relaxed mb-5">
-                {current.description}
-              </p>
-
-              {/* Navigation */}
-              <div className="flex items-center justify-between">
-                <div>
-                  {!isFirst && (
-                    <button onClick={goPrev}
-                      className="flex items-center gap-1.5 text-sm text-[#5C7A8A] hover:text-[#0D1B2A] transition-colors font-body">
-                      <ChevronLeft size={15} /> Back
-                    </button>
-                  )}
+                <div className="absolute left-3 top-3 rounded-full border border-[#D0DDE6] bg-white/90 px-3 py-1 text-xs font-semibold text-[#5C7A8A] shadow-sm">
+                  Step 1
                 </div>
-
-                {/* Mobile dots */}
-                <div className="flex sm:hidden items-center gap-1.5">
-                  {steps.map((_, i) => (
-                    <div key={i}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === step ? "w-5 bg-primary" : i < step ? "w-1.5 bg-accent" : "w-1.5 bg-[#D0DDE6]"
-                      }`} />
-                  ))}
-                </div>
-
-                <motion.button
-                  whileTap={{ scale: 0.96 }}
-                  onClick={goNext}
-                  className="flex items-center gap-2 rounded-xl bg-primary hover:bg-primary-light text-white font-medium px-6 py-2.5 text-sm font-body transition-all hover:-translate-y-0.5 active:scale-95 shadow-md shadow-primary/25"
-                >
-                  {isLast ? "Start Annotating" : "Next"}
-                  <ArrowRight size={15} />
-                </motion.button>
               </div>
-            </div>
+              {bodyBlock}
+            </GuideCardChrome>
+          </motion.div>
+        ) : (
+          /* ── Steps 2-5: anchored-to-context layout ── */
+          <motion.div
+            key={`anchored-${step}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="relative z-10 flex h-full flex-col"
+          >
+            {/* Step 3: mock header with Rooms list button */}
+            {step === 2 && (
+              <header className="relative z-30 flex shrink-0 items-center justify-end border-b border-[#E5EAF0]/80 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur-sm">
+                <div className="relative">
+                  <motion.div
+                    aria-hidden
+                    className="pointer-events-none flex items-center gap-2 rounded-xl border border-primary bg-primary px-3 py-2 font-body text-sm font-medium text-white shadow-md"
+                    animate={{ boxShadow: ["0 0 0 0 rgba(26,127,168,0.45)", "0 0 0 10px rgba(26,127,168,0)"] }}
+                    transition={{ duration: 1.6, repeat: Infinity }}
+                  >
+                    <SlidersHorizontal size={14} />
+                    <span className="hidden sm:inline">Rooms list</span>
+                  </motion.div>
 
-          </div>
-        </motion.div>
+                  <div className="absolute right-0 top-full z-40 mt-3 w-[min(calc(100vw-2rem),22rem)] sm:w-80">
+                    <GuideCardChrome step={step} total={steps.length} onDot={setStep} onSkip={skip} compact>
+                      {bodyBlock}
+                    </GuideCardChrome>
+                  </div>
+                </div>
+              </header>
+            )}
+
+            <div className={cn("relative flex min-h-0 flex-1 flex-col", step === 2 && "z-0")}>
+              {/* Step 4: floor group demo */}
+              {step === 3 && (
+                <FloorGroupDemo
+                  cardSlot={
+                    <GuideCardChrome step={step} total={steps.length} onDot={setStep} onSkip={skip} compact>
+                      {bodyBlock}
+                    </GuideCardChrome>
+                  }
+                />
+              )}
+
+              {/* Step 5: single-room zone demo */}
+              {step === 4 && (
+                <FloorSingleRoomDemo
+                  cardSlot={
+                    <GuideCardChrome step={step} total={steps.length} onDot={setStep} onSkip={skip} compact>
+                      {bodyBlock}
+                    </GuideCardChrome>
+                  }
+                />
+              )}
+
+              {/* Step 2: toolbar at bottom centre, card above it */}
+              {step === 1 && (
+                <div className="pointer-events-none flex flex-1 flex-col items-center justify-end px-3 pb-6 md:px-6 md:pb-10">
+                  <div className="flex max-w-full flex-col-reverse items-center gap-4 sm:flex-row sm:items-end sm:justify-center sm:gap-5">
+                    <div className="relative shrink-0">
+                      <MockFloatingToolbar highlightPen />
+                      <p className="mt-2 text-center font-body text-[11px] text-white/85">
+                        Draw tool <span className="text-accent">(P)</span>
+                      </p>
+                    </div>
+                    <div className="w-[min(calc(100vw-2rem),22rem)] shrink-0 sm:mb-1 sm:max-w-sm">
+                      <GuideCardChrome step={step} total={steps.length} onDot={setStep} onSkip={skip} compact>
+                        {bodyBlock}
+                      </GuideCardChrome>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: filler behind the anchored header card */}
+              {step === 2 && <div className="pointer-events-none flex-1" />}
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

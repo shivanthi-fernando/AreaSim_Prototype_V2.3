@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  useEffect, useRef, useState, useCallback
+  useEffect, useRef, useState, useCallback, useMemo
 } from "react";
-import { Stage, Layer, Image as KImage, Line, Text, Group, Rect } from "react-konva";
+import { Stage, Layer, Image as KImage, Line, Text, Group, Rect, Transformer } from "react-konva";
 import Konva from "konva";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -14,6 +14,7 @@ import {
 import { useCanvasStore } from "@/store/canvas";
 import { Room, ZONE_COLORS } from "@/lib/mockData";
 import { RoomModal } from "./RoomModal";
+import { GuideOverlay, GUIDE_TOTAL, guideStepAboveToolbar } from "./GuideOverlay";
 import useImage from "use-image";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +41,7 @@ const TOOLS: { id: Tool; icon: typeof MousePointer2; label: string; shortcut: st
 interface FloorCanvasProps {
   floorId: string;
   imageUrl: string;
-  onOpenGuide: () => void;
+  onOpenGuide?: () => void;
 }
 
 function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {
@@ -56,10 +57,12 @@ function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {
   return size;
 }
 
-export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps) {
+export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bgImageRef = useRef<Konva.Image>(null);
+  const bgTransformerRef = useRef<Konva.Transformer>(null);
   const { width, height } = useContainerSize(containerRef as React.RefObject<HTMLDivElement>);
 
   const {
@@ -76,6 +79,33 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
   const activeImageUrl = customImageUrl ?? imageUrl;
   const [bgImage] = useImage(activeImageUrl);
 
+  // Image resize state (screen-pixel bounds; null = auto-fit)
+  const [customImgBounds, setCustomImgBounds] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [bgImgSelected, setBgImgSelected] = useState(false);
+
+  // Reset custom bounds when the source image changes
+  const prevActiveImageUrl = useRef(activeImageUrl);
+  useEffect(() => {
+    if (activeImageUrl !== prevActiveImageUrl.current) {
+      setCustomImgBounds(null);
+      setBgImgSelected(false);
+      prevActiveImageUrl.current = activeImageUrl;
+    }
+  }, [activeImageUrl]);
+
+  // Attach / detach Transformer
+  useEffect(() => {
+    const tr = bgTransformerRef.current;
+    const img = bgImageRef.current;
+    if (!tr) return;
+    if (bgImgSelected && img) {
+      tr.nodes([img]);
+    } else {
+      tr.nodes([]);
+    }
+    tr.getLayer()?.batchDraw();
+  }, [bgImgSelected]);
+
   const [drawStart, setDrawStart] = useState<{ x: number; y: number } | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDrawing, setIsDrawing] = useState(false);
@@ -87,6 +117,10 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
   const [groupName, setGroupName] = useState("");
   const [showGroupBar, setShowGroupBar] = useState(false);
   const [uploadHint, setUploadHint] = useState(false);
+
+  // Inline guide state
+  const [showGuide, setShowGuide] = useState(false);
+  const [guideStep, setGuideStep] = useState(0);
 
   useEffect(() => {
     setShowGroupBar(activeTool === "group" && selectedRoomIds.length >= 2);
@@ -100,6 +134,24 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
     setHistoryIdx((i) => i - 1);
   };
 
+  // Auto-fit image bounds (screen pixels)
+  const autoFitBounds = useMemo(() => {
+    if (!bgImage || !width || !height) return { x: 0, y: 0, w: width || 800, h: height || 600 };
+    // Cover: scale so the image fills the full canvas (may overflow one axis)
+    const ratio = Math.max(width / bgImage.width, height / bgImage.height);
+    const w = bgImage.width * ratio;
+    const h = bgImage.height * ratio;
+    return { x: (width - w) / 2, y: (height - h) / 2, w, h };
+  }, [bgImage, width, height]);
+
+  // Effective bounds
+  const eff = customImgBounds ?? autoFitBounds;
+  const effScaleX = bgImage ? eff.w / bgImage.width : 1;
+  const effScaleY = bgImage ? eff.h / bgImage.height : 1;
+
+  const scaledPoints = (pts: number[]) =>
+    pts.map((v, i) => (i % 2 === 0 ? v * effScaleX + eff.x : v * effScaleY + eff.y));
+
   const getPointerPos = () => {
     const stage = stageRef.current;
     if (!stage) return { x: 0, y: 0 };
@@ -112,6 +164,7 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
   };
 
   const handleCanvasMouseDown = () => {
+    setBgImgSelected(false);
     if (activeTool !== "pen") return;
     const pos = getPointerPos();
     setDrawStart(pos);
@@ -191,7 +244,6 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
   const zoom = (delta: number) => setScale((s) => Math.min(4, Math.max(0.3, s + delta)));
   const resetZoom = () => { setScale(1); setOffset({ x: 0, y: 0 }); };
 
-  // Handle floor plan image upload
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -205,27 +257,21 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
     e.target.value = "";
   };
 
-  // Scale floor plan image to fill canvas
-  let imgW = width, imgH = height;
-  if (bgImage) {
-    const ratio = Math.min(width / bgImage.width, height / bgImage.height);
-    imgW = bgImage.width * ratio;
-    imgH = bgImage.height * ratio;
-  }
-  const imgOffX = (width - imgW) / 2;
-  const imgOffY = (height - imgH) / 2;
-
-  const scaleX = bgImage ? imgW / bgImage.width : 1;
-  const scaleY = bgImage ? imgH / bgImage.height : 1;
-
-  const scaledPoints = (pts: number[]) =>
-    pts.map((v, i) => (i % 2 === 0 ? v * scaleX + imgOffX : v * scaleY + imgOffY));
-
   const getCursor = () => {
     if (activeTool === "pen") return "crosshair";
     if (activeTool === "eraser") return "cell";
     return "default";
   };
+
+  // Guide helpers
+  const handleGuideNext = () => {
+    if (guideStep >= GUIDE_TOTAL - 1) { setShowGuide(false); setGuideStep(0); }
+    else setGuideStep(s => s + 1);
+  };
+  const handleGuideBack = () => setGuideStep(s => Math.max(0, s - 1));
+  const handleGuideClose = () => { setShowGuide(false); setGuideStep(0); };
+
+  const toolbarGlowing = showGuide && guideStepAboveToolbar(guideStep);
 
   return (
     <div className="relative flex flex-col h-full bg-surface-2">
@@ -255,20 +301,36 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
           onMouseUp={handleCanvasMouseUp}
         >
           <Layer>
-            {/* Floor plan image */}
+            {/* Floor plan image — draggable + resizable */}
             {bgImage && (
               <KImage
+                ref={bgImageRef}
                 image={bgImage}
-                x={imgOffX / scale}
-                y={imgOffY / scale}
-                width={imgW / scale}
-                height={imgH / scale}
+                x={eff.x / scale}
+                y={eff.y / scale}
+                width={eff.w / scale}
+                height={eff.h / scale}
+                draggable
+                onClick={(e) => { e.cancelBubble = true; setBgImgSelected(true); }}
+                onDragEnd={(e) => {
+                  setCustomImgBounds({ x: e.target.x() * scale, y: e.target.y() * scale, w: eff.w, h: eff.h });
+                }}
+                onTransformEnd={() => {
+                  const node = bgImageRef.current;
+                  if (!node) return;
+                  const newW = node.width() * node.scaleX() * scale;
+                  const newH = node.height() * node.scaleY() * scale;
+                  setCustomImgBounds({ x: node.x() * scale, y: node.y() * scale, w: newW, h: newH });
+                  node.scaleX(1);
+                  node.scaleY(1);
+                  node.width(newW / scale);
+                  node.height(newH / scale);
+                }}
               />
             )}
 
-            {/* Existing rooms — draggable in select mode */}
+            {/* Existing rooms */}
             {rooms.map((room) => {
-              // Skip stub rooms (AI-detected but not yet drawn)
               if (room.points.length === 0) return null;
               const pts = scaledPoints(room.points).map((v) => v / scale);
               const isSelected = selectedRoomIds.includes(room.id);
@@ -282,11 +344,10 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
                   draggable={activeTool === "select"}
                   onClick={() => handleRoomClick(room)}
                   onDragEnd={(e) => {
-                    // Convert Konva-stage drag offset to original SVG/image coords
                     const gx = e.target.x();
                     const gy = e.target.y();
-                    const dx = gx * scale / (scaleX || 1);
-                    const dy = gy * scale / (scaleY || 1);
+                    const dx = gx * scale / (effScaleX || 1);
+                    const dy = gy * scale / (effScaleY || 1);
                     updateRoomPoints(floorId, room.id, dx, dy);
                     e.target.position({ x: 0, y: 0 });
                   }}
@@ -378,6 +439,15 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
                 listening={false}
               />
             )}
+
+            {/* Image resize transformer */}
+            <Transformer
+              ref={bgTransformerRef}
+              rotateEnabled={false}
+              boundBoxFunc={(oldBox, newBox) =>
+                newBox.width < 60 || newBox.height < 60 ? oldBox : newBox
+              }
+            />
           </Layer>
         </Stage>
 
@@ -461,12 +531,22 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
           )}
         </AnimatePresence>
 
-        {/* ── Figma-style Floating Toolbar ─────────────────────────────── */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/15 px-2 py-1.5">
-
+        {/* ── Floating Toolbar ─────────────────────────────── */}
+        <motion.div
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/15 px-2 py-1.5"
+          animate={toolbarGlowing
+            ? { boxShadow: ["0 4px 24px rgba(112,95,178,0)", "0 4px 24px rgba(146,133,202,0.45)", "0 4px 24px rgba(112,95,178,0)"] }
+            : { boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }
+          }
+          transition={{ duration: 1.8, repeat: toolbarGlowing ? Infinity : 0 }}
+        >
           {/* Tools */}
           {TOOLS.map(({ id, icon: Icon, label, shortcut }) => {
             const active = activeTool === id;
+            const isHighlighted = showGuide && (
+              (guideStep === 1 && id === "pen") ||
+              (guideStep === 3 && id === "group")
+            );
             return (
               <motion.button
                 key={id}
@@ -481,6 +561,14 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
                 )}
               >
                 <Icon size={17} />
+                {/* Pulse ring for guide highlight */}
+                {isHighlighted && (
+                  <motion.span
+                    className="absolute inset-0 rounded-xl border-2 border-[#9285CA] pointer-events-none"
+                    animate={{ opacity: [0.3, 1, 0.3], scale: [0.95, 1.05, 0.95] }}
+                    transition={{ duration: 1.4, repeat: Infinity }}
+                  />
+                )}
                 {/* Tooltip */}
                 <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg border border-border bg-surface px-2 py-1 text-xs font-body text-text shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
                   {label}
@@ -490,47 +578,38 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
             );
           })}
 
-          {/* Separator */}
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Zoom out */}
           <button onClick={() => zoom(-0.15)} title="Zoom out"
             className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-all">
             <ZoomOut size={15} />
           </button>
 
-          {/* Zoom % */}
           <button onClick={resetZoom} title="Reset zoom"
             className="h-9 px-2 rounded-xl flex items-center justify-center text-xs font-mono text-text-muted hover:text-text hover:bg-surface-2 transition-all min-w-[44px]"
             style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
             {Math.round(scale * 100)}%
           </button>
 
-          {/* Zoom in */}
           <button onClick={() => zoom(0.15)} title="Zoom in"
             className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-all">
             <ZoomIn size={15} />
           </button>
 
-          {/* Separator */}
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Undo */}
           <button onClick={undo} title="Undo"
             className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-all">
             <Undo2 size={15} />
           </button>
 
-          {/* Redo */}
           <button title="Redo"
             className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-all">
             <Redo2 size={15} />
           </button>
 
-          {/* Separator */}
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Upload floor plan */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => fileInputRef.current?.click()}
@@ -542,12 +621,29 @@ export function FloorCanvas({ floorId, imageUrl, onOpenGuide }: FloorCanvasProps
             <Upload size={15} />
           </motion.button>
 
-          {/* Help */}
-          <button onClick={onOpenGuide} title="Open guide"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-all">
+          <button
+            onClick={() => { setGuideStep(0); setShowGuide(true); }}
+            title="Open guide"
+            className={cn(
+              "w-9 h-9 rounded-xl flex items-center justify-center transition-all",
+              showGuide ? "text-[#9285CA] bg-[#F0EEFF]" : "text-text-muted hover:text-text hover:bg-surface-2"
+            )}
+          >
             <HelpCircle size={15} />
           </button>
-        </div>
+        </motion.div>
+
+        {/* Inline guide overlay */}
+        <AnimatePresence>
+          {showGuide && (
+            <GuideOverlay
+              step={guideStep}
+              onNext={handleGuideNext}
+              onBack={handleGuideBack}
+              onClose={handleGuideClose}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

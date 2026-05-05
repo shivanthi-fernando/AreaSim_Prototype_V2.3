@@ -119,18 +119,15 @@ export default function FloorPage() {
           </Button>
 
           {allCounted && (
-            <button
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Gem size={14} />}
               onClick={() => setCompletionModal(true)}
-              className="relative flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold font-body transition-all hover:opacity-90"
-              style={{
-                background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-                boxShadow: "0 0 0 1.5px #F59E0B40, 0 2px 8px rgba(245,158,11,0.3)",
-                color: "white",
-              }}
+              className="h-10 py-2 px-4"
             >
-              <Gem size={14} className="shrink-0" />
               <span className="hidden sm:inline">Room Program</span>
-            </button>
+            </Button>
           )}
 
           <LanguageSelector />
@@ -138,10 +135,11 @@ export default function FloorPage() {
           {/* User avatar */}
           <button
             onClick={() => router.push("/settings")}
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white shrink-0 hover:opacity-80 transition-opacity"
+            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 hover:opacity-80 transition-opacity"
+            style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
             title="Settings"
           >
-            <User size={14} />
+            <User size={14} color="#139485" />
           </button>
         </div>
       </header>
@@ -157,8 +155,7 @@ export default function FloorPage() {
 
           <FloorCanvas
             floorId={floorId}
-            imageUrl={activeFloor?.imageUrl ?? "/mock/floorplan-oslo.svg"}
-            onOpenGuide={() => router.push(`/project/${projectId}/canvas/guide`)}
+            imageUrl={activeFloor?.imageUrl ?? "/buerogrundriss.png"}
           />
         </div>
 
