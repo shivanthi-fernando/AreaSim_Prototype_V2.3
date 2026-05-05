@@ -116,7 +116,7 @@ export const mockProject: Project = {
       id: "floor-1",
       name: "Ground Floor",
       level: "Ground",
-      imageUrl: "/buerogrundriss.png",
+      imageUrl: "/mock/floorplan-oslo.svg",
       rooms: [
         { id: "r1", name: "Conference Room A", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 45, verified: false },
         { id: "r2", name: "Conference Room B", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 32, verified: false },
@@ -140,7 +140,7 @@ export const mockProject: Project = {
       id: "floor-2",
       name: "1st Floor",
       level: "1st",
-      imageUrl: "/buerogrundriss.png",
+      imageUrl: "/mock/floorplan-oslo.svg",
       rooms: [
         { id: "r1-1", name: "Staff Training Room", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 65, verified: false },
         { id: "r1-2", name: "Simulation Lab", points: [], status: "unvisited", countHistory: [], currentCount: 0, sqm: 80, verified: false },
@@ -160,7 +160,7 @@ export const mockProject: Project = {
       id: "floor-3",
       name: "2nd Floor",
       level: "2nd",
-      imageUrl: "/buerogrundriss.png",
+      imageUrl: "/mock/floorplan-oslo.svg",
       rooms: [],
       zones: [],
       detectedRooms: FLOOR2_DETECTED,

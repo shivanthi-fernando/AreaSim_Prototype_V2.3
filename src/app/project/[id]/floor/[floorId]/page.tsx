@@ -155,7 +155,7 @@ export default function FloorPage() {
 
           <FloorCanvas
             floorId={floorId}
-            imageUrl={activeFloor?.imageUrl ?? "/buerogrundriss.png"}
+            imageUrl={activeFloor?.imageUrl ?? "/mock/floorplan-oslo.svg"}
           />
         </div>
 

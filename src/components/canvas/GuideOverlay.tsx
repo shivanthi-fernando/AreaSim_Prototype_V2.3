@@ -116,30 +116,42 @@ const STEPS = [
     title: "Welcome to AreaSim",
     description: "Map your floor plan, draw rooms, count people, and generate area programs — all in one place.",
     aboveToolbar: false,
+    cardLeft: undefined as string | undefined,
+    arrowLeftPx: undefined as number | undefined,
     Illustration: WelcomeIllustration,
   },
   {
     title: "Draw Rooms",
     description: "Select the Pen tool below, then drag on the floor plan to outline a room.",
     aboveToolbar: true,
+    // Shifts card so arrow at 58px from card-left lands on the Pen button
+    // (toolbar is centered; pen button is ~184px left of screen center)
+    cardLeft: "max(8px, calc(50% - 242px))" as string | undefined,
+    arrowLeftPx: 58 as number | undefined,
     Illustration: DrawRoomIllustration,
   },
   {
     title: "Name & Count",
     description: "Tap any drawn room to give it a name and record the occupant count.",
     aboveToolbar: false,
+    cardLeft: undefined as string | undefined,
+    arrowLeftPx: undefined as number | undefined,
     Illustration: NameCountIllustration,
   },
   {
     title: "Group into Zones",
     description: "Use the Group tool below to select multiple rooms and bundle them into a named zone.",
     aboveToolbar: true,
+    cardLeft: undefined as string | undefined,
+    arrowLeftPx: undefined as number | undefined,
     Illustration: GroupZonesIllustration,
   },
   {
     title: "You're all set!",
     description: "When all rooms are counted, tap Room Program to generate your area report.",
     aboveToolbar: false,
+    cardLeft: undefined as string | undefined,
+    arrowLeftPx: undefined as number | undefined,
     Illustration: DoneIllustration,
   },
 ];
@@ -228,10 +240,15 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       {/* CSS arrow pointing down to toolbar */}
       {current.aboveToolbar && (
         <div
-          className="absolute left-1/2 -translate-x-1/2"
-          style={{ bottom: -9, width: 0, height: 0,
+          style={{
+            position: "absolute",
+            bottom: -9,
+            left: current.arrowLeftPx !== undefined ? current.arrowLeftPx : "50%",
+            transform: current.arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
+            width: 0, height: 0,
             borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-            borderTop: "9px solid #E5EAF0" }}
+            borderTop: "9px solid #E5EAF0",
+          }}
         >
           <div style={{ position: "absolute", top: -8, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
@@ -244,7 +261,10 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
 
   if (current.aboveToolbar) {
     return (
-      <div className="absolute bottom-[76px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+      <div
+        className="absolute bottom-[76px] z-50 pointer-events-auto"
+        style={{ left: current.cardLeft ?? "50%", transform: current.cardLeft ? "none" : "translateX(-50%)" }}
+      >
         <AnimatePresence mode="wait">{card}</AnimatePresence>
       </div>
     );
@@ -253,7 +273,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
       <motion.div
-        className="absolute inset-0 bg-black/15 pointer-events-auto"
+        className="absolute inset-0 bg-black/50 pointer-events-auto"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose}
       />
