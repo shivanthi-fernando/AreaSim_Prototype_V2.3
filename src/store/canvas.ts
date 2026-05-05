@@ -197,6 +197,6 @@ export const useCanvasStore = create<CanvasState>()(
         return ZONE_COLORS[used % ZONE_COLORS.length];
       },
     }),
-    { name: "areasim-canvas" }
+    { name: "areasim-canvas-v2" }
   )
 );
