@@ -334,203 +334,12 @@ function _CreateProjectPanel() {
 function CityIllusPanel() {
   return (
     <div className="relative w-full h-full flex flex-col justify-end" style={{ background: "linear-gradient(160deg, #EBF7F2 0%, #DFF0E8 60%, #D5EBE0 100%)", minHeight: 480 }}>
-      <svg viewBox="0 0 560 540" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full" style={{ objectFit: "cover" }}>
-        <defs>
-          <linearGradient id="ci-skyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#EBF7F2"/>
-            <stop offset="100%" stopColor="#DFF0E8"/>
-          </linearGradient>
-          <linearGradient id="ci-groundGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#C8E8D8"/>
-            <stop offset="100%" stopColor="#B8DED0"/>
-          </linearGradient>
-          <radialGradient id="ci-glow1" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#139485" stopOpacity=".15"/>
-            <stop offset="100%" stopColor="#139485" stopOpacity="0"/>
-          </radialGradient>
-          <radialGradient id="ci-glow2" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#1BA896" stopOpacity=".12"/>
-            <stop offset="100%" stopColor="#1BA896" stopOpacity="0"/>
-          </radialGradient>
-          <radialGradient id="ci-glow3" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#6D5FAD" stopOpacity=".1"/>
-            <stop offset="100%" stopColor="#6D5FAD" stopOpacity="0"/>
-          </radialGradient>
-          <filter id="ci-blur4"><feGaussianBlur stdDeviation="4"/></filter>
-          <filter id="ci-blur2"><feGaussianBlur stdDeviation="2"/></filter>
-        </defs>
-
-        <rect width="560" height="480" fill="url(#ci-skyGrad)"/>
-        <rect x="0" y="340" width="560" height="140" fill="url(#ci-groundGrad)"/>
-        <line x1="0" y1="342" x2="560" y2="342" stroke="rgba(19,148,133,.15)" strokeWidth="1"/>
-
-        {/* Road */}
-        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#B8D0C0" strokeWidth="36"/>
-        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#C4D8CC" strokeWidth="32"/>
-        <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="rgba(19,148,133,.3)" strokeWidth="1.5" strokeDasharray="22 14"/>
-        <path d="M -20,366 C 80,356 140,346 200,341 S 320,336 400,331 S 510,326 580,321" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1"/>
-        <path d="M -20,394 C 80,384 140,374 200,369 S 320,364 400,359 S 510,354 580,349" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1"/>
-
-        {/* Glow pools */}
-        <ellipse cx="110" cy="340" rx="70" ry="25" fill="url(#ci-glow1)" filter="url(#ci-blur4)"/>
-        <ellipse cx="290" cy="335" rx="80" ry="22" fill="url(#ci-glow2)" filter="url(#ci-blur4)"/>
-        <ellipse cx="450" cy="335" rx="65" ry="20" fill="url(#ci-glow3)" filter="url(#ci-blur4)"/>
-
-        {/* Building Group 1 */}
-        <rect x="34" y="210" width="52" height="130" fill="#A8D4BC" rx="2"/>
-        <rect x="34" y="210" width="52" height="4" fill="#5BAA7A" rx="1"/>
-        <g fill="rgba(56,134,94,.35)">
-          <rect x="41" y="220" width="10" height="13" rx="1"/><rect x="57" y="220" width="10" height="13" rx="1"/><rect x="73" y="220" width="7" height="13" rx="1"/>
-          <rect x="41" y="240" width="10" height="13" rx="1"/><rect x="57" y="240" width="10" height="13" rx="1"/><rect x="73" y="240" width="7" height="13" rx="1"/>
-          <rect x="41" y="260" width="10" height="13" rx="1"/><rect x="57" y="260" width="10" height="13" rx="1"/><rect x="73" y="260" width="7" height="13" rx="1"/>
-          <rect x="41" y="280" width="10" height="13" rx="1"/><rect x="57" y="280" width="10" height="13" rx="1"/><rect x="73" y="280" width="7" height="13" rx="1"/>
-          <rect x="41" y="300" width="10" height="13" rx="1"/><rect x="57" y="300" width="10" height="13" rx="1"/>
-        </g>
-        <rect x="73" y="260" width="7" height="13" rx="1" fill="#139485" opacity=".5"/>
-        <rect x="41" y="280" width="10" height="13" rx="1" fill="#139485" opacity=".4"/>
-        <rect x="92" y="255" width="36" height="85" fill="#B8DCCB" rx="2"/>
-        <rect x="92" y="255" width="36" height="3" fill="#5BAA7A"/>
-        <g fill="rgba(56,134,94,.3)">
-          <rect x="98" y="264" width="8" height="10" rx="1"/><rect x="112" y="264" width="8" height="10" rx="1"/>
-          <rect x="98" y="282" width="8" height="10" rx="1"/><rect x="112" y="282" width="8" height="10" rx="1"/>
-          <rect x="98" y="300" width="8" height="10" rx="1"/><rect x="112" y="300" width="8" height="10" rx="1"/>
-        </g>
-        <rect x="50" y="315" width="20" height="25" rx="10" fill="#8CC4A8"/>
-
-        {/* Building Group 2: Amber */}
-        <rect x="152" y="165" width="44" height="175" fill="#F0DFB8" rx="2"/>
-        <rect x="152" y="165" width="44" height="4" fill="#D4920A" rx="1"/>
-        <g fill="rgba(176,110,10,.35)">
-          <rect x="158" y="175" width="9" height="12" rx="1"/><rect x="172" y="175" width="9" height="12" rx="1"/><rect x="183" y="175" width="7" height="12" rx="1"/>
-          <rect x="158" y="195" width="9" height="12" rx="1"/><rect x="172" y="195" width="9" height="12" rx="1"/><rect x="183" y="195" width="7" height="12" rx="1"/>
-          <rect x="158" y="215" width="9" height="12" rx="1"/><rect x="172" y="215" width="9" height="12" rx="1"/>
-          <rect x="158" y="235" width="9" height="12" rx="1"/><rect x="172" y="235" width="9" height="12" rx="1"/>
-          <rect x="158" y="255" width="9" height="12" rx="1"/><rect x="172" y="255" width="9" height="12" rx="1"/>
-          <rect x="158" y="275" width="9" height="12" rx="1"/><rect x="172" y="275" width="9" height="12" rx="1"/>
-          <rect x="158" y="295" width="9" height="12" rx="1"/><rect x="172" y="295" width="9" height="12" rx="1"/>
-          <rect x="158" y="315" width="9" height="12" rx="1"/><rect x="172" y="315" width="9" height="12" rx="1"/>
-        </g>
-        <rect x="183" y="195" width="7" height="12" rx="1" fill="#B06E0A" opacity=".5"/>
-        <rect x="158" y="235" width="9" height="12" rx="1" fill="#B06E0A" opacity=".4"/>
-        <line x1="174" y1="165" x2="174" y2="148" stroke="#D4920A" strokeWidth="1.5"/>
-        <circle cx="174" cy="146" r="3" fill="#D4920A" opacity=".8"/>
-
-        {/* Building Group 2b: Blue */}
-        <rect x="200" y="250" width="34" height="90" fill="#C0D5F0" rx="2"/>
-        <rect x="200" y="250" width="34" height="3" fill="#3A6FB5" rx="1"/>
-        <g fill="rgba(58,111,181,.35)">
-          <rect x="206" y="260" width="8" height="10" rx="1"/><rect x="219" y="260" width="8" height="10" rx="1"/>
-          <rect x="206" y="278" width="8" height="10" rx="1"/><rect x="219" y="278" width="8" height="10" rx="1"/>
-          <rect x="206" y="296" width="8" height="10" rx="1"/><rect x="219" y="296" width="8" height="10" rx="1"/>
-          <rect x="206" y="314" width="8" height="10" rx="1"/><rect x="219" y="314" width="8" height="10" rx="1"/>
-        </g>
-        <rect x="219" y="278" width="8" height="10" rx="1" fill="#3A6FB5" opacity=".5"/>
-
-        {/* Building Group 3: Orange tower */}
-        <rect x="264" y="135" width="56" height="205" fill="#F0DFB8" rx="2"/>
-        <rect x="264" y="135" width="56" height="5" fill="#D4920A" rx="1"/>
-        <g fill="rgba(176,110,10,.3)">
-          <rect x="272" y="148" width="10" height="14" rx="1"/><rect x="288" y="148" width="10" height="14" rx="1"/><rect x="304" y="148" width="9" height="14" rx="1"/>
-          <rect x="272" y="170" width="10" height="14" rx="1"/><rect x="288" y="170" width="10" height="14" rx="1"/><rect x="304" y="170" width="9" height="14" rx="1"/>
-          <rect x="272" y="192" width="10" height="14" rx="1"/><rect x="288" y="192" width="10" height="14" rx="1"/><rect x="304" y="192" width="9" height="14" rx="1"/>
-          <rect x="272" y="214" width="10" height="14" rx="1"/><rect x="288" y="214" width="10" height="14" rx="1"/><rect x="304" y="214" width="9" height="14" rx="1"/>
-          <rect x="272" y="236" width="10" height="14" rx="1"/><rect x="288" y="236" width="10" height="14" rx="1"/>
-          <rect x="272" y="258" width="10" height="14" rx="1"/><rect x="288" y="258" width="10" height="14" rx="1"/>
-          <rect x="272" y="280" width="10" height="14" rx="1"/><rect x="288" y="280" width="10" height="14" rx="1"/>
-          <rect x="272" y="302" width="10" height="14" rx="1"/><rect x="288" y="302" width="10" height="14" rx="1"/>
-          <rect x="272" y="324" width="10" height="14" rx="1"/>
-        </g>
-        <rect x="304" y="148" width="9" height="14" rx="1" fill="#B06E0A" opacity=".5"/>
-        <rect x="288" y="170" width="10" height="14" rx="1" fill="#B06E0A" opacity=".4"/>
-        <rect x="272" y="192" width="10" height="14" rx="1" fill="#B06E0A" opacity=".45"/>
-        <line x1="292" y1="135" x2="292" y2="110" stroke="rgba(176,110,10,.3)" strokeWidth="1"/>
-        <circle cx="292" cy="108" r="5" fill="#D4920A" opacity=".4" filter="url(#ci-blur2)"/>
-        <circle cx="292" cy="108" r="2.5" fill="#D4920A" opacity=".7"/>
-
-        {/* Building Group 3b: Purple */}
-        <rect x="326" y="200" width="38" height="140" fill="#D0CAF0" rx="2"/>
-        <rect x="326" y="200" width="38" height="4" fill="#6D5FAD" rx="1"/>
-        <g fill="rgba(109,95,173,.3)">
-          <rect x="333" y="212" width="8" height="11" rx="1"/><rect x="347" y="212" width="9" height="11" rx="1"/>
-          <rect x="333" y="231" width="8" height="11" rx="1"/><rect x="347" y="231" width="9" height="11" rx="1"/>
-          <rect x="333" y="250" width="8" height="11" rx="1"/><rect x="347" y="250" width="9" height="11" rx="1"/>
-          <rect x="333" y="269" width="8" height="11" rx="1"/><rect x="347" y="269" width="9" height="11" rx="1"/>
-          <rect x="333" y="288" width="8" height="11" rx="1"/><rect x="347" y="288" width="9" height="11" rx="1"/>
-          <rect x="333" y="307" width="8" height="11" rx="1"/><rect x="347" y="307" width="9" height="11" rx="1"/>
-        </g>
-        <rect x="347" y="231" width="9" height="11" rx="1" fill="#6D5FAD" opacity=".5"/>
-
-        {/* Building Group 4: Right destination */}
-        <rect x="390" y="230" width="80" height="110" fill="#A8D4BC" rx="3"/>
-        <rect x="390" y="230" width="80" height="5" fill="#5BAA7A" rx="1"/>
-        <g fill="rgba(19,148,133,.3)">
-          <rect x="397" y="243" width="12" height="16" rx="1"/><rect x="415" y="243" width="12" height="16" rx="1"/><rect x="433" y="243" width="12" height="16" rx="1"/><rect x="451" y="243" width="12" height="16" rx="1"/>
-          <rect x="397" y="267" width="12" height="16" rx="1"/><rect x="415" y="267" width="12" height="16" rx="1"/><rect x="433" y="267" width="12" height="16" rx="1"/><rect x="451" y="267" width="12" height="16" rx="1"/>
-          <rect x="397" y="291" width="12" height="16" rx="1"/><rect x="415" y="291" width="12" height="16" rx="1"/><rect x="433" y="291" width="12" height="16" rx="1"/><rect x="451" y="291" width="12" height="16" rx="1"/>
-          <rect x="469" y="243" width="14" height="16" rx="1"/><rect x="469" y="267" width="14" height="16" rx="1"/><rect x="469" y="291" width="14" height="16" rx="1"/>
-        </g>
-        <rect x="397" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5"/>
-        <rect x="415" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".45"/>
-        <rect x="433" y="267" width="12" height="16" rx="1" fill="#139485" opacity=".4"/>
-        <rect x="451" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5"/>
-        <rect x="397" y="291" width="12" height="16" rx="1" fill="#139485" opacity=".4"/>
-        <rect x="469" y="267" width="14" height="16" rx="1" fill="#139485" opacity=".45"/>
-        <rect x="476" y="190" width="36" height="150" fill="#B0D4C0" rx="2"/>
-        <rect x="476" y="190" width="36" height="4" fill="#5BAA7A" rx="1"/>
-        <g fill="rgba(19,148,133,.3)">
-          <rect x="482" y="202" width="8" height="12" rx="1"/><rect x="495" y="202" width="9" height="12" rx="1"/>
-          <rect x="482" y="222" width="8" height="12" rx="1"/><rect x="495" y="222" width="9" height="12" rx="1"/>
-          <rect x="482" y="242" width="8" height="12" rx="1"/><rect x="495" y="242" width="9" height="12" rx="1"/>
-          <rect x="482" y="262" width="8" height="12" rx="1"/><rect x="495" y="262" width="9" height="12" rx="1"/>
-          <rect x="482" y="282" width="8" height="12" rx="1"/><rect x="495" y="282" width="9" height="12" rx="1"/>
-          <rect x="482" y="302" width="8" height="12" rx="1"/><rect x="495" y="302" width="9" height="12" rx="1"/>
-        </g>
-        <rect x="482" y="202" width="8" height="12" rx="1" fill="#139485" opacity=".5"/>
-        <rect x="495" y="242" width="9" height="12" rx="1" fill="#139485" opacity=".4"/>
-
-        {/* Trees */}
-        <rect x="135" y="312" width="4" height="28" fill="#6A9E7A"/>
-        <circle cx="137" cy="305" r="14" fill="#4DAF7C"/>
-        <circle cx="137" cy="300" r="10" fill="#3A9E6A" opacity=".7"/>
-        <rect x="242" y="318" width="4" height="22" fill="#6A9E7A"/>
-        <circle cx="244" cy="312" r="12" fill="#4DAF7C"/>
-        <circle cx="244" cy="307" r="8" fill="#3A9E6A" opacity=".6"/>
-        <rect x="375" y="320" width="4" height="20" fill="#6A9E7A"/>
-        <circle cx="377" cy="315" r="11" fill="#4DAF7C"/>
-        <circle cx="377" cy="310" r="7.5" fill="#3A9E6A" opacity=".6"/>
-        <rect x="524" y="318" width="3" height="22" fill="#6A9E7A"/>
-        <circle cx="526" cy="312" r="10" fill="#4DAF7C"/>
-
-        {/* Journey path */}
-        <path d="M 85,162 Q 185,115 292,92 Q 390,95 430,193" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1.5" strokeDasharray="8 6"/>
-        <path d="M 185,133 l 5,-4 l 0,8" fill="rgba(19,148,133,.25)"/>
-        <path d="M 335,98 l 5,-2 l -1,8" fill="rgba(19,148,133,.25)"/>
-
-        {/* Step markers — moved up to create gap above buildings */}
-        <circle cx="85" cy="163" r="32" fill="rgba(19,148,133,.12)" filter="url(#ci-blur4)"/>
-        <circle cx="85" cy="163" r="22" fill="#139485"/>
-        <circle cx="85" cy="163" r="22" fill="none" stroke="#4DAF7C" strokeWidth="2"/>
-        <text x="85" y="167" textAnchor="middle" fontSize="14" fontWeight="700" fill="white" fontFamily="-apple-system,sans-serif">1</text>
-        <line x1="85" y1="141" x2="85" y2="126" stroke="#139485" strokeWidth="1.5"/>
-        <rect x="64" y="118" width="82" height="16" fill="#139485" rx="4"/>
-        <text x="105" y="129" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="white" fontFamily="-apple-system,sans-serif">YOU ARE HERE</text>
-
-        <circle cx="292" cy="92" r="18" fill="rgba(176,110,10,.1)" filter="url(#ci-blur2)"/>
-        <circle cx="292" cy="92" r="14" fill="#FDF3E0"/>
-        <circle cx="292" cy="92" r="14" fill="none" stroke="#B06E0A" strokeWidth="1.8"/>
-        <text x="292" y="96.5" textAnchor="middle" fontSize="11" fontWeight="700" fill="#8A5000" fontFamily="-apple-system,sans-serif">2</text>
-
-        <circle cx="430" cy="193" r="14" fill="#F0EEFF"/>
-        <circle cx="430" cy="193" r="14" fill="none" stroke="#6D5FAD" strokeWidth="1.5" strokeDasharray="4 3"/>
-        <text x="430" y="197.5" textAnchor="middle" fontSize="11" fontWeight="600" fill="rgba(109,95,173,.7)" fontFamily="-apple-system,sans-serif">3</text>
-
-        <text x="85" y="200" textAnchor="middle" fontSize="8" fill="#1F6644" fontWeight="600" fontFamily="-apple-system,sans-serif">CREATE PROJECT</text>
-        <text x="292" y="132" textAnchor="middle" fontSize="8" fill="rgba(176,110,10,.7)" fontWeight="600" fontFamily="-apple-system,sans-serif">LEASE PARAMETERS</text>
-        <text x="430" y="224" textAnchor="middle" fontSize="8" fill="rgba(109,95,173,.6)" fontWeight="600" fontFamily="-apple-system,sans-serif">FLOOR PLAN</text>
-
-        <ellipse cx="190" cy="365" rx="8" ry="3" fill="rgba(19,148,133,.08)"/>
-        <ellipse cx="350" cy="358" rx="8" ry="3" fill="rgba(19,148,133,.08)"/>
-      </svg>
+      <img
+        src="/Onboarding_step_one.png"
+        alt="Onboarding Step 1 Illustration"
+        className="absolute inset-0 w-full h-full"
+        style={{ objectFit: "cover" }}
+      />
 
       {/* Caption overlay */}
       <div className="relative z-10 p-8" style={{ background: "linear-gradient(to top, rgba(235,247,242,0.95) 60%, transparent)" }}>
@@ -541,15 +350,24 @@ function CityIllusPanel() {
           Map where you are today — so we can show you where you could be tomorrow.
         </p>
         <div className="flex gap-2.5 mt-5 flex-wrap">
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium" style={{ background: "#139485", color: "#fff" }}>
+          <div
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium"
+            style={{ background: "#139485", color: "#fff" }}
+          >
             <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(255,255,255,.25)" }}>1</div>
             Create project
           </div>
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border" style={{ background: "rgba(19,148,133,.08)", color: "#4A6650", borderColor: "rgba(19,148,133,.2)" }}>
+          <div
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border"
+            style={{ background: "rgba(19,148,133,.08)", color: "#4A6650", borderColor: "rgba(19,148,133,.2)" }}
+          >
             <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.1)" }}>2</div>
             Lease parameters
           </div>
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border" style={{ background: "rgba(19,148,133,.05)", color: "#6A8070", borderColor: "rgba(19,148,133,.15)" }}>
+          <div
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border"
+            style={{ background: "rgba(19,148,133,.05)", color: "#6A8070", borderColor: "rgba(19,148,133,.15)" }}
+          >
             <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.07)" }}>3</div>
             Floor plan
           </div>

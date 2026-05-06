@@ -59,8 +59,6 @@ export default function FloorPage() {
   const activeFloorRooms = activeFloor?.rooms ?? [];
   const allCounted = activeFloorRooms.length > 0 && activeFloorRooms.every((r) => r.status === "counted");
 
-  // Highlight conduct survey button when on last guide step
-  const highlightSurvey = showGuide && guideStep === 5;
   // Highlight first room when on panel steps 1 or 4 (0-indexed 0 or 3)
   const guideHighlightFirstRoom = showGuide && (guideStep === 0 || guideStep === 3 || guideStep === 4);
 
@@ -134,7 +132,7 @@ export default function FloorPage() {
             <span className="hidden sm:inline">Rooms list</span>
           </Button>
 
-          {/* Conduct Survey — highlighted when guide is on step 6 */}
+          {/* Conduct Survey */}
           <div className="relative">
             <Button
               variant="secondary"
@@ -145,13 +143,6 @@ export default function FloorPage() {
             >
               <span className="hidden sm:inline">Conduct Survey</span>
             </Button>
-            {highlightSurvey && (
-              <motion.span
-                className="absolute inset-0 rounded-xl border-2 border-[#9285CA] pointer-events-none"
-                animate={{ opacity: [0.3, 1, 0.3], scale: [0.97, 1.03, 0.97] }}
-                transition={{ duration: 1.4, repeat: Infinity }}
-              />
-            )}
           </div>
 
           {allCounted && (
@@ -161,6 +152,7 @@ export default function FloorPage() {
               icon={<Gem size={14} />}
               onClick={() => setCompletionModal(true)}
               className="h-10 py-2 px-4"
+              style={{ background: "linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%)", boxShadow: "0 4px 14px rgba(180,83,9,0.35)", border: "none" }}
             >
               <span className="hidden sm:inline">Room Program</span>
             </Button>
@@ -200,19 +192,19 @@ export default function FloorPage() {
 
         {/* Detail panel — absolute overlay, right-aligned, 1/3 screen width */}
         <DetailPanel floorId={floorId} guideHighlightFirstRoom={guideHighlightFirstRoom} />
-
-        {/* Guide overlay — positioned relative to flex-1 area */}
-        <AnimatePresence>
-          {showGuide && (
-            <GuideOverlay
-              step={guideStep}
-              onNext={handleGuideNext}
-              onBack={handleGuideBack}
-              onClose={handleGuideClose}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Guide overlay — fixed positioning, renders above everything */}
+      <AnimatePresence>
+        {showGuide && (
+          <GuideOverlay
+            step={guideStep}
+            onNext={handleGuideNext}
+            onBack={handleGuideBack}
+            onClose={handleGuideClose}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Modals */}
       <SurveyModal />

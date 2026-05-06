@@ -8,24 +8,19 @@ import { ArrowLeft, ArrowRight, X } from "lucide-react";
 function RoomListIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Panel background */}
       <rect x="30" y="8" width="220" height="92" rx="6" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
-      {/* Header */}
-      <rect x="30" y="8" width="220" height="22" rx="6" fill="#F8FAFF" />
-      <rect x="30" y="24" width="220" height="6" fill="#F8FAFF" />
+      <rect x="30" y="8" width="220" height="22" rx="6" fill="#FFFBF8" />
+      <rect x="30" y="24" width="220" height="6" fill="#FFFBF8" />
       <text x="44" y="22" fontSize="8" fontWeight="700" fill="#0D1B2A">Rooms</text>
-      {/* First room row — highlighted */}
       <motion.rect x="30" y="30" width="220" height="24" fill="#EEF4FF"
         animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.8, repeat: Infinity }} />
       <circle cx="44" cy="42" r="4" fill="#C8D8E4" />
       <text x="52" y="45" fontSize="7.5" fontWeight="700" fill="#374151">Conference Room A</text>
-      {/* Verify button — pulsing */}
       <motion.g animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 0.4 }}
         style={{ transformOrigin: "222px 42px" }}>
         <rect x="194" y="36" width="46" height="13" rx="4" fill="#0A4F6E" />
         <text x="217" y="45" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Verify</text>
       </motion.g>
-      {/* Other rows */}
       {[54, 70, 86].map((y, i) => (
         <g key={i}>
           <rect x="30" y={y} width="220" height="16" fill="white" />
@@ -44,12 +39,10 @@ function DrawRoomIllustration() {
       {[70, 140, 210].map(x => <line key={x} x1={x} y1="8" x2={x} y2="100" stroke="#E5EAF0" strokeWidth="0.8" />)}
       {[36, 72].map(y => <line key={y} x1="20" y1={y} x2="260" y2={y} stroke="#E5EAF0" strokeWidth="0.8" />)}
       <rect x="204" y="16" width="52" height="40" rx="2" fill="rgba(10,79,110,0.05)" stroke="#0A4F6E" strokeWidth="1" strokeDasharray="4 3" />
-      <motion.polygon
-        points={pts.map(p => p.join(",")).join(" ")}
+      <motion.polygon points={pts.map(p => p.join(",")).join(" ")}
         fill="rgba(10,79,110,0.12)" stroke="#0A4F6E" strokeWidth="2"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.4, repeat: Infinity, repeatDelay: 2.5 }}
-      />
+        transition={{ delay: 1.8, duration: 0.4, repeat: Infinity, repeatDelay: 2.5 }} />
       {pts.map((pt, i) => {
         const next = pts[(i + 1) % pts.length];
         return <motion.line key={i} x1={pt[0]} y1={pt[1]} x2={next[0]} y2={next[1]}
@@ -70,49 +63,37 @@ function DrawRoomIllustration() {
 function AnimatedGroupZonesIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Room A */}
       <motion.rect x="22" y="18" width="88" height="72" rx="4"
         fill="rgba(10,79,110,0.09)" stroke="#0A4F6E" strokeWidth="1.5"
         initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }}
-      />
+        transition={{ delay: 0.2, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.text x="66" y="58" textAnchor="middle" fontSize="8" fill="#0A4F6E" fontWeight="600"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}>Office 1</motion.text>
-      {/* Room B */}
       <motion.rect x="122" y="18" width="88" height="72" rx="4"
-        fill="rgba(146,133,202,0.10)" stroke="#9285CA" strokeWidth="1.5"
+        fill="rgba(245,158,11,0.10)" stroke="#F59E0B" strokeWidth="1.5"
         initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }}
-      />
+        transition={{ delay: 0.5, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.text x="166" y="58" textAnchor="middle" fontSize="8" fill="#0A4F6E" fontWeight="600"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}>Office 2</motion.text>
-      {/* Connecting animated line */}
       <motion.line x1="110" y1="54" x2="122" y2="54" stroke="#00C9A7" strokeWidth="2" strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ delay: 1.0, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}
-      />
-      {/* Zone border */}
+        transition={{ delay: 1.0, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.rect x="14" y="10" width="204" height="88" rx="8"
         fill="transparent" stroke="#00C9A7" strokeWidth="2" strokeDasharray="8 5"
         initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0.3] }}
-        transition={{ delay: 1.4, duration: 0.5, repeat: Infinity, repeatDelay: 2.8 }}
-      />
-      {/* Zone label */}
-      <motion.rect x="70" y="90" width="92" height="16" rx="8" fill="#9285CA"
+        transition={{ delay: 1.4, duration: 0.5, repeat: Infinity, repeatDelay: 2.8 }} />
+      <motion.rect x="70" y="90" width="92" height="16" rx="8" fill="#F59E0B"
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.6, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2.8 }}
-      />
+        transition={{ delay: 1.6, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.text x="116" y="101" textAnchor="middle" fontSize="7.5" fill="white" fontWeight="700"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 1.7, duration: 0.2, repeat: Infinity, repeatDelay: 2.8 }}>Zone A — Marketing</motion.text>
-      {/* Right room */}
       <motion.rect x="222" y="28" width="46" height="52" rx="3"
         fill="rgba(0,201,167,0.10)" stroke="#00C9A7" strokeWidth="1.2"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}
-      />
+        transition={{ delay: 0.3, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }} />
     </svg>
   );
 }
@@ -121,10 +102,9 @@ function GroupButtonIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <rect x="30" y="8" width="220" height="92" rx="6" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
-      <rect x="30" y="8" width="220" height="22" rx="6" fill="#F8FAFF" />
-      <rect x="30" y="24" width="220" height="6" fill="#F8FAFF" />
+      <rect x="30" y="8" width="220" height="22" rx="6" fill="#FFFBF8" />
+      <rect x="30" y="24" width="220" height="6" fill="#FFFBF8" />
       <text x="44" y="22" fontSize="8" fontWeight="700" fill="#0D1B2A">Rooms</text>
-      {/* First room row highlighted */}
       <motion.rect x="30" y="30" width="220" height="24" fill="#EEF4FF"
         animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} />
       <circle cx="44" cy="42" r="4" fill="#C8D8E4" />
@@ -132,20 +112,16 @@ function GroupButtonIllustration() {
       {/* Group button pulsing */}
       <motion.g animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 1.1, repeat: Infinity, repeatDelay: 0.5 }}
         style={{ transformOrigin: "177px 42px" }}>
-        <rect x="150" y="36" width="42" height="13" rx="4" fill="#9285CA" />
+        <rect x="150" y="36" width="42" height="13" rx="4" fill="#F59E0B" />
         <text x="171" y="45" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Group</text>
       </motion.g>
-      {/* Second room row */}
       <motion.rect x="30" y="54" width="220" height="20"
-        animate={{ backgroundColor: ["#FFFFFF", "#F8F0FF", "#FFFFFF"] }}
-        transition={{ delay: 0.6, duration: 1.8, repeat: Infinity }} fill="#ffffff" />
+        animate={{ opacity: [1, 0.85, 1] }} transition={{ delay: 0.6, duration: 1.8, repeat: Infinity }} fill="white" />
       <circle cx="44" cy="64" r="3.5" fill="#E5EAF0" />
       <text x="52" y="67" fontSize="7" fill="#6B7280">Conference Room B</text>
-      {/* Group selection checkbox pulsing on 2nd row */}
       <motion.rect x="234" y="58" width="10" height="10" rx="2"
-        stroke="#9285CA" strokeWidth="1.5" fill="transparent"
-        animate={{ opacity: [0, 1, 0] }} transition={{ delay: 1.2, duration: 1.0, repeat: Infinity, repeatDelay: 1.2 }}
-      />
+        stroke="#F59E0B" strokeWidth="1.5" fill="transparent"
+        animate={{ opacity: [0, 1, 0] }} transition={{ delay: 1.2, duration: 1.0, repeat: Infinity, repeatDelay: 1.2 }} />
       {[74, 88].map((y, i) => (
         <g key={i}>
           <rect x="30" y={y} width="220" height="14" fill="white" />
@@ -160,31 +136,25 @@ function GroupButtonIllustration() {
 function CountingIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Panel background */}
-      <rect x="30" y="8" width="220" height="34" rx="5" fill="#F8FAFF" stroke="#E5EAF0" strokeWidth="1.2" />
+      <rect x="30" y="8" width="220" height="34" rx="5" fill="#FFFBF8" stroke="#E5EAF0" strokeWidth="1.2" />
       <text x="44" y="22" fontSize="8" fontWeight="700" fill="#0D1B2A">Rooms</text>
-      {/* Start room counting button pulsing */}
       <motion.g animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 1.3, repeat: Infinity, repeatDelay: 0.4 }}
         style={{ transformOrigin: "196px 27px" }}>
         <rect x="148" y="18" width="96" height="18" rx="5" fill="#0A4F6E" />
         <text x="196" y="30" textAnchor="middle" fontSize="7" fill="white" fontWeight="700">Start room counting</text>
       </motion.g>
-      {/* Room with people icons animating in */}
       <rect x="30" y="52" width="220" height="52" rx="5" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
       <text x="44" y="66" fontSize="7.5" fontWeight="700" fill="#374151">Conference Room A</text>
-      {/* People icons appearing sequentially */}
       {[0, 1, 2].map((i) => (
         <motion.g key={i}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 + i * 0.35, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2.2 }}
           style={{ transformOrigin: `${70 + i * 22}px 84px` }}>
-          <circle cx={70 + i * 22} cy={79} r={7} fill="rgba(146,133,202,0.15)" stroke="#9285CA" strokeWidth="1.2" />
-          <circle cx={70 + i * 22} cy={76} r={2.5} fill="#9285CA" />
-          <path d={`M${63 + i * 22} 85 Q${70 + i * 22} 80 ${77 + i * 22} 85`} stroke="#9285CA" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <circle cx={70 + i * 22} cy={79} r={7} fill="rgba(245,158,11,0.15)" stroke="#F59E0B" strokeWidth="1.2" />
+          <circle cx={70 + i * 22} cy={76} r={2.5} fill="#F59E0B" />
+          <path d={`M${63 + i * 22} 85 Q${70 + i * 22} 80 ${77 + i * 22} 85`} stroke="#F59E0B" strokeWidth="1.2" fill="none" strokeLinecap="round" />
         </motion.g>
       ))}
-      {/* Count badge */}
       <motion.g animate={{ scale: [1, 1.1, 1] }} transition={{ delay: 1.5, duration: 0.8, repeat: Infinity, repeatDelay: 1.5 }}
         style={{ transformOrigin: "210px 84px" }}>
         <circle cx="210" cy="84" r="14" fill="#0A4F6E" />
@@ -197,37 +167,29 @@ function CountingIllustration() {
 function SurveyIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Survey button in header area */}
       <motion.g animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 0.5 }}
         style={{ transformOrigin: "140px 20px" }}>
         <rect x="84" y="10" width="112" height="20" rx="5" fill="#0A4F6E" />
         <text x="140" y="23" textAnchor="middle" fontSize="8" fill="white" fontWeight="700">Conduct Survey</text>
       </motion.g>
-      {/* Survey form */}
       <rect x="22" y="38" width="236" height="62" rx="5" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
-      {/* Survey question */}
       <rect x="32" y="46" width="120" height="6" rx="3" fill="#E5EAF0" />
-      {/* Response options animating in */}
       {[0, 1, 2].map((i) => (
         <motion.g key={i}
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 + i * 0.4, duration: 0.3, repeat: Infinity, repeatDelay: 2.5 }}>
           <motion.rect x="32" y={58 + i * 13} width="10" height="10" rx="2"
             fill={i === 1 ? "#00C9A7" : "white"} stroke={i === 1 ? "#00C9A7" : "#C8D8E4"} strokeWidth="1.2"
             animate={i === 1 ? { scale: [1, 1.1, 1] } : {}}
-            transition={{ delay: 1.2, duration: 0.6, repeat: Infinity, repeatDelay: 2.0 }}
-          />
+            transition={{ delay: 1.2, duration: 0.6, repeat: Infinity, repeatDelay: 2.0 }} />
           {i === 1 && (
             <path d="M35 64 L37 67 L41 62" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           )}
           <rect x="48" y={62 + i * 13} width={80 - i * 14} height="5" rx="2.5" fill="#F0F4F8" />
         </motion.g>
       ))}
-      {/* Send button */}
-      <motion.rect x="200" y="82" width="48" height="14" rx="4" fill="#9285CA"
-        animate={{ opacity: [0.7, 1, 0.7] }} transition={{ delay: 1.8, duration: 1.2, repeat: Infinity }}
-      />
+      <motion.rect x="200" y="82" width="48" height="14" rx="4" fill="#F59E0B"
+        animate={{ opacity: [0.7, 1, 0.7] }} transition={{ delay: 1.8, duration: 1.2, repeat: Infinity }} />
       <text x="224" y="91" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Send →</text>
     </svg>
   );
@@ -236,16 +198,19 @@ function SurveyIllustration() {
 // ─── Step data ────────────────────────────────────────────────────────────────
 
 type PositionType =
-  | "right-panel-mid"
-  | "above-toolbar-pen"
-  | "above-toolbar-group"
-  | "below-header";
+  | "right-panel-mid"       // card left of panel, right arrow → panel
+  | "above-toolbar-pen"     // card above toolbar, down arrow → pen tool
+  | "above-toolbar-group"   // card above toolbar, down arrow → group tool
+  | "inside-panel-group"    // card inside panel, up arrow → Group button in row
+  | "inside-panel-count"    // card inside panel, up arrow → Start room counting button
+  | "below-header";         // card below header, up arrow → Conduct Survey
 
 interface StepDef {
   title: string;
   description: string;
   position: PositionType;
-  arrowLeftPx?: number;   // for above-toolbar steps: px from card-left to arrow
+  arrowLeftPx?: number;   // horizontal px from card-left for up/down arrow
+  arrowRightPx?: number;  // horizontal px from card-right for up arrow (below-header)
   Illustration: React.FC;
 }
 
@@ -273,19 +238,22 @@ const STEPS: StepDef[] = [
   {
     title: "Group via Room List",
     description: "Alternatively, you can identify zones by selecting multiple rooms from this list and grouping them together.",
-    position: "right-panel-mid",
+    position: "inside-panel-group",
+    arrowLeftPx: 180,
     Illustration: GroupButtonIllustration,
   },
   {
     title: "Count Room Capacity",
     description: "You can get the capacity of each room at different times of day using the Start room counting option.",
-    position: "right-panel-mid",
+    position: "inside-panel-count",
+    arrowLeftPx: 195,
     Illustration: CountingIllustration,
   },
   {
     title: "Conduct a Survey",
     description: "Send out a survey to gather your employees' opinions on their workspace experience.",
     position: "below-header",
+    arrowRightPx: 16,
     Illustration: SurveyIllustration,
   },
 ];
@@ -295,6 +263,41 @@ export const GUIDE_TOTAL = STEPS.length;
 export function guideStepAboveToolbar(step: number) {
   const pos = STEPS[step]?.position;
   return pos === "above-toolbar-pen" || pos === "above-toolbar-group";
+}
+
+// ─── Multi-div spotlight regions ─────────────────────────────────────────────
+
+type Region = { top?: string; bottom?: string; left?: string; right?: string; height?: string; width?: string };
+
+function getRegions(position: PositionType): Region[] {
+  switch (position) {
+    case "right-panel-mid":
+      return [
+        { top: "0", left: "0", right: "33.333%", bottom: "0" },
+        { top: "0", left: "66.667%", right: "0", height: "56px" },
+      ];
+    case "above-toolbar-pen":
+    case "above-toolbar-group":
+      return [{ top: "0", left: "0", right: "0", bottom: "64px" }];
+    case "inside-panel-group":
+      return [
+        { top: "0", left: "0", right: "33.333%", bottom: "0" },
+        { top: "0", left: "66.667%", right: "0", height: "220px" },
+        { top: "264px", left: "66.667%", right: "0", bottom: "0" },
+      ];
+    case "inside-panel-count":
+      return [
+        { top: "0", left: "0", right: "33.333%", bottom: "0" },
+        { top: "0", left: "66.667%", right: "0", height: "162px" },
+        { top: "202px", left: "66.667%", right: "0", bottom: "0" },
+      ];
+    case "below-header":
+      return [
+        { top: "56px", left: "0", right: "0", bottom: "0" },
+        { top: "0", left: "0", right: "246px", height: "56px" },
+        { top: "0", right: "0", width: "96px", height: "56px" },
+      ];
+  }
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -310,10 +313,18 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   const total = GUIDE_TOTAL;
   const current = STEPS[step];
   if (!current) return null;
-  const { Illustration, position, arrowLeftPx } = current;
+
+  const { Illustration, position, arrowLeftPx, arrowRightPx } = current;
   const isLastStep = step >= total - 1;
 
-  // ── Card ────────────────────────────────────────────────────────────────────
+  const isToolbarStep = position === "above-toolbar-pen" || position === "above-toolbar-group";
+  const isInsidePanelStep = position === "inside-panel-group" || position === "inside-panel-count";
+  const isRightPanelMid = position === "right-panel-mid";
+  const isBelowHeader = position === "below-header";
+
+  // No dark backdrop — tooltip card stands alone with glow shadow
+
+  // ── Card ────────────────────────────────────────────────────────────────
   const card = (
     <motion.div
       key={step}
@@ -321,7 +332,11 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.17 }}
-      className="relative w-72 rounded-2xl border border-[#E5EAF0] bg-white shadow-2xl"
+      className="relative w-72 rounded-2xl border border-[#D9CEBF]"
+      style={{
+        background: "#f1eee9ff",
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 32px rgba(232,225,214,0.5)",
+      }}
     >
       {/* Close */}
       <button
@@ -332,160 +347,162 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       </button>
 
       <div className="p-4 pb-3">
-        <span className="inline-block text-[10px] font-semibold text-[#9285CA] bg-[#F0EEFF] px-2 py-0.5 rounded-full font-body mb-2">
+        {/* Step badge */}
+        <span className="inline-block text-[10px] font-semibold text-[#8B6F47] bg-[#D9CEBF] px-2 py-0.5 rounded-full font-body mb-2">
           Step {step + 1} of {total}
         </span>
         <h3 className="text-sm font-bold text-[#0D1B2A] font-body mb-1">{current.title}</h3>
         <p className="text-xs text-[#5A7184] font-body leading-relaxed mb-3">{current.description}</p>
-        <div className="rounded-xl bg-[#F8FAFF] overflow-hidden" style={{ height: 108 }}>
+        <div className="rounded-xl overflow-hidden" style={{ height: 108, background: "rgba(255,255,255,0.45)" }}>
           <Illustration />
         </div>
       </div>
 
       {/* Nav bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-[#F1F5F9]">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-[#D9CEBF]">
         <button
           onClick={onBack}
           disabled={step === 0}
-          className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#9285CA] disabled:opacity-30 hover:opacity-70 transition-opacity"
+          className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] disabled:opacity-30 hover:opacity-70 transition-opacity"
         >
           <ArrowLeft size={13} /> Back
         </button>
 
-        {/* Progress dots */}
-        <div className="flex items-center gap-1.5">
-          {Array.from({ length: total }, (_, i) => (
-            <div
-              key={i}
-              className="rounded-full transition-all duration-200"
-              style={{
-                width: i === step ? 16 : 6,
-                height: 6,
-                background: i === step ? "#9285CA" : i < step ? "#C4B8E8" : "#D0DDE6",
-              }}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={onNext}
-          className="btn-3d rounded-full flex items-center gap-1.5 text-xs font-semibold font-body px-3 py-1.5 text-white"
-        >
-          {isLastStep ? "Done" : (
-            <>Next <ArrowRight size={13} /></>
-          )}
+        <button onClick={onNext}
+          className="btn-3d rounded-full flex items-center gap-1.5 text-xs font-semibold font-body px-3 py-1.5 text-white">
+          {isLastStep ? "Done" : <><span>Next</span> <ArrowRight size={13} /></>}
         </button>
       </div>
 
-      {/* Down-pointing arrow for above-toolbar steps */}
-      {(position === "above-toolbar-pen" || position === "above-toolbar-group") && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: -9,
-            left: arrowLeftPx !== undefined ? arrowLeftPx : "50%",
-            transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
-            width: 0, height: 0,
-            borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-            borderTop: "9px solid #E5EAF0",
-          }}
-        >
+      {/* ── Arrows ──────────────────────────────────────────────────────────── */}
+
+      {/* Down arrow — toolbar steps (points down toward toolbar) */}
+      {isToolbarStep && (
+        <div style={{
+          position: "absolute", bottom: -9,
+          left: arrowLeftPx !== undefined ? arrowLeftPx : "50%",
+          transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
+          width: 0, height: 0,
+          borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
+          borderTop: "9px solid #D9CEBF",
+        }}>
           <div style={{
             position: "absolute", top: -8, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderTop: "8px solid white",
+            borderTop: "8px solid #E8E1D6",
           }} />
         </div>
       )}
 
-      {/* Right-pointing arrow for right-panel steps */}
-      {position === "right-panel-mid" && (
-        <div
-          style={{
-            position: "absolute",
-            right: -9,
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: 0, height: 0,
-            borderTop: "9px solid transparent",
-            borderBottom: "9px solid transparent",
-            borderLeft: "9px solid #E5EAF0",
-          }}
-        >
+      {/* Right arrow — right-panel-mid step (points right toward panel list) */}
+      {isRightPanelMid && (
+        <div style={{
+          position: "absolute", right: -9, top: "50%", transform: "translateY(-50%)",
+          width: 0, height: 0,
+          borderTop: "9px solid transparent", borderBottom: "9px solid transparent",
+          borderLeft: "9px solid #D9CEBF",
+        }}>
           <div style={{
             position: "absolute", top: -8, left: -9, width: 0, height: 0,
-            borderTop: "8px solid transparent",
-            borderBottom: "8px solid transparent",
-            borderLeft: "8px solid white",
+            borderTop: "8px solid transparent", borderBottom: "8px solid transparent",
+            borderLeft: "8px solid #E8E1D6",
           }} />
         </div>
       )}
 
-      {/* Up-pointing arrow for below-header step */}
-      {position === "below-header" && (
-        <div
-          style={{
-            position: "absolute",
-            top: -9,
-            right: 44,
-            width: 0, height: 0,
-            borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-            borderBottom: "9px solid #E5EAF0",
-          }}
-        >
+      {/* Up arrow — inside-panel steps (points up toward target element above) */}
+      {isInsidePanelStep && (
+        <div style={{
+          position: "absolute", top: -9,
+          left: arrowLeftPx !== undefined ? arrowLeftPx : "50%",
+          transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
+          width: 0, height: 0,
+          borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
+          borderBottom: "9px solid #D9CEBF",
+        }}>
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid white",
+            borderBottom: "8px solid #E8E1D6",
+          }} />
+        </div>
+      )}
+
+      {/* Up arrow — below-header step (points up toward Conduct Survey button) */}
+      {isBelowHeader && (
+        <div style={{
+          position: "absolute", top: -9,
+          right: arrowRightPx !== undefined ? arrowRightPx : 52,
+          width: 0, height: 0,
+          borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
+          borderBottom: "9px solid #D9CEBF",
+        }}>
+          <div style={{
+            position: "absolute", top: 1, left: -8, width: 0, height: 0,
+            borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
+            borderBottom: "8px solid #E8E1D6",
           }} />
         </div>
       )}
     </motion.div>
   );
 
-  // ── Position wrappers ──────────────────────────────────────────────────────
+  // ── Position wrappers (all fixed — escapes overflow containers) ─────────
 
-  if (position === "above-toolbar-pen") {
+  if (isToolbarStep) {
+    const leftOffset = position === "above-toolbar-pen"
+      ? "max(8px, calc(50% - 242px))"
+      : "max(8px, calc(50% - 202px))";
     return (
-      <div
-        className="absolute z-50 pointer-events-auto"
-        style={{ bottom: "76px", left: "max(8px, calc(50% - 242px))" }}
-      >
-        <AnimatePresence mode="wait">{card}</AnimatePresence>
-      </div>
+      <>
+        <div className="fixed z-50 pointer-events-auto" style={{ bottom: "76px", left: leftOffset }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
     );
   }
 
-  if (position === "above-toolbar-group") {
+  if (isRightPanelMid) {
     return (
-      <div
-        className="absolute z-50 pointer-events-auto"
-        style={{ bottom: "76px", left: "max(8px, calc(50% - 202px))" }}
-      >
-        <AnimatePresence mode="wait">{card}</AnimatePresence>
-      </div>
+      <>
+        <div className="fixed z-50 pointer-events-auto"
+          style={{ right: "calc(33.333% + 12px)", top: "50%", transform: "translateY(-50%)" }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
     );
   }
 
-  if (position === "right-panel-mid") {
+  // Step 4 — inside panel, up arrow pointing to Group button in first room row
+  if (position === "inside-panel-group") {
     return (
-      <div
-        className="absolute z-50 pointer-events-auto"
-        style={{ right: "calc(33.333% + 12px)", top: "50%", transform: "translateY(-50%)" }}
-      >
-        <AnimatePresence mode="wait">{card}</AnimatePresence>
-      </div>
+      <>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "8px", top: "280px" }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
     );
   }
 
-  if (position === "below-header") {
+  // Step 5 — inside panel, up arrow pointing to Start room counting button
+  if (position === "inside-panel-count") {
     return (
-      <div
-        className="absolute z-50 pointer-events-auto"
-        style={{ top: "10px", right: "calc(33.333% + 12px)" }}
-      >
-        <AnimatePresence mode="wait">{card}</AnimatePresence>
-      </div>
+      <>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "8px", top: "212px" }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
+    );
+  }
+
+  // Step 6 — below header, up arrow pointing to Conduct Survey button
+  if (isBelowHeader) {
+    return (
+      <>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: "155px" }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
     );
   }
 

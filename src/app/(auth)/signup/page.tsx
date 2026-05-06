@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, User, Building2, Hash, ArrowRight } from "lucide-react";
+import { Mail, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -24,8 +24,6 @@ export default function SignUpPage() {
   const [values, setValues] = useState({
     fullName: "",
     workEmail: "",
-    organization: "",
-    organizationNumber: "",
   });
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -63,14 +61,6 @@ export default function SignUpPage() {
         <motion.div variants={itemVariants}>
           <Input label="Work email" type="email" placeholder="ingrid@company.no" icon={<Mail size={16} />}
             value={values.workEmail} onChange={handleChange("workEmail")} />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <Input label="Organization" placeholder="Larsen & Partners AS" icon={<Building2 size={16} />}
-            value={values.organization} onChange={handleChange("organization")} />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <Input label="Organization number" placeholder="e.g. 123 456 789" icon={<Hash size={16} />}
-            value={values.organizationNumber} onChange={handleChange("organizationNumber")} />
         </motion.div>
         <motion.div variants={itemVariants}>
           <label className="flex items-start gap-3 cursor-pointer group">

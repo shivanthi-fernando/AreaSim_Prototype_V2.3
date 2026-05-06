@@ -42,31 +42,25 @@ function BurstRing({ color }: { color: string }) {
 
 const STAT_CONFIG = [
   {
-    icon:       <Building size={12} />,
-    label:      "Rooms",
-    color:      "#9285CA",
-    glow:       "rgba(146,133,202,0.35)",
-    iconColor:  "#9285CA",
-    labelColor: "#7060A8",
-    bg:         "#9285CA",
+    icon: <Building size={12} />,
+    label: "Rooms",
+    glow: "rgba(217,119,6,0.35)",
+    iconColor: "#B45309",
+    labelColor: "#92400E",
   },
   {
-    icon:       <Package size={12} />,
-    label:      "Zones",
-    color:      "#9285CA",
-    glow:       "rgba(146,133,202,0.35)",
-    iconColor:  "#9285CA",
-    labelColor: "#7060A8",
-    bg:         "#9285CA",
+    icon: <Package size={12} />,
+    label: "Zones",
+    glow: "rgba(217,119,6,0.35)",
+    iconColor: "#B45309",
+    labelColor: "#92400E",
   },
   {
-    icon:       <ClipboardList size={12} />,
-    label:      "Survey",
-    color:      "#9285CA",
-    glow:       "rgba(146,133,202,0.35)",
-    iconColor:  "#9285CA",
-    labelColor: "#7060A8",
-    bg:         "#9285CA",
+    icon: <ClipboardList size={12} />,
+    label: "Survey",
+    glow: "rgba(217,119,6,0.35)",
+    iconColor: "#B45309",
+    labelColor: "#92400E",
   },
 ];
 
@@ -96,7 +90,7 @@ export function ScoreWidget() {
       className="relative flex items-stretch rounded-xl border border-[#E5EAF0] bg-white shadow-lg overflow-hidden"
     >
 
-      {STAT_CONFIG.map(({ icon, label, bg, glow, iconColor, labelColor }, i) => {
+      {STAT_CONFIG.map(({ icon, label, glow, iconColor, labelColor }, i) => {
         const isRooms = i === 0;
         const value = values[i];
         return (
@@ -104,28 +98,30 @@ export function ScoreWidget() {
             key={label}
             className={`relative z-10 flex items-center gap-2.5 px-4 py-2.5 ${i < STAT_CONFIG.length - 1 ? "border-r border-[#E5EAF0]" : ""}`}
           >
-            {/* Number circle */}
+            {/* Coin circle */}
             <div className="relative">
               <motion.div
-                className="relative w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm"
-                style={{ background: bg }}
+                className="relative w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{
+                  background: "linear-gradient(145deg, #f8e19cff 45%, #ffcb71ff 100%)",
+                  border: "1.5px solid #e3b069ff",
+                  boxShadow: "0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55)",
+                }}
                 animate={{
                   boxShadow: [
-                    `0 0 0px ${glow.replace("0.35", "0")}`,
-                    `0 0 10px ${glow}`,
-                    `0 0 0px ${glow.replace("0.35", "0")}`,
+                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 0px ${glow.replace("0.35", "0")}`,
+                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 10px ${glow}`,
+                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 0px ${glow.replace("0.35", "0")}`,
                   ],
-                  ...(isRooms && roomBurst
-                    ? { scale: [1, 1.35, 0.95, 1.1, 1] }
-                    : {}),
+                  ...(isRooms && roomBurst ? { scale: [1, 1.35, 0.95, 1.1, 1] } : {}),
                 }}
                 transition={{
                   boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
                   scale: { duration: 0.5, times: [0, 0.3, 0.6, 0.8, 1] },
                 }}
               >
-                <span className="text-[11px] font-bold text-white tabular-nums leading-none"
-                  style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+                <span className="text-[11px] font-extrabold tabular-nums leading-none"
+                  style={{ color: "#cc6f35ff", fontFamily: "var(--font-jetbrains-mono)" }}>
                   <AnimatedNumber value={value} />
                 </span>
               </motion.div>
@@ -133,14 +129,14 @@ export function ScoreWidget() {
               <AnimatePresence>
                 {isRooms && roomBurst && (
                   <>
-                    <BurstRing key="burst1" color={bg} />
+                    <BurstRing key="burst1" color="#D97706" />
                     <motion.div
                       key="burst2"
                       className="absolute inset-0 rounded-full pointer-events-none"
                       initial={{ scale: 1, opacity: 0.5 }}
                       animate={{ scale: 1.8, opacity: 0 }}
                       transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-                      style={{ border: `2px solid ${bg}` }}
+                      style={{ border: "2px solid #D97706" }}
                     />
                   </>
                 )}

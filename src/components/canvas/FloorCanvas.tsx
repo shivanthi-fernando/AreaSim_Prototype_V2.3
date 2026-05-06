@@ -518,7 +518,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
         <motion.div
           className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/15 px-2 py-1.5"
           animate={toolbarGlowing
-            ? { boxShadow: ["0 4px 24px rgba(112,95,178,0)", "0 4px 24px rgba(146,133,202,0.45)", "0 4px 24px rgba(112,95,178,0)"] }
+            ? { boxShadow: ["0 4px 24px rgba(251,146,60,0)", "0 4px 24px rgba(251,146,60,0.45)", "0 4px 24px rgba(251,146,60,0)"] }
             : { boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }
           }
           transition={{ duration: 1.8, repeat: toolbarGlowing ? Infinity : 0 }}
@@ -547,7 +547,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
                 {/* Pulse ring for guide highlight */}
                 {isHighlighted && (
                   <motion.span
-                    className="absolute inset-0 rounded-xl border-2 border-[#9285CA] pointer-events-none"
+                    className="absolute inset-0 rounded-xl border-2 border-[#FB923C] pointer-events-none"
                     animate={{ opacity: [0.3, 1, 0.3], scale: [0.95, 1.05, 0.95] }}
                     transition={{ duration: 1.4, repeat: Infinity }}
                   />

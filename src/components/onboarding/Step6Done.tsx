@@ -28,8 +28,11 @@ export function Step6Done() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center text-center space-y-8"
+      className="flex flex-col items-center text-center"
     >
+      {/* White card wrapping all content */}
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-[#F0F4F8] px-8 py-10 flex flex-col items-center space-y-8">
+
       {/* Celebration icon */}
       <motion.div
         initial={{ scale: 0.5, rotate: -10 }}
@@ -106,6 +109,8 @@ export function Step6Done() {
           Continue
         </Button>
       </motion.div>
+
+      </div>{/* end white card */}
     </motion.div>
   );
 }
