@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ChevronDown, CheckCircle2, SlidersHorizontal, ClipboardList, Gem, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
@@ -12,6 +12,7 @@ import { ScoreWidget } from "@/components/canvas/ScoreWidget";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
 import { SurveyModal } from "@/components/canvas/SurveyModal";
 import { CompletionModal } from "@/components/canvas/CompletionModal";
+import { GuideOverlay, GUIDE_TOTAL } from "@/components/canvas/GuideOverlay";
 import { useCanvasStore } from "@/store/canvas";
 import { mockProject } from "@/lib/mockData";
 
@@ -34,12 +35,37 @@ export default function FloorPage() {
 
   const [floorDropdownOpen, setFloorDropdownOpen] = useState(false);
 
+  // Guide state
+  const [showGuide, setShowGuide] = useState(true);
+  const [guideStep, setGuideStep] = useState(0);
+
+  // Open detail panel when guide is active on a panel-pointing step
+  const panelSteps = new Set([0, 3, 4]);
+  useEffect(() => {
+    if (showGuide && panelSteps.has(guideStep)) {
+      setDetailPanel(true);
+    }
+  }, [showGuide, guideStep]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleGuideNext = () => {
+    if (guideStep >= GUIDE_TOTAL - 1) { setShowGuide(false); setGuideStep(0); }
+    else setGuideStep(s => s + 1);
+  };
+  const handleGuideBack = () => setGuideStep(s => Math.max(0, s - 1));
+  const handleGuideClose = () => { setShowGuide(false); setGuideStep(0); };
+  const handleOpenGuide = () => { setGuideStep(0); setShowGuide(true); };
+
   const activeFloor = floors.find((f) => f.id === floorId) ?? floors[0];
   const activeFloorRooms = activeFloor?.rooms ?? [];
   const allCounted = activeFloorRooms.length > 0 && activeFloorRooms.every((r) => r.status === "counted");
 
+  // Highlight conduct survey button when on last guide step
+  const highlightSurvey = showGuide && guideStep === 5;
+  // Highlight first room when on panel steps 1 or 4 (0-indexed 0 or 3)
+  const guideHighlightFirstRoom = showGuide && (guideStep === 0 || guideStep === 3 || guideStep === 4);
+
   return (
-    <div className="h-screen flex flex-col bg-bg overflow-hidden">
+    <div className="h-screen flex flex-col bg-bg overflow-hidden relative">
       {/* ── Top Bar ── */}
       <header className="flex items-center gap-3 px-3 py-2 border-b border-border bg-surface shrink-0">
         {/* Logo — navigates to dashboard */}
@@ -108,15 +134,25 @@ export default function FloorPage() {
             <span className="hidden sm:inline">Rooms list</span>
           </Button>
 
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<ClipboardList size={14} />}
-            onClick={() => setSurveyModal(true)}
-            className="border-primary text-primary hover:bg-primary/5 h-10 py-2 px-4"
-          >
-            <span className="hidden sm:inline">Conduct Survey</span>
-          </Button>
+          {/* Conduct Survey — highlighted when guide is on step 6 */}
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<ClipboardList size={14} />}
+              onClick={() => setSurveyModal(true)}
+              className="border-primary text-primary hover:bg-primary/5 h-10 py-2 px-4"
+            >
+              <span className="hidden sm:inline">Conduct Survey</span>
+            </Button>
+            {highlightSurvey && (
+              <motion.span
+                className="absolute inset-0 rounded-xl border-2 border-[#9285CA] pointer-events-none"
+                animate={{ opacity: [0.3, 1, 0.3], scale: [0.97, 1.03, 0.97] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
+              />
+            )}
+          </div>
 
           {allCounted && (
             <Button
@@ -156,11 +192,26 @@ export default function FloorPage() {
           <FloorCanvas
             floorId={floorId}
             imageUrl={activeFloor?.imageUrl ?? "/mock/floorplan-oslo.svg"}
+            showGuide={showGuide}
+            guideStep={guideStep}
+            onOpenGuide={handleOpenGuide}
           />
         </div>
 
         {/* Detail panel — absolute overlay, right-aligned, 1/3 screen width */}
-        <DetailPanel floorId={floorId} />
+        <DetailPanel floorId={floorId} guideHighlightFirstRoom={guideHighlightFirstRoom} />
+
+        {/* Guide overlay — positioned relative to flex-1 area */}
+        <AnimatePresence>
+          {showGuide && (
+            <GuideOverlay
+              step={guideStep}
+              onNext={handleGuideNext}
+              onBack={handleGuideBack}
+              onClose={handleGuideClose}
+            />
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Modals */}

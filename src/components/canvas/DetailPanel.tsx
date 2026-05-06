@@ -18,6 +18,7 @@ import { ZONE_COLORS } from "@/lib/mockData";
 
 interface DetailPanelProps {
   floorId: string;
+  guideHighlightFirstRoom?: boolean;
 }
 
 const STATUS_ICON: Record<string, React.ReactNode> = {
@@ -26,7 +27,7 @@ const STATUS_ICON: Record<string, React.ReactNode> = {
   unvisited: <Circle size={13} className="text-[#C8D8E4] shrink-0" />,
 };
 
-export function DetailPanel({ floorId: _initialFloorId }: DetailPanelProps) {
+export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom = false }: DetailPanelProps) {
   const router = useRouter();
   const params = useParams();
   const projectId = params.id as string;
@@ -196,10 +197,11 @@ export function DetailPanel({ floorId: _initialFloorId }: DetailPanelProps) {
                 </p>
 
                 <div className="rounded-xl border border-[#E5EAF0] overflow-hidden">
-                  {rooms.map((room) => (
+                  {rooms.map((room, idx) => (
                     <RoomRow
                       key={room.id}
                       room={room}
+                      forceHighlight={guideHighlightFirstRoom && idx === 0}
                       groupMode={groupMode}
                       selectedForGroup={selectedForGroup}
                       onToggleGroupSelect={(id) =>
@@ -336,6 +338,7 @@ function RoomRow({
   onVerify,
   onDelete,
   onUpdate,
+  forceHighlight = false,
 }: {
   room: Room;
   groupMode: boolean;
@@ -345,6 +348,7 @@ function RoomRow({
   onVerify: () => void;
   onDelete: () => void;
   onUpdate: (data: Partial<Room>) => void;
+  forceHighlight?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(room.name);
@@ -358,7 +362,7 @@ function RoomRow({
   const isGroupSelected = selectedForGroup.includes(room.id);
 
   return (
-    <div className="border-b border-[#F0F4F8] last:border-0 bg-white hover:bg-[#F7F9FC] transition-colors">
+    <div className={cn("border-b border-[#F0F4F8] last:border-0 transition-colors", forceHighlight ? "bg-[#EEF4FF]" : "bg-white hover:bg-[#F7F9FC]")}>
       <div className="flex items-center justify-between px-3 py-2.5 group">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {groupMode ? (
@@ -394,7 +398,7 @@ function RoomRow({
         {!groupMode && (
           <div className={cn(
             "flex items-center gap-1 transition-opacity",
-            room.verified ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            room.verified ? "opacity-100" : (forceHighlight ? "opacity-100" : "opacity-0 group-hover:opacity-100")
           )}>
             {room.verified ? (
               <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-accent/10 text-accent-text text-[10px] font-bold">

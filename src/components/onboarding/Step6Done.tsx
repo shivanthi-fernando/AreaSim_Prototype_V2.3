@@ -7,9 +7,9 @@ import { CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 const checklist = [
-  "Identify rooms",
-  "Identify zones",
-  "Get participant count from each room",
+  "Verify identified rooms on floor plan",
+  "Mark zones",
+  "Get employee count of each room",
   "Conduct survey",
 ];
 
@@ -58,7 +58,7 @@ export function Step6Done() {
           className="text-sm text-text-muted font-body max-w-sm leading-relaxed"
         >
           In order to give you advice on your space utilisation, it&apos;s important
-          for us to get specific details about each floor. We just need you to:
+          for us to understand your space and people. For that, we mainly want you to do few things:
         </motion.p>
       </div>
 

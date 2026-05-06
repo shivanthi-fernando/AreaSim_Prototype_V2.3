@@ -14,33 +14,35 @@ import {
 import { useCanvasStore } from "@/store/canvas";
 import { Room, ZONE_COLORS } from "@/lib/mockData";
 import { RoomModal } from "./RoomModal";
-import { GuideOverlay, GUIDE_TOTAL, guideStepAboveToolbar } from "./GuideOverlay";
+import { guideStepAboveToolbar } from "./GuideOverlay";
 import useImage from "use-image";
 import { cn } from "@/lib/utils";
 
 const FILL_COLORS = {
   unvisited: "rgba(10,79,110,0.18)",
-  counting:  "rgba(245,158,11,0.18)",
-  counted:   "rgba(0,201,167,0.20)",
+  counting: "rgba(245,158,11,0.18)",
+  counted: "rgba(0,201,167,0.20)",
 };
 const STROKE_COLORS = {
   unvisited: "rgba(10,79,110,0.6)",
-  counting:  "rgba(245,158,11,0.7)",
-  counted:   "rgba(0,201,167,0.8)",
+  counting: "rgba(245,158,11,0.7)",
+  counted: "rgba(0,201,167,0.8)",
 };
 
 type Tool = "select" | "pen" | "group" | "eraser";
 
 const TOOLS: { id: Tool; icon: typeof MousePointer2; label: string; shortcut: string }[] = [
-  { id: "select",  icon: MousePointer2, label: "Select", shortcut: "V" },
-  { id: "pen",     icon: PenLine,       label: "Draw",   shortcut: "P" },
-  { id: "group",   icon: GroupIcon,     label: "Group",  shortcut: "G" },
-  { id: "eraser",  icon: Eraser,        label: "Erase",  shortcut: "E" },
+  { id: "select", icon: MousePointer2, label: "Select", shortcut: "V" },
+  { id: "pen", icon: PenLine, label: "Pen", shortcut: "P" },
+  { id: "group", icon: GroupIcon, label: "Group", shortcut: "G" },
+  { id: "eraser", icon: Eraser, label: "Erase", shortcut: "E" },
 ];
 
 interface FloorCanvasProps {
   floorId: string;
   imageUrl: string;
+  showGuide?: boolean;
+  guideStep?: number;
   onOpenGuide?: () => void;
 }
 
@@ -57,7 +59,7 @@ function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {
   return size;
 }
 
-export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
+export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 0, onOpenGuide }: FloorCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -117,10 +119,6 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
   const [groupName, setGroupName] = useState("");
   const [showGroupBar, setShowGroupBar] = useState(false);
   const [uploadHint, setUploadHint] = useState(false);
-
-  // Inline guide state — open on first mount
-  const [showGuide, setShowGuide] = useState(true);
-  const [guideStep, setGuideStep] = useState(0);
 
   useEffect(() => {
     setShowGroupBar(activeTool === "group" && selectedRoomIds.length >= 2);
@@ -257,14 +255,6 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
     if (activeTool === "eraser") return "cell";
     return "default";
   };
-
-  // Guide helpers
-  const handleGuideNext = () => {
-    if (guideStep >= GUIDE_TOTAL - 1) { setShowGuide(false); setGuideStep(0); }
-    else setGuideStep(s => s + 1);
-  };
-  const handleGuideBack = () => setGuideStep(s => Math.max(0, s - 1));
-  const handleGuideClose = () => { setShowGuide(false); setGuideStep(0); };
 
   const toolbarGlowing = showGuide && guideStepAboveToolbar(guideStep);
 
@@ -538,7 +528,7 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
             const active = activeTool === id;
             const isHighlighted = showGuide && (
               (guideStep === 1 && id === "pen") ||
-              (guideStep === 3 && id === "group")
+              (guideStep === 2 && id === "group")
             );
             return (
               <motion.button
@@ -615,7 +605,7 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
           </motion.button>
 
           <button
-            onClick={() => { setGuideStep(0); setShowGuide(true); }}
+            onClick={() => onOpenGuide?.()}
             title="Open guide"
             className={cn(
               "w-9 h-9 rounded-xl flex items-center justify-center transition-all",
@@ -625,18 +615,6 @@ export function FloorCanvas({ floorId, imageUrl }: FloorCanvasProps) {
             <HelpCircle size={15} />
           </button>
         </motion.div>
-
-        {/* Inline guide overlay */}
-        <AnimatePresence>
-          {showGuide && (
-            <GuideOverlay
-              step={guideStep}
-              onNext={handleGuideNext}
-              onBack={handleGuideBack}
-              onClose={handleGuideClose}
-            />
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );
