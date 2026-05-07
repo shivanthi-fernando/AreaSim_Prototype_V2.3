@@ -419,7 +419,7 @@ export default function FloorCountPage() {
                 </div>
               </div>
               <div className="divide-y divide-[#F1F5F9]">
-                {rooms.map((room, idx) => {
+                {rooms.map((room) => {
                   const cat = roomCategories[room.id];
                   const seats = roomSeats[room.id] || 0;
                   return (

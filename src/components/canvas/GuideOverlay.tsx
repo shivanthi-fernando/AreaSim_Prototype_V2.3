@@ -265,40 +265,6 @@ export function guideStepAboveToolbar(step: number) {
   return pos === "above-toolbar-pen" || pos === "above-toolbar-group";
 }
 
-// ─── Multi-div spotlight regions ─────────────────────────────────────────────
-
-type Region = { top?: string; bottom?: string; left?: string; right?: string; height?: string; width?: string };
-
-function getRegions(position: PositionType): Region[] {
-  switch (position) {
-    case "right-panel-mid":
-      return [
-        { top: "0", left: "0", right: "33.333%", bottom: "0" },
-        { top: "0", left: "66.667%", right: "0", height: "56px" },
-      ];
-    case "above-toolbar-pen":
-    case "above-toolbar-group":
-      return [{ top: "0", left: "0", right: "0", bottom: "64px" }];
-    case "inside-panel-group":
-      return [
-        { top: "0", left: "0", right: "33.333%", bottom: "0" },
-        { top: "0", left: "66.667%", right: "0", height: "220px" },
-        { top: "264px", left: "66.667%", right: "0", bottom: "0" },
-      ];
-    case "inside-panel-count":
-      return [
-        { top: "0", left: "0", right: "33.333%", bottom: "0" },
-        { top: "0", left: "66.667%", right: "0", height: "162px" },
-        { top: "202px", left: "66.667%", right: "0", bottom: "0" },
-      ];
-    case "below-header":
-      return [
-        { top: "56px", left: "0", right: "0", bottom: "0" },
-        { top: "0", left: "0", right: "246px", height: "56px" },
-        { top: "0", right: "0", width: "96px", height: "56px" },
-      ];
-  }
-}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

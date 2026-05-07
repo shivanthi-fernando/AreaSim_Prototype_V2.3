@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Phone, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -334,11 +335,12 @@ function _CreateProjectPanel() {
 function CityIllusPanel() {
   return (
     <div className="relative w-full h-full flex flex-col justify-end" style={{ background: "linear-gradient(160deg, #EBF7F2 0%, #DFF0E8 60%, #D5EBE0 100%)", minHeight: 480 }}>
-      <img
+      <Image
         src="/Onboarding_step_one.png"
         alt="Onboarding Step 1 Illustration"
-        className="absolute inset-0 w-full h-full"
-        style={{ objectFit: "cover" }}
+        fill
+        className="object-cover"
+        priority
       />
 
       {/* Caption overlay */}
