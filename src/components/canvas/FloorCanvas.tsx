@@ -516,7 +516,8 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
 
         {/* ── Floating Toolbar ─────────────────────────────── */}
         <motion.div
-          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/15 px-2 py-1.5"
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border shadow-2xl shadow-black/15 px-2 py-1.5"
+          style={{ background: "#FBF6EE" }}
           animate={toolbarGlowing
             ? { boxShadow: ["0 4px 24px rgba(251,146,60,0)", "0 4px 24px rgba(251,146,60,0.45)", "0 4px 24px rgba(251,146,60,0)"] }
             : { boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }
@@ -609,7 +610,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
             title="Open guide"
             className={cn(
               "w-9 h-9 rounded-xl flex items-center justify-center transition-all",
-              showGuide ? "text-[#9285CA] bg-[#F0EEFF]" : "text-text-muted hover:text-text hover:bg-surface-2"
+              showGuide ? "text-[#FB923C] bg-[#FFF7ED]" : "text-text-muted hover:text-text hover:bg-surface-2"
             )}
           >
             <HelpCircle size={15} />

@@ -39,12 +39,13 @@ export default function FloorPage() {
   const [showGuide, setShowGuide] = useState(true);
   const [guideStep, setGuideStep] = useState(0);
 
-  // Open detail panel when guide is active on a panel-pointing step
+  // Open/close detail panel based on guide step
   const panelSteps = new Set([0, 3, 4]);
+  const noPanelSteps = new Set([5, 6]);
   useEffect(() => {
-    if (showGuide && panelSteps.has(guideStep)) {
-      setDetailPanel(true);
-    }
+    if (!showGuide) return;
+    if (panelSteps.has(guideStep)) setDetailPanel(true);
+    if (noPanelSteps.has(guideStep)) setDetailPanel(false);
   }, [showGuide, guideStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGuideNext = () => {

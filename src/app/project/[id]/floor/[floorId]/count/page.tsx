@@ -363,9 +363,9 @@ export default function FloorCountPage() {
 
   if (countingPhase === "setup") {
     return (
-      <div className="h-screen bg-[#F8FAFC] flex flex-col font-body overflow-hidden">
-        <header className="bg-white border-b border-[#E2E8F0] px-6 py-3 shrink-0">
-          <div className="max-w-[1200px] mx-auto flex items-center gap-6">
+      <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
+        <header className="border-b border-[#E2E8F0] px-6 py-3 shrink-0" style={{ background: "#FBF6EE" }}>
+          <div className="max-w-[1200px] mx-auto flex items-center gap-4">
             <button
               onClick={handleBackToCanvas}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
@@ -373,36 +373,51 @@ export default function FloorCountPage() {
               <ArrowLeft size={14} /> Back to canvas
             </button>
             <div className="w-px h-6 bg-[#E2E8F0]" />
-            <h1 className="text-lg font-800 text-text leading-none" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-              Room counting setup
-            </h1>
-          </div>
-        </header>
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[1200px] mx-auto space-y-6">
-            {/* Title */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <Layers size={20} className="text-primary" />
-                  </div>
-                  <h2 className="text-xl font-bold text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                    Before you start counting
-                  </h2>
-                </div>
-                <p className="text-sm text-text-muted pl-[52px]">
-                  Set the category and verify the number of seats for each room. This is a one-time setup.
-                </p>
-              </div>
+            {/* Project name */}
+            <span className="text-sm font-semibold text-text font-body truncate max-w-[180px]">
+              {mockProject.name}
+            </span>
+            <div className="w-px h-6 bg-[#E2E8F0]" />
+            {/* Floor selector */}
+            <div className="relative">
+              <select
+                value={activeFloorId}
+                onChange={(e) => setActiveFloorId(e.target.value)}
+                className="appearance-none rounded-lg border border-[#E2E8F0] bg-white/60 pl-3 pr-8 py-1.5 text-sm font-medium text-text font-body focus:outline-none focus:border-primary transition-all"
+              >
+                {floors.map((f) => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
+                ))}
+              </select>
+              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            </div>
+            <div className="ml-auto">
               <Button
-                size="lg"
-                className="h-11 px-8 rounded-2xl shadow-lg shadow-primary/20 font-bold shrink-0"
+                size="sm"
+                className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
                 disabled={!allRoomsSetup}
                 onClick={handleSetupConfirm}
               >
                 Confirm &amp; continue
               </Button>
+            </div>
+          </div>
+        </header>
+        <main className="flex-1 overflow-y-auto p-8">
+          <div className="max-w-[1200px] mx-auto space-y-6">
+            {/* Title */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Layers size={20} className="text-primary" />
+                </div>
+                <h2 className="text-xl font-bold text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                  Before you start counting
+                </h2>
+              </div>
+              <p className="text-sm text-text-muted pl-[52px]">
+                Set the category and verify the number of seats for each room. This is a one-time setup.
+              </p>
             </div>
 
             {/* Per-room setup table */}
@@ -480,17 +495,6 @@ export default function FloorCountPage() {
               </div>
             </div>
 
-            {/* Bottom confirm */}
-            {rooms.length > 4 && (
-              <Button
-                size="lg"
-                className="w-full h-12 rounded-2xl shadow-lg shadow-primary/20 text-base font-bold"
-                disabled={!allRoomsSetup}
-                onClick={handleSetupConfirm}
-              >
-                Confirm &amp; continue
-              </Button>
-            )}
           </div>
         </main>
       </div>

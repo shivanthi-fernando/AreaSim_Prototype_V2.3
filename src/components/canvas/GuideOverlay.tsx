@@ -164,6 +164,44 @@ function CountingIllustration() {
   );
 }
 
+function ScoreWidgetIllustration() {
+  return (
+    <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      <defs>
+        <linearGradient id="coinG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#F8E19C" />
+          <stop offset="100%" stopColor="#FFCB71" />
+        </linearGradient>
+      </defs>
+      {/* Widget container */}
+      <rect x="18" y="22" width="244" height="64" rx="8" fill="#FBF6EE" stroke="#E5EAF0" strokeWidth="1.2" />
+      <line x1="100" y1="22" x2="100" y2="86" stroke="#E5EAF0" strokeWidth="1.2" />
+      <line x1="182" y1="22" x2="182" y2="86" stroke="#E5EAF0" strokeWidth="1.2" />
+      {/* Rooms */}
+      <motion.circle cx="50" cy="54" r="14" fill="url(#coinG)" stroke="#E3B069" strokeWidth="1.5"
+        animate={{ boxShadow: undefined, opacity: [0.85, 1, 0.85] }} transition={{ duration: 2.2, repeat: Infinity }} />
+      <text x="50" y="58" textAnchor="middle" fontSize="11" fontWeight="800" fill="#CC6F35" fontFamily="monospace">11</text>
+      <text x="72" y="45" fontSize="7" fill="#92400E" fontWeight="600">Rooms</text>
+      <motion.rect x="66" y="62" width="26" height="6" rx="3" fill="#FDE68A"
+        animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} />
+      {/* Zones */}
+      <motion.circle cx="141" cy="54" r="14" fill="url(#coinG)" stroke="#E3B069" strokeWidth="1.5"
+        animate={{ opacity: [0.85, 1, 0.85] }} transition={{ duration: 2.2, repeat: Infinity, delay: 0.5 }} />
+      <text x="141" y="58" textAnchor="middle" fontSize="11" fontWeight="800" fill="#CC6F35" fontFamily="monospace">3</text>
+      <text x="162" y="45" fontSize="7" fill="#92400E" fontWeight="600">Zones</text>
+      <motion.rect x="156" y="62" width="18" height="6" rx="3" fill="#FDE68A"
+        animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity, delay: 0.5 }} />
+      {/* Survey */}
+      <motion.circle cx="221" cy="54" r="14" fill="url(#coinG)" stroke="#E3B069" strokeWidth="1.5"
+        animate={{ opacity: [0.85, 1, 0.85] }} transition={{ duration: 2.2, repeat: Infinity, delay: 1.0 }} />
+      <text x="221" y="58" textAnchor="middle" fontSize="11" fontWeight="800" fill="#CC6F35" fontFamily="monospace">5</text>
+      <text x="242" y="45" fontSize="7" fill="#92400E" fontWeight="600">Survey</text>
+      <motion.rect x="236" y="62" width="18" height="6" rx="3" fill="#FDE68A"
+        animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity, delay: 1.0 }} />
+    </svg>
+  );
+}
+
 function SurveyIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -203,7 +241,8 @@ type PositionType =
   | "above-toolbar-group"   // card above toolbar, down arrow → group tool
   | "inside-panel-group"    // card inside panel, up arrow → Group button in row
   | "inside-panel-count"    // card inside panel, up arrow → Start room counting button
-  | "below-header";         // card below header, up arrow → Conduct Survey
+  | "below-header"          // card below header, up arrow → Conduct Survey
+  | "score-widget";         // card below score widget, up arrow → score widget
 
 interface StepDef {
   title: string;
@@ -256,6 +295,13 @@ const STEPS: StepDef[] = [
     arrowRightPx: 16,
     Illustration: SurveyIllustration,
   },
+  {
+    title: "Track Your Progress",
+    description: "Here you can see the count of identified rooms, identified zones and number of surveys conducted.",
+    position: "score-widget",
+    arrowLeftPx: 80,
+    Illustration: ScoreWidgetIllustration,
+  },
 ];
 
 export const GUIDE_TOTAL = STEPS.length;
@@ -287,6 +333,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   const isInsidePanelStep = position === "inside-panel-group" || position === "inside-panel-count";
   const isRightPanelMid = position === "right-panel-mid";
   const isBelowHeader = position === "below-header";
+  const isScoreWidget = position === "score-widget";
 
   // No dark backdrop — tooltip card stands alone with glow shadow
 
@@ -300,8 +347,8 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       transition={{ duration: 0.17 }}
       className="relative w-72 rounded-2xl border border-[#D9CEBF]"
       style={{
-        background: "#f1eee9ff",
-        boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 32px rgba(232,225,214,0.5)",
+        background: "#FBF6EE",
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 28px rgba(251,246,238,0.9)",
       }}
     >
       {/* Close */}
@@ -319,7 +366,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
         </span>
         <h3 className="text-sm font-bold text-[#0D1B2A] font-body mb-1">{current.title}</h3>
         <p className="text-xs text-[#5A7184] font-body leading-relaxed mb-3">{current.description}</p>
-        <div className="rounded-xl overflow-hidden" style={{ height: 108, background: "rgba(255,255,255,0.45)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ height: 108, background: "rgba(255,255,255,0.5)" }}>
           <Illustration />
         </div>
       </div>
@@ -355,7 +402,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: -8, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderTop: "8px solid #E8E1D6",
+            borderTop: "8px solid #FBF6EE",
           }} />
         </div>
       )}
@@ -371,7 +418,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: -8, left: -9, width: 0, height: 0,
             borderTop: "8px solid transparent", borderBottom: "8px solid transparent",
-            borderLeft: "8px solid #E8E1D6",
+            borderLeft: "8px solid #FBF6EE",
           }} />
         </div>
       )}
@@ -389,7 +436,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid #E8E1D6",
+            borderBottom: "8px solid #FBF6EE",
           }} />
         </div>
       )}
@@ -406,7 +453,25 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid #E8E1D6",
+            borderBottom: "8px solid #FBF6EE",
+          }} />
+        </div>
+      )}
+
+      {/* Up arrow — score-widget step (points up toward score widget above) */}
+      {isScoreWidget && (
+        <div style={{
+          position: "absolute", top: -9,
+          left: arrowLeftPx !== undefined ? arrowLeftPx : "50%",
+          transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
+          width: 0, height: 0,
+          borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
+          borderBottom: "9px solid #D9CEBF",
+        }}>
+          <div style={{
+            position: "absolute", top: 1, left: -8, width: 0, height: 0,
+            borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
+            borderBottom: "8px solid #FBF6EE",
           }} />
         </div>
       )}
@@ -443,7 +508,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "8px", top: "280px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "28px", top: "308px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
@@ -465,7 +530,18 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (isBelowHeader) {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: "155px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: "182px" }}>
+          <AnimatePresence mode="wait">{card}</AnimatePresence>
+        </div>
+      </>
+    );
+  }
+
+  // Step 7 — below score widget (top-left), up arrow pointing to widget above
+  if (isScoreWidget) {
+    return (
+      <>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "132px", left: "16px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

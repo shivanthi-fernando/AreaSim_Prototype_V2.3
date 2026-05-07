@@ -89,11 +89,11 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: "100%", opacity: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="absolute right-0 top-0 h-full bg-surface flex flex-col border-l border-[#E5EAF0] overflow-hidden shadow-2xl z-40"
-      style={{ width: "33.333%", minWidth: "280px", maxWidth: "460px" }}
+      className="absolute right-0 top-0 h-full flex flex-col border-l border-[#E5EAF0] overflow-hidden shadow-2xl z-40"
+      style={{ width: "33.333%", minWidth: "280px", maxWidth: "460px", background: "#FBF6EE" }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5EAF0] shrink-0 bg-surface">
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5EAF0] shrink-0" style={{ background: "#FBF6EE" }}>
         <div>
           <p className="text-[10px] text-[#8CA3B0] tracking-wider font-body mb-0.5">Floor</p>
           <h2
@@ -112,7 +112,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
       </div>
 
       {/* Rooms / Zones Tabs */}
-      <div className="flex border-b border-[#E5EAF0] shrink-0 bg-surface px-4 pt-3 gap-4">
+      <div className="flex border-b border-[#E5EAF0] shrink-0 px-4 pt-3 gap-4" style={{ background: "#FBF6EE" }}>
         {(["rooms", "zones"] as const).map((tab) => (
           <button
             key={tab}
@@ -362,7 +362,7 @@ function RoomRow({
   const isGroupSelected = selectedForGroup.includes(room.id);
 
   return (
-    <div className={cn("border-b border-[#F0F4F8] last:border-0 transition-colors", forceHighlight ? "bg-[#EEF4FF]" : "bg-white hover:bg-[#F7F9FC]")}>
+    <div className={cn("border-b border-[#F0F4F8] last:border-0 transition-colors", forceHighlight ? "bg-[#EEF4FF]" : "bg-transparent hover:bg-[#F5EFE5]")}>
       <div className="flex items-center justify-between px-3 py-2.5 group">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {groupMode ? (
@@ -499,7 +499,7 @@ function ZoneRow({ zone, rooms }: { zone: Zone; rooms: Room[] }) {
   const zoneRooms = rooms.filter((r) => zone.roomIds.includes(r.id));
 
   return (
-    <div className="rounded-xl border border-[#E5EAF0] overflow-hidden bg-white">
+    <div className="rounded-xl border border-[#E5EAF0] overflow-hidden" style={{ background: "#FBF6EE" }}>
       <button
         onClick={() => setExpanded((v) => !v)}
         className="w-full flex items-center justify-between px-3 py-3 hover:bg-[#F7F9FC] transition-colors group"

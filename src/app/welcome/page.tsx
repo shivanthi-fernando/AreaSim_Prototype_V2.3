@@ -38,7 +38,7 @@ export default function WelcomePage() {
                 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-text leading-tight"
                 style={{ fontFamily: "var(--font-manrope)" }}
               >
-                Welcome to your workspace journey. Smarter every step.
+                Welcome to your workspace journey.
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
