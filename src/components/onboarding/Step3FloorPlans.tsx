@@ -35,14 +35,14 @@ const CONSULTANTS = [
     title: "CEO & Partner",
     bio: "Extensive management and project leadership experience from Gjensidige NOR, OBOS Basale, Aberdeen Standard Investment, and Statsbygg.",
     phone: "+47 90 09 01 70",
-    email: "havard@areasim.no",
+    email: "havard@areasim.ai",
   },
   {
     name: "Mads Dyrseth",
     title: "COO & Partner",
     bio: "One of Norway's foremost analysts on government leases, with expertise in financial analysis, consulting, and commercial property from Statsbygg and SVV.",
     phone: "+47 97 40 78 49",
-    email: "mads@areasim.no",
+    email: "mads@areasim.ai",
   },
 ];
 

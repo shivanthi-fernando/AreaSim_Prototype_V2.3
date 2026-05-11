@@ -58,11 +58,11 @@ function StatCard({ icon, label, value, suffix = "", gradient, delay }: {
 
 // ─── Activity helpers ─────────────────────────────────────────────────────────
 const ACTIVITY_COLORS: Record<string, string> = {
-  room:    "bg-primary/10 text-primary",
-  survey:  "bg-accent/10 text-accent",
-  floor:   "bg-amber-500/10 text-amber-600",
-  member:  "bg-purple-500/10 text-purple-600",
-  project: "bg-blue-500/10 text-blue-600",
+  room:    "bg-[#139485]/10 text-[#139485]",
+  survey:  "bg-[#C47A2C]/10 text-[#C47A2C]",
+  floor:   "bg-[#C47A2C]/10 text-[#C47A2C]",
+  member:  "bg-[#7A6BAF]/10 text-[#7A6BAF]",
+  project: "bg-[#4A7AAE]/10 text-[#4A7AAE]",
 };
 const ACTIVITY_ICONS: Record<string, React.ReactNode> = {
   room:    <Building2 size={14} />,
@@ -74,9 +74,9 @@ const ACTIVITY_ICONS: Record<string, React.ReactNode> = {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    active:    "bg-accent/10 text-accent",
-    draft:     "bg-amber-500/10 text-amber-600",
-    completed: "bg-primary/10 text-primary",
+    active:    "bg-[#139485]/10 text-[#139485]",
+    draft:     "bg-[#C47A2C]/10 text-[#C47A2C]",
+    completed: "bg-[#4A7AAE]/10 text-[#4A7AAE]",
   };
   return (
     <span className={cn("inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold font-body", map[status] ?? "bg-border text-text-muted")}>
@@ -117,7 +117,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-md rounded-3xl bg-surface border border-border shadow-2xl overflow-hidden"
       >
         {/* Gradient top banner */}
-        <div className="relative bg-gradient-to-br from-primary via-primary-light to-accent px-6 pt-6 pb-10">
+        <div className="relative px-6 pt-6 pb-10" style={{ background: "linear-gradient(135deg, #139485 0%, #4A7AAE 55%, #C8953A 100%)" }}>
           {/* decorative grid */}
           <div className="absolute inset-0 opacity-10"
             style={{
@@ -219,13 +219,13 @@ function InviteModal({ onClose }: { onClose: () => void }) {
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={onClose}
-                    className="flex-1 py-2.5 rounded-xl border border-border text-sm font-semibold text-text-muted hover:text-text hover:border-border/60 transition-all font-body"
+                    className="flex-1 py-2.5 rounded-xl border border-[#E5DFD5] text-sm font-semibold text-text-muted hover:text-text hover:border-[#C8BFB0] hover:bg-[#F5F2EA] transition-all font-body"
                   >
                     Maybe later
                   </button>
                   <button
                     onClick={handleSend}
-                    className="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light transition-colors shadow-md shadow-primary/20 flex items-center justify-center gap-2 font-body"
+                    className="btn-3d flex-1 py-2.5 rounded-xl text-white text-sm font-bold transition-all flex items-center justify-center gap-2 font-body"
                   >
                     <UserPlus size={14} /> Send invites
                   </button>
@@ -252,10 +252,10 @@ export default function DashboardPage() {
   }, []);
 
   const stats = [
-    { icon: <FolderOpen size={20} className="text-white" />, label: "Total projects",     value: mockDashboardStats.totalProjects,     suffix: "",  gradient: "bg-gradient-to-br from-primary to-primary-light", delay: 0 },
-    { icon: <Building2 size={20} className="text-white" />,  label: "Rooms mapped",       value: mockDashboardStats.totalRooms,         suffix: "",  gradient: "bg-gradient-to-br from-accent to-emerald-400",    delay: 1 },
-    { icon: <TrendingUp size={20} className="text-white" />, label: "Avg. utilisation",   value: mockDashboardStats.avgUtilisation,     suffix: "%", gradient: "bg-gradient-to-br from-amber-400 to-orange-500",  delay: 2 },
-    { icon: <ClipboardCheck size={20} className="text-white" />, label: "Survey responses", value: mockDashboardStats.surveysCompleted, suffix: "",  gradient: "bg-gradient-to-br from-purple-500 to-indigo-500", delay: 3 },
+    { icon: <FolderOpen size={20} className="text-white" />, label: "Total projects",     value: mockDashboardStats.totalProjects,     suffix: "",  gradient: "bg-gradient-to-br from-[#139485] to-[#0E7A6D]",  delay: 0 },
+    { icon: <Building2 size={20} className="text-white" />,  label: "Rooms mapped",       value: mockDashboardStats.totalRooms,         suffix: "",  gradient: "bg-gradient-to-br from-[#4A7AAE] to-[#3A6B9E]",  delay: 1 },
+    { icon: <TrendingUp size={20} className="text-white" />, label: "Avg. utilisation",   value: mockDashboardStats.avgUtilisation,     suffix: "%", gradient: "bg-gradient-to-br from-[#C47A2C] to-[#B56826]",  delay: 2 },
+    { icon: <ClipboardCheck size={20} className="text-white" />, label: "Survey responses", value: mockDashboardStats.surveysCompleted, suffix: "",  gradient: "bg-gradient-to-br from-[#7A6BAF] to-[#6958A0]",  delay: 3 },
   ];
 
   return (
@@ -270,7 +270,8 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary via-primary-light to-accent p-8"
+          className="relative rounded-3xl overflow-hidden p-8"
+          style={{ background: "linear-gradient(135deg, #139485 0%, #4A7AAE 55%, #C8953A 100%)" }}
         >
           <div className="absolute inset-0 opacity-10"
             style={{
@@ -291,7 +292,7 @@ export default function DashboardPage() {
             <div className="hidden md:flex gap-3">
               <button
                 onClick={() => router.push("/project")}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-sm font-semibold transition-colors backdrop-blur-sm"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/35 text-white text-sm font-semibold transition-colors backdrop-blur-sm border border-white/20"
               >
                 View projects <ArrowRight size={14} />
               </button>
@@ -327,7 +328,7 @@ export default function DashboardPage() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#139485]/10 to-[#C47A2C]/10 flex items-center justify-center shrink-0">
                         <Building2 size={18} className="text-primary" />
                       </div>
                       <div className="min-w-0">
@@ -355,7 +356,7 @@ export default function DashboardPage() {
                       <motion.div
                         initial={{ width: 0 }} animate={{ width: `${project.completionPct}%` }}
                         transition={{ delay: 0.3 + i * 0.1, duration: 0.8, ease: "easeOut" }}
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                        className="h-full rounded-full bg-gradient-to-r from-[#139485] to-[#4A7AAE]"
                       />
                     </div>
                   </div>

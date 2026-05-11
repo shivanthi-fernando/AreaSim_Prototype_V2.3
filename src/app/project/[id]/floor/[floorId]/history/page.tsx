@@ -64,7 +64,7 @@ export default function RoomHistoryPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <div className="h-screen bg-[#F8FAFC] flex flex-col font-body overflow-hidden">
+    <div className="h-screen bg-bg flex flex-col font-body overflow-hidden">
       {/* --- Header --- */}
       <header className="bg-white border-b border-[#E2E8F0] px-6 py-4 shrink-0">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
@@ -108,7 +108,7 @@ export default function RoomHistoryPage() {
                     }}
                     className={cn(
                       "w-full text-left px-4 py-2.5 text-sm transition-colors",
-                      selectedRoomId === room.id ? "bg-primary/5 text-primary font-bold" : "text-text hover:bg-[#F8FAFC]"
+                      selectedRoomId === room.id ? "bg-primary/5 text-primary font-bold" : "text-text hover:bg-bg"
                     )}
                   >
                     {room.name}
@@ -125,14 +125,14 @@ export default function RoomHistoryPage() {
           
           {/* --- Chart Section --- */}
           <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col h-[40vh] min-h-[300px]">
-            <div className="px-6 py-5 border-b border-[#F1F5F9] flex items-center justify-between bg-[#F8FAFC]/50">
+            <div className="px-6 py-5 border-b border-[#F1F5F9] flex items-center justify-between bg-bg/50">
               <div>
                 <h3 className="text-lg font-bold text-text leading-none mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Occupancy trends</h3>
                 <p className="text-xs text-text-muted">Tracking count variation across different rounds</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#139485" }} />
                   <span className="text-[11px] font-bold text-text-muted">Actual count</span>
                 </div>
               </div>
@@ -143,8 +143,8 @@ export default function RoomHistoryPage() {
                 <AreaChart data={historyData}>
                   <defs>
                     <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6366F1" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#139485" stopOpacity={0.12}/>
+                      <stop offset="95%" stopColor="#139485" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
@@ -164,10 +164,10 @@ export default function RoomHistoryPage() {
                     contentStyle={{ borderRadius: "12px", border: "1px solid #E2E8F0", boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" }}
                     labelStyle={{ fontWeight: "bold", color: "#0D1B2A", marginBottom: "4px" }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="count" 
-                    stroke="#6366F1" 
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#139485"
                     strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorCount)" 
@@ -180,13 +180,13 @@ export default function RoomHistoryPage() {
 
           {/* --- History Table Section --- */}
           <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-[#F1F5F9] bg-[#F8FAFC]/50">
+            <div className="px-6 py-5 border-b border-[#F1F5F9] bg-bg/50">
               <h3 className="text-lg font-bold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>Session records</h3>
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
+                <thead className="bg-bg border-b border-[#E2E8F0]">
                   <tr className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
                     <th className="px-6 py-4">Date</th>
                     <th className="px-6 py-4">Time</th>
@@ -203,7 +203,7 @@ export default function RoomHistoryPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       key={idx} 
-                      className="hover:bg-[#F8FAFC] transition-colors"
+                      className="hover:bg-bg transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-sm font-bold text-text">
@@ -231,7 +231,7 @@ export default function RoomHistoryPage() {
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-3">
                           <span className="text-sm text-text-muted font-medium">{row.by}</span>
-                          <div className="w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[10px] font-bold text-primary border border-white shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#EDE8E0] flex items-center justify-center text-[10px] font-bold text-primary border border-white shrink-0">
                             {row.by.split(" ").map(n => n[0]).join("")}
                           </div>
                         </div>

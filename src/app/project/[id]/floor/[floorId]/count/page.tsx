@@ -170,6 +170,7 @@ export default function FloorCountPage() {
     }
     return "setup";
   });
+  const [startModalDismissed, setStartModalDismissed] = useState(false);
   // Per-room category selected during setup
   const [roomCategories, setRoomCategories] = useState<Record<string, string>>({});
   const [verifiedRooms, setVerifiedRooms] = useState<Set<string>>(new Set());
@@ -1144,18 +1145,21 @@ export default function FloorCountPage() {
 
       {/* ── Start session modal (shown when phase="ready") ─────────────────────── */}
       <AnimatePresence>
-        {countingPhase === "ready" && (
+        {countingPhase === "ready" && !startModalDismissed && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-[#0A1929]/60 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full"
+              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full relative"
             >
+              <button
+                onClick={() => setStartModalDismissed(true)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-text-muted hover:bg-[#E2E8F0] hover:text-text transition-colors z-10"
+              >
+                <X size={16} />
+              </button>
               <div className="p-8 text-center space-y-6">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
-                  <Play size={28} className="text-primary" fill="currentColor" />
-                </div>
                 <div className="space-y-2">
                   <h4 className="text-xl font-800 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                     Ready to start counting?

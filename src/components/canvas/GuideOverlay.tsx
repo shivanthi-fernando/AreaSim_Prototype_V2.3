@@ -508,7 +508,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "6px", top: "308px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "22px", top: "308px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
