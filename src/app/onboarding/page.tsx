@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useAppI18n } from "@/hooks/use-app-i18n";
 import { X, Phone, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
@@ -332,49 +332,458 @@ function _CreateProjectPanel() {
 
 // ─── Step 1 — City Illustration Panel ────────────────────────────────────────
 
-function CityIllusPanel() {
-  return (
-    <div className="relative w-full h-full flex flex-col justify-end" style={{ background: "linear-gradient(160deg, #EBF7F2 0%, #DFF0E8 60%, #D5EBE0 100%)", minHeight: 480 }}>
-      <Image
-        src="/Onboarding_step_one.png"
-        alt="Onboarding Step 1 Illustration"
-        fill
-        className="object-cover"
-        priority
-      />
+/** Matches in-app UI sans (Manrope); SVG reads CSS var from document. */
+const DIAGRAM_CAPTION_FONT =
+  'var(--font-manrope,ui-sans-serif,system-ui),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
 
-      {/* Caption overlay */}
-      <div className="relative z-10 p-8" style={{ background: "linear-gradient(to top, rgba(235,247,242,0.95) 60%, transparent)" }}>
-        <h2 className="text-2xl leading-snug mb-2" style={{ fontFamily: "var(--font-manrope)", color: "#1C2A24", letterSpacing: "-0.02em", fontWeight: 400 }}>
-          Start your<br /><strong style={{ fontWeight: 600, color: "#1F6644" }}>workspace journey.</strong>
+const DIAGRAM_NODE_CY = 81;
+/** All methodology step circles share the same radius */
+const DIAGRAM_NODE_R = 16;
+
+/** One continuous geometry: hill arcs linked by baseline dashes between nodes */
+const METHODOLOGY_CONNECTOR_D =
+  "M 70 81 Q 99 50 128 81 L 160 81 Q 190 50 219 81 L 251 81 Q 281 50 309 81 L 341 81 Q 371 50 399 81 L 431 81 Q 461 50 489 81";
+
+/** One arrow + motion sync; hops ≈ cubic + gap each (fraction of path ~length) */
+const METHODOLOGY_FLOW_DUR_S = 10;
+
+/** Stroke colours for hops leaving nodes 1–2, 3, 4, 5, 6 (matches METHODOLOGY_CONNECTOR_D) */
+const METHODOLOGY_FLOW_ARROW_FILLS = ["#169487", "#169487", "#6D5FAD", "#DCA31B", "#3A78C9"] as const;
+
+const METHODOLOGY_FLOW_FILL_VALUES = METHODOLOGY_FLOW_ARROW_FILLS.join(";");
+/** Cumulative fractional length (arc+line per hop ~ equal in this layout) */
+const METHODOLOGY_FLOW_FILL_KEYTIMES = "0;0.217;0.434;0.65;0.868";
+
+function MethodologyCaption({
+  cx,
+  yStart,
+  fill,
+  line1,
+  line2,
+}: {
+  cx: number;
+  yStart: number;
+  fill: string;
+  line1: string;
+  line2: string;
+}) {
+  const a = line1.toUpperCase();
+  const b = line2.trim();
+  const captionStyle = {
+    fontFamily: DIAGRAM_CAPTION_FONT,
+    fontSize: 7.15,
+    fontWeight: 700,
+    letterSpacing: "0.07em",
+  } as const;
+
+  if (b) {
+    return (
+      <g>
+        <text x={cx} y={yStart} textAnchor="middle" fill={fill} {...captionStyle}>
+          {a}
+        </text>
+        <text x={cx} y={yStart + 9} textAnchor="middle" fill={fill} {...captionStyle}>
+          {b.toUpperCase()}
+        </text>
+      </g>
+    );
+  }
+
+  return (
+    <text x={cx} y={yStart + 4} textAnchor="middle" fill={fill} {...captionStyle}>
+      {a}
+    </text>
+  );
+}
+
+/**
+ * Detailed city / journey illustration aligned with the Next.js onboarding reference.
+ * SVG schematic labels stay English; overlay copy is i18n.
+ */
+function CityIllusPanel() {
+  const { t } = useAppI18n();
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      className="relative flex h-full min-h-0 w-full flex-col justify-end"
+      style={{
+        background: "linear-gradient(160deg, #EBF7F2 0%, #DFF0E8 60%, #D5EBE0 100%)",
+      }}
+    >
+      <svg
+        viewBox="0 0 560 540"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute left-1/2 top-1/2 block h-[98%] w-[99%] -translate-x-1/2 -translate-y-1/2 lg:h-[102%] lg:w-[102%] xl:h-[108%] xl:w-[100%]"
+        aria-hidden
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id="as-ci-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#EBF7F2" />
+            <stop offset="100%" stopColor="#DFF0E8" />
+          </linearGradient>
+          <linearGradient id="as-ci-ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#C8E8D8" />
+            <stop offset="100%" stopColor="#B8DED0" />
+          </linearGradient>
+          <radialGradient id="as-ci-glow1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#139485" stopOpacity=".15" />
+            <stop offset="100%" stopColor="#139485" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="as-ci-glow2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#1BA896" stopOpacity=".12" />
+            <stop offset="100%" stopColor="#1BA896" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="as-ci-glow3" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#6D5FAD" stopOpacity=".1" />
+            <stop offset="100%" stopColor="#6D5FAD" stopOpacity="0" />
+          </radialGradient>
+          <filter id="as-ci-blur4">
+            <feGaussianBlur stdDeviation="4" />
+          </filter>
+          <filter id="as-ci-blur2">
+            <feGaussianBlur stdDeviation="2" />
+          </filter>
+          <filter id="as-ci-diagram-node-shadow" x="-70%" y="-70%" width="240%" height="240%">
+            <feDropShadow dx="0" dy="2.5" stdDeviation="4" floodColor="#14221c" floodOpacity="0.26" />
+          </filter>
+          <filter id="as-ci-flow-arrow-shadow" x="-80%" y="-80%" width="260%" height="260%">
+            <feDropShadow dx="0" dy="0.8" stdDeviation="1.1" floodColor="#1c2a24" floodOpacity="0.2" />
+          </filter>
+          <radialGradient id="as-ci-node-fill-teal" cx="42%" cy="38%" r="78%">
+            <stop offset="0%" stopColor="#22B8A8" />
+            <stop offset="65%" stopColor="#139485" />
+            <stop offset="100%" stopColor="#0F7569" />
+          </radialGradient>
+          <radialGradient id="as-ci-node-fill-purple" cx="42%" cy="38%" r="78%">
+            <stop offset="0%" stopColor="#8578C9" />
+            <stop offset="65%" stopColor="#6D5FAD" />
+            <stop offset="100%" stopColor="#60529C" />
+          </radialGradient>
+          <radialGradient id="as-ci-node-fill-amber" cx="42%" cy="38%" r="78%">
+            <stop offset="0%" stopColor="#F4BC3E" />
+            <stop offset="65%" stopColor="#E8A71A" />
+            <stop offset="100%" stopColor="#CF9414" />
+          </radialGradient>
+          <radialGradient id="as-ci-node-fill-blue" cx="42%" cy="38%" r="78%">
+            <stop offset="0%" stopColor="#4F84D4" />
+            <stop offset="65%" stopColor="#3A6FB5" />
+            <stop offset="100%" stopColor="#3262A5" />
+          </radialGradient>
+          <radialGradient id="as-ci-node-fill-sage" cx="42%" cy="38%" r="78%">
+            <stop offset="0%" stopColor="#82AD94" />
+            <stop offset="65%" stopColor="#6E9B82" />
+            <stop offset="100%" stopColor="#628A74" />
+          </radialGradient>
+          {/* Hidden path for single synced flow arrow */}
+          <path id="as-ci-diagram-flow" fill="none" d={METHODOLOGY_CONNECTOR_D} />
+        </defs>
+
+        <rect width="560" height="480" fill="url(#as-ci-sky)" />
+        <rect x="0" y="340" width="560" height="140" fill="url(#as-ci-ground)" />
+        <line x1="0" y1="342" x2="560" y2="342" stroke="rgba(19,148,133,.15)" strokeWidth="1" />
+
+        <g transform="translate(0,18)">
+          <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#C4D8CC" strokeWidth="36" strokeLinecap="square" strokeLinejoin="miter" />
+          <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="#C4D8CC" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M -20,380 C 80,370 140,360 200,355 S 320,350 400,345 S 510,340 580,335" fill="none" stroke="rgba(19,148,133,.3)" strokeWidth="1.5" strokeDasharray="22 14" strokeLinecap="round" />
+          <path d="M -20,366 C 80,356 140,346 200,341 S 320,336 400,331 S 510,326 580,321" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1" strokeLinecap="round" />
+          <path d="M -20,394 C 80,384 140,374 200,369 S 320,364 400,359 S 510,354 580,349" fill="none" stroke="rgba(19,148,133,.2)" strokeWidth="1" strokeLinecap="round" />
+        </g>
+
+        <ellipse cx="110" cy="340" rx="70" ry="25" fill="url(#as-ci-glow1)" filter="url(#as-ci-blur4)" />
+        <ellipse cx="290" cy="335" rx="80" ry="22" fill="url(#as-ci-glow2)" filter="url(#as-ci-blur4)" />
+        <ellipse cx="450" cy="335" rx="65" ry="20" fill="url(#as-ci-glow3)" filter="url(#as-ci-blur4)" />
+
+        {/* Building: teal left */}
+        <rect x="34" y="210" width="52" height="130" fill="#A8D4BC" rx="2" />
+        <rect x="34" y="210" width="52" height="4" fill="#5BAA7A" rx="1" />
+        <g fill="rgba(56,134,94,.35)">
+          <rect x="41" y="220" width="10" height="13" rx="1" /><rect x="57" y="220" width="10" height="13" rx="1" /><rect x="73" y="220" width="7" height="13" rx="1" />
+          <rect x="41" y="240" width="10" height="13" rx="1" /><rect x="57" y="240" width="10" height="13" rx="1" /><rect x="73" y="240" width="7" height="13" rx="1" />
+          <rect x="41" y="260" width="10" height="13" rx="1" /><rect x="57" y="260" width="10" height="13" rx="1" /><rect x="73" y="260" width="7" height="13" rx="1" />
+          <rect x="41" y="280" width="10" height="13" rx="1" /><rect x="57" y="280" width="10" height="13" rx="1" /><rect x="73" y="280" width="7" height="13" rx="1" />
+          <rect x="41" y="300" width="10" height="13" rx="1" /><rect x="57" y="300" width="10" height="13" rx="1" />
+        </g>
+        <rect x="73" y="260" width="7" height="13" rx="1" fill="#139485" opacity=".5" />
+        <rect x="41" y="280" width="10" height="13" rx="1" fill="#139485" opacity=".4" />
+        <rect x="92" y="255" width="36" height="85" fill="#B8DCCB" rx="2" />
+        <rect x="92" y="255" width="36" height="3" fill="#5BAA7A" />
+        <g fill="rgba(56,134,94,.3)">
+          <rect x="98" y="264" width="8" height="10" rx="1" /><rect x="112" y="264" width="8" height="10" rx="1" />
+          <rect x="98" y="282" width="8" height="10" rx="1" /><rect x="112" y="282" width="8" height="10" rx="1" />
+          <rect x="98" y="300" width="8" height="10" rx="1" /><rect x="112" y="300" width="8" height="10" rx="1" />
+        </g>
+        <rect x="50" y="315" width="20" height="25" rx="10" fill="#8CC4A8" />
+
+        {/* Building: amber tall */}
+        <rect x="152" y="165" width="44" height="175" fill="#F0DFB8" rx="2" />
+        <rect x="152" y="165" width="44" height="4" fill="#D4920A" rx="1" />
+        <g fill="rgba(176,110,10,.35)">
+          <rect x="158" y="175" width="9" height="12" rx="1" /><rect x="172" y="175" width="9" height="12" rx="1" /><rect x="183" y="175" width="7" height="12" rx="1" />
+          <rect x="158" y="195" width="9" height="12" rx="1" /><rect x="172" y="195" width="9" height="12" rx="1" /><rect x="183" y="195" width="7" height="12" rx="1" />
+          <rect x="158" y="215" width="9" height="12" rx="1" /><rect x="172" y="215" width="9" height="12" rx="1" />
+          <rect x="158" y="235" width="9" height="12" rx="1" /><rect x="172" y="235" width="9" height="12" rx="1" />
+          <rect x="158" y="255" width="9" height="12" rx="1" /><rect x="172" y="255" width="9" height="12" rx="1" />
+          <rect x="158" y="275" width="9" height="12" rx="1" /><rect x="172" y="275" width="9" height="12" rx="1" />
+          <rect x="158" y="295" width="9" height="12" rx="1" /><rect x="172" y="295" width="9" height="12" rx="1" />
+          <rect x="158" y="315" width="9" height="12" rx="1" /><rect x="172" y="315" width="9" height="12" rx="1" />
+        </g>
+        <rect x="183" y="195" width="7" height="12" rx="1" fill="#B06E0A" opacity=".5" />
+        <rect x="158" y="235" width="9" height="12" rx="1" fill="#B06E0A" opacity=".4" />
+
+        {/* Building: blue small */}
+        <rect x="200" y="250" width="34" height="90" fill="#C0D5F0" rx="2" />
+        <rect x="200" y="250" width="34" height="3" fill="#3A6FB5" rx="1" />
+        <g fill="rgba(58,111,181,.35)">
+          <rect x="206" y="260" width="8" height="10" rx="1" /><rect x="219" y="260" width="8" height="10" rx="1" />
+          <rect x="206" y="278" width="8" height="10" rx="1" /><rect x="219" y="278" width="8" height="10" rx="1" />
+          <rect x="206" y="296" width="8" height="10" rx="1" /><rect x="219" y="296" width="8" height="10" rx="1" />
+          <rect x="206" y="314" width="8" height="10" rx="1" /><rect x="219" y="314" width="8" height="10" rx="1" />
+        </g>
+        <rect x="219" y="278" width="8" height="10" rx="1" fill="#3A6FB5" opacity=".5" />
+
+        {/* Building: amber tall centre */}
+        <rect x="264" y="135" width="56" height="205" fill="#F0DFB8" rx="2" />
+        <rect x="264" y="135" width="56" height="5" fill="#D4920A" rx="1" />
+        <g fill="rgba(176,110,10,.3)">
+          <rect x="272" y="148" width="10" height="14" rx="1" /><rect x="288" y="148" width="10" height="14" rx="1" /><rect x="304" y="148" width="9" height="14" rx="1" />
+          <rect x="272" y="170" width="10" height="14" rx="1" /><rect x="288" y="170" width="10" height="14" rx="1" /><rect x="304" y="170" width="9" height="14" rx="1" />
+          <rect x="272" y="192" width="10" height="14" rx="1" /><rect x="288" y="192" width="10" height="14" rx="1" /><rect x="304" y="192" width="9" height="14" rx="1" />
+          <rect x="272" y="214" width="10" height="14" rx="1" /><rect x="288" y="214" width="10" height="14" rx="1" /><rect x="304" y="214" width="9" height="14" rx="1" />
+          <rect x="272" y="236" width="10" height="14" rx="1" /><rect x="288" y="236" width="10" height="14" rx="1" />
+          <rect x="272" y="258" width="10" height="14" rx="1" /><rect x="288" y="258" width="10" height="14" rx="1" />
+          <rect x="272" y="280" width="10" height="14" rx="1" /><rect x="288" y="280" width="10" height="14" rx="1" />
+          <rect x="272" y="302" width="10" height="14" rx="1" /><rect x="288" y="302" width="10" height="14" rx="1" />
+          <rect x="272" y="324" width="10" height="14" rx="1" />
+        </g>
+        <rect x="304" y="148" width="9" height="14" rx="1" fill="#B06E0A" opacity=".5" />
+        <rect x="288" y="170" width="10" height="14" rx="1" fill="#B06E0A" opacity=".4" />
+        <rect x="272" y="192" width="10" height="14" rx="1" fill="#B06E0A" opacity=".45" />
+        {/* Building: purple */}
+        <rect x="326" y="200" width="38" height="140" fill="#D0CAF0" rx="2" />
+        <rect x="326" y="200" width="38" height="4" fill="#6D5FAD" rx="1" />
+        <g fill="rgba(109,95,173,.3)">
+          <rect x="333" y="212" width="8" height="11" rx="1" /><rect x="347" y="212" width="9" height="11" rx="1" />
+          <rect x="333" y="231" width="8" height="11" rx="1" /><rect x="347" y="231" width="9" height="11" rx="1" />
+          <rect x="333" y="250" width="8" height="11" rx="1" /><rect x="347" y="250" width="9" height="11" rx="1" />
+          <rect x="333" y="269" width="8" height="11" rx="1" /><rect x="347" y="269" width="9" height="11" rx="1" />
+          <rect x="333" y="288" width="8" height="11" rx="1" /><rect x="347" y="288" width="9" height="11" rx="1" />
+          <rect x="333" y="307" width="8" height="11" rx="1" /><rect x="347" y="307" width="9" height="11" rx="1" />
+        </g>
+        <rect x="347" y="231" width="9" height="11" rx="1" fill="#6D5FAD" opacity=".5" />
+
+        {/* Building: teal wide right */}
+        <rect x="390" y="230" width="80" height="110" fill="#A8D4BC" rx="3" />
+        <rect x="390" y="230" width="80" height="5" fill="#5BAA7A" rx="1" />
+        <g fill="rgba(19,148,133,.3)">
+          <rect x="397" y="243" width="12" height="16" rx="1" /><rect x="415" y="243" width="12" height="16" rx="1" /><rect x="433" y="243" width="12" height="16" rx="1" /><rect x="451" y="243" width="12" height="16" rx="1" />
+          <rect x="397" y="267" width="12" height="16" rx="1" /><rect x="415" y="267" width="12" height="16" rx="1" /><rect x="433" y="267" width="12" height="16" rx="1" /><rect x="451" y="267" width="12" height="16" rx="1" />
+          <rect x="397" y="291" width="12" height="16" rx="1" /><rect x="415" y="291" width="12" height="16" rx="1" /><rect x="433" y="291" width="12" height="16" rx="1" /><rect x="451" y="291" width="12" height="16" rx="1" />
+        </g>
+        <rect x="397" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5" />
+        <rect x="415" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".45" />
+        <rect x="433" y="267" width="12" height="16" rx="1" fill="#139485" opacity=".4" />
+        <rect x="451" y="243" width="12" height="16" rx="1" fill="#139485" opacity=".5" />
+        <rect x="397" y="291" width="12" height="16" rx="1" fill="#139485" opacity=".4" />
+        {/* Building: teal narrow far right */}
+        <rect x="476" y="190" width="36" height="150" fill="#B0D4C0" rx="2" />
+        <rect x="476" y="190" width="36" height="4" fill="#5BAA7A" rx="1" />
+        <g fill="rgba(19,148,133,.3)">
+          <rect x="482" y="202" width="8" height="12" rx="1" /><rect x="495" y="202" width="9" height="12" rx="1" />
+          <rect x="482" y="222" width="8" height="12" rx="1" /><rect x="495" y="222" width="9" height="12" rx="1" />
+          <rect x="482" y="242" width="8" height="12" rx="1" /><rect x="495" y="242" width="9" height="12" rx="1" />
+          <rect x="482" y="262" width="8" height="12" rx="1" /><rect x="495" y="262" width="9" height="12" rx="1" />
+          <rect x="482" y="282" width="8" height="12" rx="1" /><rect x="495" y="282" width="9" height="12" rx="1" />
+          <rect x="482" y="302" width="8" height="12" rx="1" /><rect x="495" y="302" width="9" height="12" rx="1" />
+        </g>
+        <rect x="482" y="202" width="8" height="12" rx="1" fill="#139485" opacity=".5" />
+        <rect x="495" y="242" width="9" height="12" rx="1" fill="#139485" opacity=".4" />
+
+        {/* Trees — framer-motion sway */}
+        <rect x="135" y="312" width="4" height="28" fill="#6A9E7A" />
+        <motion.g
+          initial={false}
+          animate={reduceMotion ? undefined : { x: [0, 0.8, 0, -0.8, 0], y: [0, -0.35, 0, -0.2, 0] }}
+          transition={reduceMotion ? undefined : { duration: 3.8, ease: "easeInOut", repeat: Infinity }}
+        >
+          <circle cx="137" cy="305" r="14" fill="#4DAF7C" />
+          <circle cx="137" cy="300" r="10" fill="#3A9E6A" opacity=".7" />
+        </motion.g>
+        <rect x="242" y="318" width="4" height="22" fill="#6A9E7A" />
+        <motion.g
+          initial={false}
+          animate={reduceMotion ? undefined : { x: [0, -0.7, 0, 0.7, 0], y: [0, -0.25, 0, -0.15, 0] }}
+          transition={reduceMotion ? undefined : { duration: 3.4, ease: "easeInOut", repeat: Infinity, delay: 0.25 }}
+        >
+          <circle cx="244" cy="312" r="12" fill="#4DAF7C" />
+          <circle cx="244" cy="307" r="8" fill="#3A9E6A" opacity=".6" />
+        </motion.g>
+        <rect x="375" y="320" width="4" height="20" fill="#6A9E7A" />
+        <motion.g
+          initial={false}
+          animate={reduceMotion ? undefined : { x: [0, 0.6, 0, -0.6, 0], y: [0, -0.2, 0, -0.12, 0] }}
+          transition={reduceMotion ? undefined : { duration: 3.1, ease: "easeInOut", repeat: Infinity, delay: 0.45 }}
+        >
+          <circle cx="377" cy="315" r="11" fill="#4DAF7C" />
+          <circle cx="377" cy="310" r="7.5" fill="#3A9E6A" opacity=".6" />
+        </motion.g>
+        <rect x="524" y="318" width="3" height="22" fill="#6A9E7A" />
+        <motion.g
+          initial={false}
+          animate={reduceMotion ? undefined : { x: [0, -0.45, 0, 0.45, 0] }}
+          transition={reduceMotion ? undefined : { duration: 2.9, ease: "easeInOut", repeat: Infinity, delay: 0.2 }}
+        >
+          <circle cx="526" cy="312" r="10" fill="#4DAF7C" />
+          <circle cx="526" cy="307.5" r="6.6" fill="#3A9E6A" opacity=".6" />
+        </motion.g>
+
+        {/* Seven-phase roadmap */}
+        <g aria-hidden>
+          <g>
+            <path
+              fill="none"
+              stroke="rgba(19, 148, 133, 0.32)"
+              strokeWidth="1.25"
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d={METHODOLOGY_CONNECTOR_D}
+            >
+              {!reduceMotion ? (
+                <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1s" repeatCount="indefinite" />
+              ) : null}
+            </path>
+          </g>
+
+          {!reduceMotion ? (
+            <g opacity={0.98}>
+              <path
+                d="M 5 0 L -6 -5.5 L -6 5.5 Z"
+                fill={METHODOLOGY_FLOW_ARROW_FILLS[0]}
+                stroke="rgba(255,255,255,0.35)"
+                strokeWidth="0.35"
+                strokeLinejoin="round"
+                filter="url(#as-ci-flow-arrow-shadow)"
+              >
+                <animate
+                  attributeName="fill"
+                  calcMode="discrete"
+                  values={METHODOLOGY_FLOW_FILL_VALUES}
+                  keyTimes={METHODOLOGY_FLOW_FILL_KEYTIMES}
+                  dur={`${METHODOLOGY_FLOW_DUR_S}s`}
+                  repeatCount="indefinite"
+                />
+                <animateMotion
+                  dur={`${METHODOLOGY_FLOW_DUR_S}s`}
+                  repeatCount="indefinite"
+                  rotate="auto"
+                  calcMode="linear"
+                >
+                  <mpath href="#as-ci-diagram-flow" />
+                </animateMotion>
+              </path>
+            </g>
+          ) : null}
+
+          <g>
+            {/* Node 1-2 */}
+            <g>
+              <circle cx="54" cy="81" r={DIAGRAM_NODE_R + 5} fill="rgba(19,148,133,.14)" filter="url(#as-ci-blur4)" />
+              <circle cx="54" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-teal)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="54" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#4DC4B0" strokeWidth="1.7" />
+              <text x="54" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" letterSpacing="-0.02em" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>1-2</text>
+              <MethodologyCaption cx={54} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.countCollect.line1")} line2={t("onboarding.methodology.diagram.countCollect.line2")} />
+            </g>
+            {/* Node 3 */}
+            <g>
+              <circle cx="144" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-teal)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="144" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#4DC4B0" strokeWidth="1.7" />
+              <text x="144" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>3</text>
+              <MethodologyCaption cx={144} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.analysisAdvice.line1")} line2={t("onboarding.methodology.diagram.analysisAdvice.line2")} />
+            </g>
+            {/* Node 4 */}
+            <g>
+              <circle cx="235" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-purple)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="235" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#B6ACEB" strokeWidth="1.7" />
+              <text x="235" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>4</text>
+              <MethodologyCaption cx={235} yStart={108} fill="#5A4F95" line1={t("onboarding.methodology.diagram.workplaceConcept.line1")} line2={t("onboarding.methodology.diagram.workplaceConcept.line2")} />
+            </g>
+            {/* Node 5 */}
+            <g>
+              <circle cx="325" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-amber)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="325" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#FFD78A" strokeWidth="1.7" />
+              <text x="325" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>5</text>
+              <MethodologyCaption cx={325} yStart={108} fill="#A06A08" line1={t("onboarding.methodology.diagram.roomProgram.line1")} line2={t("onboarding.methodology.diagram.roomProgram.line2")} />
+            </g>
+            {/* Node 6 */}
+            <g>
+              <circle cx="415" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-blue)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="415" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#93BCE8" strokeWidth="1.7" />
+              <text x="415" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>6</text>
+              <MethodologyCaption cx={415} yStart={108} fill="#2E5E96" line1={t("onboarding.methodology.diagram.designPhase.line1")} line2={t("onboarding.methodology.diagram.designPhase.line2")} />
+            </g>
+            {/* Node 7 */}
+            <g>
+              <circle cx="505" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-sage)" filter="url(#as-ci-diagram-node-shadow)" />
+              <circle cx="505" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#A9CBB5" strokeWidth="1.7" />
+              <text x="505" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>7</text>
+              <MethodologyCaption cx={505} yStart={108} fill="#4A7358" line1={t("onboarding.methodology.diagram.optimization.line1")} line2={t("onboarding.methodology.diagram.optimization.line2")} />
+            </g>
+          </g>
+
+          {/* "You are here" badge */}
+          <motion.g
+            initial={false}
+            animate={reduceMotion ? { y: 0, opacity: 1, scale: 1 } : { y: [0, -2.5, 0], opacity: [0.88, 1, 0.88], scale: [1, 1.02, 1] }}
+            transition={reduceMotion ? undefined : { duration: 1.9, ease: "easeInOut", repeat: Infinity }}
+          >
+            <rect x="7" y="42" width="94" height="16" fill="#139485" rx="4" filter="url(#as-ci-diagram-node-shadow)" />
+            <text x="54" y="53" textAnchor="middle" fontSize="7" fontWeight="600" fill="white" fontFamily={DIAGRAM_CAPTION_FONT} letterSpacing="0.06em">
+              {t("onboarding.projectDetails.hero.illustration.youAreHere")}
+            </text>
+          </motion.g>
+          <line x1="54" y1="58" x2="54" y2={DIAGRAM_NODE_CY - DIAGRAM_NODE_R} stroke="rgba(19,148,133,.65)" strokeWidth="1.3" strokeLinecap="round" />
+        </g>
+
+        <ellipse cx="190" cy="365" rx="8" ry="3" fill="rgba(19,148,133,.08)" />
+        <ellipse cx="350" cy="358" rx="8" ry="3" fill="rgba(19,148,133,.08)" />
+      </svg>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.1 }}
+        className="relative z-10 p-8"
+        style={{ background: "linear-gradient(to top, rgba(235,247,242,0.95) 60%, transparent)" }}
+      >
+        <h2
+          className="mb-2 text-2xl leading-snug text-[#1C2A24]"
+          style={{ fontFamily: "var(--font-manrope)", letterSpacing: "-0.02em", fontWeight: 400 }}
+        >
+          {t("onboarding.projectDetails.hero.illustration.line1")}
+          <br />
+          <strong style={{ fontWeight: 600, color: "#1F6644" }}>{t("onboarding.projectDetails.hero.illustration.emphasis")}</strong>
         </h2>
-        <p className="text-sm leading-relaxed max-w-xs" style={{ color: "#4A6650" }}>
-          Map where you are today — so we can show you where you could be tomorrow.
+        <p className="max-w-xs text-sm leading-relaxed" style={{ color: "#4A6650" }}>
+          {t("onboarding.projectDetails.hero.illustration.subtitle")}
         </p>
-        <div className="flex gap-2.5 mt-5 flex-wrap">
-          <div
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium"
-            style={{ background: "#139485", color: "#fff" }}
-          >
-            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(255,255,255,.25)" }}>1</div>
-            Create project
+        <div className="mt-5 flex flex-wrap gap-2.5">
+          <div className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium" style={{ background: "#139485", color: "#fff" }}>
+            <div className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold" style={{ background: "rgba(255,255,255,.25)" }}>1</div>
+            {t("onboarding.projectDetails.hero.badgeProject")}
           </div>
-          <div
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border"
-            style={{ background: "rgba(19,148,133,.08)", color: "#4A6650", borderColor: "rgba(19,148,133,.2)" }}
-          >
-            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.1)" }}>2</div>
-            Lease parameters
+          <div className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium" style={{ background: "rgba(19,148,133,.08)", color: "#4A6650", borderColor: "rgba(19,148,133,.2)" }}>
+            <div className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold" style={{ background: "rgba(19,148,133,.1)" }}>2</div>
+            {t("onboarding.projectDetails.hero.badgeLease")}
           </div>
-          <div
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border"
-            style={{ background: "rgba(19,148,133,.05)", color: "#6A8070", borderColor: "rgba(19,148,133,.15)" }}
-          >
-            <div className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(19,148,133,.07)" }}>3</div>
-            Floor plan
+          <div className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium" style={{ background: "rgba(19,148,133,.05)", color: "#6A8070", borderColor: "rgba(19,148,133,.15)" }}>
+            <div className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold" style={{ background: "rgba(19,148,133,.07)" }}>3</div>
+            {t("onboarding.projectDetails.hero.badgeFloor")}
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

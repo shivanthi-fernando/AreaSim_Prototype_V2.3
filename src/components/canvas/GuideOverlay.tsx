@@ -347,8 +347,8 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       transition={{ duration: 0.17 }}
       className="relative w-72 rounded-2xl border border-[#D9CEBF]"
       style={{
-        background: "#FBF6EE",
-        boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 28px rgba(251,246,238,0.9)",
+        background: "#FFFFFF",
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 28px rgba(255,255,255,0.9)",
       }}
     >
       {/* Close */}
@@ -402,7 +402,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: -8, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderTop: "8px solid #FBF6EE",
+            borderTop: "8px solid #FFFFFF",
           }} />
         </div>
       )}
@@ -418,7 +418,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: -8, left: -9, width: 0, height: 0,
             borderTop: "8px solid transparent", borderBottom: "8px solid transparent",
-            borderLeft: "8px solid #FBF6EE",
+            borderLeft: "8px solid #FFFFFF",
           }} />
         </div>
       )}
@@ -436,7 +436,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid #FBF6EE",
+            borderBottom: "8px solid #FFFFFF",
           }} />
         </div>
       )}
@@ -453,7 +453,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid #FBF6EE",
+            borderBottom: "8px solid #FFFFFF",
           }} />
         </div>
       )}
@@ -471,7 +471,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
             borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-            borderBottom: "8px solid #FBF6EE",
+            borderBottom: "8px solid #FFFFFF",
           }} />
         </div>
       )}

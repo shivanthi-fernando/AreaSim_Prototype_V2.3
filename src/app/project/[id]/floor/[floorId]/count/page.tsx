@@ -171,7 +171,11 @@ export default function FloorCountPage() {
     return "setup";
   });
   // Per-room category selected during setup
-  const [roomCategories, setRoomCategories] = useState<Record<string, Category>>({});
+  const [roomCategories, setRoomCategories] = useState<Record<string, string>>({});
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [addCategoryRoomId, setAddCategoryRoomId] = useState<string | null>(null);
+  const [newCategoryInput, setNewCategoryInput] = useState("");
 
   const [isRecording, setIsRecording] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -353,6 +357,21 @@ export default function FloorCountPage() {
     setRoomSeats((prev) => ({ ...prev, [roomId]: Math.max(1, val) }));
   };
 
+  // ── Add custom category ───────────────────────────────────────────────────────
+  const handleAddCategory = () => {
+    const name = newCategoryInput.trim();
+    if (!name) return;
+    if (!customCategories.includes(name)) {
+      setCustomCategories((prev) => [...prev, name]);
+    }
+    if (addCategoryRoomId) {
+      setRoomCategories((prev) => ({ ...prev, [addCategoryRoomId]: name }));
+    }
+    setShowAddCategoryModal(false);
+    setNewCategoryInput("");
+    setAddCategoryRoomId(null);
+  };
+
   // ── Setup screen confirm ──────────────────────────────────────────────────────
   const handleSetupConfirm = () => {
     localStorage.setItem("counting-setup-done", "true");
@@ -445,22 +464,31 @@ export default function FloorCountPage() {
                         <p className="text-xs text-text-muted">{formatNumber(room.sqm || 25)} m²</p>
                       </div>
 
-                      {/* Category pills */}
-                      <div className="flex items-center gap-2 flex-1">
-                        {FLOOR_CATEGORIES.map((fc) => (
-                          <button
-                            key={fc.id}
-                            onClick={() => setRoomCategories((prev) => ({ ...prev, [room.id]: fc.id }))}
-                            className={cn(
-                              "px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all",
-                              cat === fc.id
-                                ? `${fc.color} ${fc.text} border-transparent ring-2 ring-primary/20`
-                                : "bg-[#F8FAFC] text-text-muted border-[#E2E8F0] hover:border-primary/30 hover:text-text"
-                            )}
-                          >
-                            {fc.label}
-                          </button>
-                        ))}
+                      {/* Category dropdown */}
+                      <div className="flex-1 relative max-w-[220px]">
+                        <select
+                          value={cat || ""}
+                          onChange={(e) => {
+                            if (e.target.value === "add-new") {
+                              setAddCategoryRoomId(room.id);
+                              setNewCategoryInput("");
+                              setShowAddCategoryModal(true);
+                            } else {
+                              setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
+                            }
+                          }}
+                          className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
+                        >
+                          <option value="" disabled>Select category...</option>
+                          {FLOOR_CATEGORIES.map((fc) => (
+                            <option key={fc.id} value={fc.id}>{fc.label}</option>
+                          ))}
+                          {customCategories.map((cc) => (
+                            <option key={cc} value={cc}>{cc}</option>
+                          ))}
+                          <option value="add-new">+ Add new category</option>
+                        </select>
+                        <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
                       </div>
 
                       {/* Seats */}
@@ -497,6 +525,67 @@ export default function FloorCountPage() {
 
           </div>
         </main>
+
+        {/* Add Category Modal */}
+        <AnimatePresence>
+          {showAddCategoryModal && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-sm"
+              >
+                <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2E8F0]">
+                  <h3 className="font-bold text-text text-sm" style={{ fontFamily: "var(--font-manrope)" }}>
+                    Add new category
+                  </h3>
+                  <button onClick={() => setShowAddCategoryModal(false)} className="text-text-muted hover:text-text transition-colors">
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div>
+                    <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider block mb-2">
+                      Category name
+                    </label>
+                    <input
+                      type="text"
+                      value={newCategoryInput}
+                      onChange={(e) => setNewCategoryInput(e.target.value)}
+                      placeholder="e.g. Storage, Reception..."
+                      className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && newCategoryInput.trim()) {
+                          handleAddCategory();
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setShowAddCategoryModal(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1"
+                      disabled={!newCategoryInput.trim()}
+                      onClick={handleAddCategory}
+                    >
+                      Add category
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
