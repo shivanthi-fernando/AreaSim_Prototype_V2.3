@@ -172,6 +172,7 @@ export default function FloorCountPage() {
   });
   // Per-room category selected during setup
   const [roomCategories, setRoomCategories] = useState<Record<string, string>>({});
+  const [verifiedRooms, setVerifiedRooms] = useState<Set<string>>(new Set());
   const [customCategories, setCustomCategories] = useState<string[]>([]);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [addCategoryRoomId, setAddCategoryRoomId] = useState<string | null>(null);
@@ -378,7 +379,7 @@ export default function FloorCountPage() {
     setCountingPhase("ready");
   };
 
-  const allRoomsSetup = rooms.every((r) => roomCategories[r.id]);
+  const allRoomsSetup = rooms.every((r) => roomCategories[r.id] && verifiedRooms.has(r.id));
 
   if (countingPhase === "setup") {
     return (
@@ -441,31 +442,40 @@ export default function FloorCountPage() {
 
             {/* Per-room setup table */}
             <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden">
+              {/* Progress bar */}
               <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center gap-3">
                 <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
-                  {rooms.filter((r) => roomCategories[r.id]).length} of {rooms.length} rooms configured
+                  {rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length} of {rooms.length} rooms verified
                 </span>
                 <div className="flex-1 h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary rounded-full transition-all duration-300"
-                    style={{ width: `${rooms.length ? (rooms.filter((r) => roomCategories[r.id]).length / rooms.length) * 100 : 0}%` }}
+                    style={{ width: `${rooms.length ? (rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length / rooms.length) * 100 : 0}%` }}
                   />
                 </div>
+              </div>
+              {/* Column headers */}
+              <div className="grid grid-cols-4 gap-4 px-6 py-3 border-b border-[#F1F5F9] bg-[#FAFBFC]">
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Room</span>
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Category</span>
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Seats</span>
+                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Status</span>
               </div>
               <div className="divide-y divide-[#F1F5F9]">
                 {rooms.map((room) => {
                   const cat = roomCategories[room.id];
                   const seats = roomSeats[room.id] || 0;
+                  const isVerified = verifiedRooms.has(room.id);
                   return (
-                    <div key={room.id} className="px-6 py-4 flex items-center gap-6">
+                    <div key={room.id} className="grid grid-cols-4 gap-4 px-6 py-4 items-center">
                       {/* Room info */}
-                      <div className="w-44 shrink-0">
+                      <div>
                         <p className="text-sm font-bold text-text">{room.name}</p>
                         <p className="text-xs text-text-muted">{formatNumber(room.sqm || 25)} m²</p>
                       </div>
 
                       {/* Category dropdown */}
-                      <div className="flex-1 relative max-w-[220px]">
+                      <div className="relative">
                         <select
                           value={cat || ""}
                           onChange={(e) => {
@@ -475,6 +485,7 @@ export default function FloorCountPage() {
                               setShowAddCategoryModal(true);
                             } else {
                               setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
+                              setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; });
                             }
                           }}
                           className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
@@ -492,8 +503,7 @@ export default function FloorCountPage() {
                       </div>
 
                       {/* Seats */}
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-xs text-text-muted font-body">Seats:</span>
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => updateSeats(room.id, seats - 1)}
                           className="w-7 h-7 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all"
@@ -509,12 +519,23 @@ export default function FloorCountPage() {
                         </button>
                       </div>
 
-                      {/* Status */}
-                      <div className="w-6 shrink-0">
-                        {cat ? (
-                          <Check size={16} strokeWidth={3} className="text-emerald-500" />
+                      {/* Verify / Verified */}
+                      <div className="flex justify-center">
+                        {isVerified ? (
+                          <button
+                            onClick={() => setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; })}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold hover:bg-emerald-100 transition-all"
+                          >
+                            <Check size={11} strokeWidth={3} /> Verified
+                          </button>
                         ) : (
-                          <div className="w-4 h-4 rounded-full border-2 border-[#E2E8F0]" />
+                          <button
+                            disabled={!cat}
+                            onClick={() => setVerifiedRooms((prev) => new Set([...prev, room.id]))}
+                            className="px-3 py-1.5 rounded-full text-xs font-semibold border border-primary text-primary hover:bg-primary/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          >
+                            Verify
+                          </button>
                         )}
                       </div>
                     </div>

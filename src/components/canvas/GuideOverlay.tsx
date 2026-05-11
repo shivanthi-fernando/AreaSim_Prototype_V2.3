@@ -345,7 +345,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.17 }}
-      className="relative w-72 rounded-2xl border border-[#D9CEBF]"
+      className="relative w-72 rounded-2xl border border-[#E5DFD5]"
       style={{
         background: "#FFFFFF",
         boxShadow: "0 0 0 1px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.18), 0 0 28px rgba(255,255,255,0.9)",
@@ -361,7 +361,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
 
       <div className="p-4 pb-3">
         {/* Step badge */}
-        <span className="inline-block text-[10px] font-semibold text-[#8B6F47] bg-[#D9CEBF] px-2 py-0.5 rounded-full font-body mb-2">
+        <span className="inline-block text-[10px] font-semibold text-[#8B6F47] bg-[#EDE8E0] px-2 py-0.5 rounded-full font-body mb-2">
           Step {step + 1} of {total}
         </span>
         <h3 className="text-sm font-bold text-[#0D1B2A] font-body mb-1">{current.title}</h3>
@@ -372,7 +372,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       </div>
 
       {/* Nav bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-[#D9CEBF]">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-[#E5DFD5]">
         <button
           onClick={onBack}
           disabled={step === 0}
@@ -397,7 +397,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
           width: 0, height: 0,
           borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-          borderTop: "9px solid #D9CEBF",
+          borderTop: "9px solid #E5DFD5",
         }}>
           <div style={{
             position: "absolute", top: -8, left: -8, width: 0, height: 0,
@@ -413,7 +413,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           position: "absolute", right: -9, top: "50%", transform: "translateY(-50%)",
           width: 0, height: 0,
           borderTop: "9px solid transparent", borderBottom: "9px solid transparent",
-          borderLeft: "9px solid #D9CEBF",
+          borderLeft: "9px solid #E5DFD5",
         }}>
           <div style={{
             position: "absolute", top: -8, left: -9, width: 0, height: 0,
@@ -431,7 +431,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
           width: 0, height: 0,
           borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-          borderBottom: "9px solid #D9CEBF",
+          borderBottom: "9px solid #E5DFD5",
         }}>
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
@@ -448,7 +448,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           right: arrowRightPx !== undefined ? arrowRightPx : 52,
           width: 0, height: 0,
           borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-          borderBottom: "9px solid #D9CEBF",
+          borderBottom: "9px solid #E5DFD5",
         }}>
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
@@ -466,7 +466,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
           transform: arrowLeftPx !== undefined ? "none" : "translateX(-50%)",
           width: 0, height: 0,
           borderLeft: "9px solid transparent", borderRight: "9px solid transparent",
-          borderBottom: "9px solid #D9CEBF",
+          borderBottom: "9px solid #E5DFD5",
         }}>
           <div style={{
             position: "absolute", top: 1, left: -8, width: 0, height: 0,
@@ -508,7 +508,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "28px", top: "308px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "6px", top: "308px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

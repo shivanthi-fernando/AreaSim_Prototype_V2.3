@@ -90,10 +90,10 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
       exit={{ x: "100%", opacity: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="absolute right-0 top-0 h-full flex flex-col border-l border-[#E5EAF0] overflow-hidden shadow-2xl z-40"
-      style={{ width: "33.333%", minWidth: "280px", maxWidth: "460px", background: "#FBF6EE" }}
+      style={{ width: "33.333%", minWidth: "280px", maxWidth: "460px", background: "#FFFFFF" }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5EAF0] shrink-0" style={{ background: "#FBF6EE" }}>
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5EAF0] shrink-0" style={{ background: "#FFFFFF" }}>
         <div>
           <p className="text-[10px] text-[#8CA3B0] tracking-wider font-body mb-0.5">Floor</p>
           <h2
@@ -112,7 +112,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
       </div>
 
       {/* Rooms / Zones Tabs */}
-      <div className="flex border-b border-[#E5EAF0] shrink-0 px-4 pt-3 gap-4" style={{ background: "#FBF6EE" }}>
+      <div className="flex border-b border-[#E5EAF0] shrink-0 px-4 pt-3 gap-4" style={{ background: "#FFFFFF" }}>
         {(["rooms", "zones"] as const).map((tab) => (
           <button
             key={tab}
@@ -499,7 +499,7 @@ function ZoneRow({ zone, rooms }: { zone: Zone; rooms: Room[] }) {
   const zoneRooms = rooms.filter((r) => zone.roomIds.includes(r.id));
 
   return (
-    <div className="rounded-xl border border-[#E5EAF0] overflow-hidden" style={{ background: "#FBF6EE" }}>
+    <div className="rounded-xl border border-[#E5EAF0] overflow-hidden" style={{ background: "#FFFFFF" }}>
       <button
         onClick={() => setExpanded((v) => !v)}
         className="w-full flex items-center justify-between px-3 py-3 hover:bg-[#F7F9FC] transition-colors group"
