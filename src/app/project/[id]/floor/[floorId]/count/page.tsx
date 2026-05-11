@@ -384,7 +384,7 @@ export default function FloorCountPage() {
   if (countingPhase === "setup") {
     return (
       <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
-        <header className="border-b border-[#E2E8F0] px-6 py-3 shrink-0" style={{ background: "#FBF6EE" }}>
+        <header className="border-b border-[#E2E8F0] px-6 py-3 shrink-0 bg-white">
           <div className="max-w-[1200px] mx-auto flex items-center gap-4">
             <button
               onClick={handleBackToCanvas}
@@ -612,7 +612,7 @@ export default function FloorCountPage() {
   }
 
   return (
-    <div className="h-screen bg-[#F8FAFC] flex flex-col font-body overflow-hidden">
+    <div className="h-screen bg-bg flex flex-col font-body overflow-hidden">
 
       {/* ── Header ───────────────────────────────────────────────────────────── */}
       <header className="bg-white border-b border-[#E2E8F0] px-6 py-3 shrink-0">

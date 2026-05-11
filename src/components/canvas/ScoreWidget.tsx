@@ -88,7 +88,7 @@ export function ScoreWidget() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       className="relative flex items-stretch rounded-xl border border-[#E5EAF0] shadow-lg overflow-hidden"
-      style={{ background: "#FBF6EE" }}
+      style={{ background: "#FFFFFF" }}
     >
 
       {STAT_CONFIG.map(({ icon, label, glow, iconColor, labelColor }, i) => {

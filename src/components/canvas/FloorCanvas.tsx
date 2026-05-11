@@ -517,7 +517,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
         {/* ── Floating Toolbar ─────────────────────────────── */}
         <motion.div
           className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-border shadow-2xl shadow-black/15 px-2 py-1.5"
-          style={{ background: "#FBF6EE" }}
+          style={{ background: "#FFFFFF" }}
           animate={toolbarGlowing
             ? { boxShadow: ["0 4px 24px rgba(251,146,60,0)", "0 4px 24px rgba(251,146,60,0.45)", "0 4px 24px rgba(251,146,60,0)"] }
             : { boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }
