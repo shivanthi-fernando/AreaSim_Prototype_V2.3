@@ -1011,7 +1011,7 @@ function EfficiencyCard() {
         <BarChart label="Cost per employee · NOK / year"   value={costPerPerson}  marketAvg={MKT_COST}  formatValue={(n) => fmtNOK(n) + " NOK"} />
       </div>
       <div className="mt-6 rounded-[10px] border p-4 shrink-0"
-        style={hasPotential ? { background: "#FAF3E9", borderColor: "#EAE5DC" } : { background: "#EAF5EE", borderColor: "#C4E3D2" }}>
+        style={hasPotential ? { background: "#F9F6EF", borderColor: "#F6DFA0" } : { background: "#EAF5EE", borderColor: "#C4E3D2" }}>
         <div className="flex items-center gap-2 mb-1.5">
           {hasPotential ? (
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1L9.5 5.5H14L10.5 8.5 11.5 13 7.5 10.5 3.5 13 4.5 8.5 1 5.5H5.5Z" fill="#B06E0A"/></svg>
@@ -1087,8 +1087,8 @@ export default function OnboardingPage() {
                         <Step3Lease onNext={nextStep} />
                       </div>
 
-                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-[#FAF3E9] hover:bg-[#F2EADA] hover:border-primary/50 transition-all cursor-pointer group">
-                        <div className="w-12 h-12 rounded-full border border-border bg-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-[#F9F8F3] hover:bg-[#FAF3E9] hover:border-primary/50 transition-all cursor-pointer group">
+                        <div className="w-12 h-12 rounded-full border border-[#FAF3E9] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#FAF3E9" }}>
                           <Upload size={22} className="text-accent" />
                         </div>
                         <div className="text-center">

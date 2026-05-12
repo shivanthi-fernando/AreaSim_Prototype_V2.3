@@ -151,7 +151,6 @@ function SortableFloorCard({
                   <Button size="sm" variant="secondary" className="bg-white" onClick={onVerify}>
                     Verify
                   </Button>
-
                   <label className="cursor-pointer">
                     <div className="h-9 px-4 rounded-xl bg-white text-text text-sm font-medium flex items-center justify-center hover:bg-surface-2 transition-colors">
                       Change
@@ -167,9 +166,9 @@ function SortableFloorCard({
                 )}
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center gap-3 aspect-[4/3] rounded-xl border-2 border-dashed border-primary/30 bg-[#FAF3E9] hover:border-primary/50 hover:bg-[#F2EADA] transition-all cursor-pointer group/upload">
-                <div className="w-10 h-10 rounded-full bg-white border border-border shadow-sm flex items-center justify-center group-hover/upload:scale-110 transition-transform">
-                  <Upload size={20} className="text-accent" />
+              <label className="flex flex-col items-center justify-center gap-3 aspect-[4/3] rounded-xl border-2 border-dashed border-[#C4BAED] bg-[#F0EEFF] hover:border-[#9B8FD0]/60 hover:bg-[#EAE5FF] transition-all cursor-pointer group/upload">
+                <div className="w-10 h-10 rounded-full bg-white border border-[#DDD8F7] shadow-sm flex items-center justify-center group-hover/upload:scale-110 transition-transform">
+                  <Upload size={20} style={{ color: "#6D5FAD" }} />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-medium text-text">Upload floor plan</p>
@@ -445,14 +444,16 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
                 {/* Buy professional floor plan */}
                 <button
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${unclearShowContacts
-                    ? "border-accent/40 bg-accent/5"
-                    : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
-                    }`}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${
+                    unclearShowContacts
+                      ? "border-accent/40 bg-accent/5"
+                      : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
+                  }`}
                   onClick={() => setUnclearShowContacts((v) => !v)}
                 >
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${unclearShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
-                    }`}>
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+                    unclearShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
+                  }`}>
                     <ShoppingCart size={18} className="text-accent" />
                   </div>
                   <div className="flex-1">
@@ -544,14 +545,16 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
                 {/* Buy professional */}
                 <button
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${noFloorShowContacts
-                    ? "border-accent/40 bg-accent/5"
-                    : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
-                    }`}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${
+                    noFloorShowContacts
+                      ? "border-accent/40 bg-accent/5"
+                      : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
+                  }`}
                   onClick={() => setNoFloorShowContacts((v) => !v)}
                 >
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${noFloorShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
-                    }`}>
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+                    noFloorShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
+                  }`}>
                     <ShoppingCart size={18} className="text-accent" />
                   </div>
                   <div className="flex-1">

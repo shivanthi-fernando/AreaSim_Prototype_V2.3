@@ -55,7 +55,7 @@ function IconInput({
           }}
           onChange={(e) => onChange(e.target.value.replace(/[^\d]/g, ""))}
           onBlur={(e) => onChange(e.target.value.replace(/[^\d]/g, ""))}
-          className="w-full rounded-[10px] border border-border bg-surface px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] hover:border-primary/50 transition-all duration-200"
+          className="w-full rounded-[10px] border border-border bg-surface px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 hover:border-primary/50 transition-all duration-200"
           style={{ paddingLeft: prefix ? "40px" : undefined, paddingRight: suffix ? "44px" : undefined }}
         />
         {suffix && (
@@ -138,7 +138,7 @@ export function Step3Lease({ onNext }: Props) {
       onSubmit={handleSubmit(onNext)} className="space-y-5">
 
       <motion.div variants={item}>
-        <IconInput icon={<AreaIcon />} iconBg="#FAF3E9"
+        <IconInput icon={<AreaIcon />} iconBg="#EAF5EE"
           label="Total area" hint="m² — total leasable floor area"
           placeholder="760" suffix="m²"
           value={fmt(totalArea)}
@@ -147,7 +147,7 @@ export function Step3Lease({ onNext }: Props) {
       </motion.div>
 
       <motion.div variants={item}>
-        <IconInput icon={<RentIcon />} iconBg="#FAF3E9"
+        <IconInput icon={<RentIcon />} iconBg="#EBF2FF"
           label="Annual rent" hint="NOK per year"
           placeholder="2 250 000" prefix="NOK"
           value={fmt(annualRent)}
@@ -156,7 +156,7 @@ export function Step3Lease({ onNext }: Props) {
       </motion.div>
 
       <motion.div variants={item}>
-        <IconInput icon={<CommonIcon />} iconBg="#FAF3E9"
+        <IconInput icon={<CommonIcon />} iconBg="#FDF0E4"
           label="Common area cost" hint="NOK per year"
           placeholder="300 000" prefix="NOK"
           value={fmt(commonAreaCost)}
@@ -165,7 +165,7 @@ export function Step3Lease({ onNext }: Props) {
       </motion.div>
 
       <motion.div variants={item}>
-        <IconInput icon={<PeopleIcon />} iconBg="#FAF3E9"
+        <IconInput icon={<PeopleIcon />} iconBg="#EAF5EE"
           label="Permanent employees" hint="Full-time staff headcount"
           placeholder="12" suffix="ppl"
           value={employees > 0 ? String(employees) : ""}
@@ -177,7 +177,7 @@ export function Step3Lease({ onNext }: Props) {
       <motion.div variants={item}>
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
-            <div className="w-[26px] h-[26px] rounded-[7px] flex items-center justify-center shrink-0" style={{ background: "#FAF3E9" }}>
+            <div className="w-[26px] h-[26px] rounded-[7px] flex items-center justify-center shrink-0" style={{ background: "#F0EEFF" }}>
               <ConsultantIcon />
             </div>
             <span className="text-sm font-medium text-text font-body">Consultants</span>
@@ -190,33 +190,33 @@ export function Step3Lease({ onNext }: Props) {
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
               className="overflow-hidden">
-              <div className="mt-2 p-4 rounded-xl border" style={{ background: "#FAF3E9", borderColor: "#EAE5DC" }}>
+              <div className="mt-2 p-4 rounded-xl border" style={{ background: "#F0EEFF", borderColor: "#DDD8F7" }}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-semibold text-accent">External consultants</span>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium" style={{ background: "rgba(196,122,44,0.1)", color: "var(--color-accent)" }}>
+                  <span className="text-sm font-semibold" style={{ color: "#6D5FAD" }}>External consultants</span>
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium" style={{ background: "rgba(109,95,173,0.14)", color: "#6D5FAD" }}>
                     counts as {consultantFTE}
                   </span>
                 </div>
-                <p className="text-[11px] mb-3 opacity-70" style={{ color: "var(--color-accent)" }}>
+                <p className="text-[11px] mb-3" style={{ color: "rgba(109,95,173,0.65)" }}>
                   Project-based staff — shared desks, rotational presence
                 </p>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm text-text-muted font-body">How many?</span>
-                  <div className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5" style={{ background: "rgba(255,255,255,0.7)", borderColor: "#EAE5DC" }}>
+                  <div className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5" style={{ background: "rgba(255,255,255,0.7)", borderColor: "#DDD8F7" }}>
                     <input type="text" inputMode="numeric" value={consultants} onFocus={(e) => e.target.select()}
                       onChange={(e) => setValue("consultantsCount", Math.min(200, Math.max(0, parseInt(e.target.value.replace(/\D/g, "")) || 0)))}
-                      className="w-10 text-right text-sm font-bold bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] rounded" style={{ color: "var(--color-accent)" }} />
+                      className="w-10 text-right text-sm font-bold bg-transparent focus:outline-none" style={{ color: "#6D5FAD" }} />
                     <span className="text-[11px] font-semibold text-text-muted font-mono">ppl</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-medium text-accent">Count as 1 employee each</p>
-                    <p className="text-[10px] mt-0.5 opacity-60" style={{ color: "var(--color-accent)" }}>
+                    <p className="text-xs font-medium" style={{ color: "#6D5FAD" }}>Count as 1 employee each</p>
+                    <p className="text-[10px] mt-0.5" style={{ color: "rgba(109,95,173,0.55)" }}>
                       {consultantFTE === 1 ? "Each consultant occupies a dedicated seat" : "Default: 0.5 — shared desk, rotational presence"}
                     </p>
                   </div>
-                  <Toggle checked={consultantFTE === 1} onToggle={() => setValue("consultantFTE", consultantFTE === 1 ? 0.5 : 1)} activeColor="var(--color-accent)" />
+                  <Toggle checked={consultantFTE === 1} onToggle={() => setValue("consultantFTE", consultantFTE === 1 ? 0.5 : 1)} activeColor="#6D5FAD" />
                 </div>
               </div>
             </motion.div>
