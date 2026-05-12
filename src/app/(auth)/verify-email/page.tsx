@@ -62,59 +62,61 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="space-y-8 text-center">
-      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }} className="flex justify-center">
-        <motion.div animate={{ y: [-4, 4, -4] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-[#139485]/10"
-          style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
-          <Mail size={36} color="#139485" />
+    <div className="space-y-4">
+      {/* White card */}
+      <div className="bg-white rounded-2xl border border-[#ECECEC] shadow-sm p-8 space-y-8 text-center">
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }} className="flex justify-center">
+          <motion.div animate={{ y: [-4, 4, -4] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-[#139485]/10"
+            style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
+            <Mail size={36} color="#139485" />
+          </motion.div>
         </motion.div>
-      </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <h1 className="text-2xl font-700 text-text mb-2" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
-          Check your inbox
-        </h1>
-        <p className="text-sm text-text-muted font-body">
-          We&apos;ve sent a 6-digit code to <span className="text-text font-medium">{email}</span>
-        </p>
-      </motion.div>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <h1 className="text-2xl text-text mb-2" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+            Check your inbox
+          </h1>
+          <p className="text-sm text-text-muted font-body">
+            We&apos;ve sent a 6-digit code to <span className="text-text font-medium">{email}</span>
+          </p>
+        </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-        className="flex items-center justify-center gap-2.5" onPaste={handlePaste}>
-        {Array.from({ length: OTP_LENGTH }).map((_, i) => (
-          <input key={i} ref={(el) => { refs.current[i] = el; }} type="text" inputMode="numeric"
-            maxLength={1} value={otp[i]} onChange={(e) => handleChange(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            className={`w-12 h-14 text-center text-xl font-600 rounded-xl border-2 bg-surface text-text transition-all duration-200 focus:outline-none ${
-              otp[i] ? "border-primary ring-2 ring-primary/20" : "border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-            }`} style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 600 }} />
-        ))}
-      </motion.div>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          className="flex items-center justify-center gap-2.5" onPaste={handlePaste}>
+          {Array.from({ length: OTP_LENGTH }).map((_, i) => (
+            <input key={i} ref={(el) => { refs.current[i] = el; }} type="text" inputMode="numeric"
+              maxLength={1} value={otp[i]} onChange={(e) => handleChange(i, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              className={`w-12 h-14 text-center text-xl rounded-xl border-2 bg-surface text-text transition-all duration-200 focus:outline-none ${
+                otp[i] ? "border-primary ring-2 ring-primary/20" : "border-[#AEAEAE] focus:border-primary focus:ring-2 focus:ring-primary/20"
+              }`} style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 600 }} />
+          ))}
+        </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex justify-center">
-        <div className="w-full max-w-[338px]">
-          <Button className="w-full" size="lg" onClick={() => handleVerify()} loading={verifying}>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+          className="flex justify-end">
+          <Button size="lg" onClick={() => handleVerify()} loading={verifying}>
             Verify email
           </Button>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-        {canResend ? (
-          <button onClick={() => { setCountdown(60); setCanResend(false); setOtp(Array(OTP_LENGTH).fill("")); }}
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-body font-medium">
-            <RefreshCw size={13} /> Resend code
-          </button>
-        ) : (
-          <p className="text-sm text-text-muted font-body">
-            Resend in <span className="font-mono text-text font-medium">
-              {String(Math.floor(countdown / 60)).padStart(2, "0")}:{String(countdown % 60).padStart(2, "0")}
-            </span>
-          </p>
-        )}
-      </motion.div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          {canResend ? (
+            <button onClick={() => { setCountdown(60); setCanResend(false); setOtp(Array(OTP_LENGTH).fill("")); }}
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-body font-medium">
+              <RefreshCw size={13} /> Resend code
+            </button>
+          ) : (
+            <p className="text-sm text-text-muted font-body">
+              Resend in <span className="font-mono text-text font-medium">
+                {String(Math.floor(countdown / 60)).padStart(2, "0")}:{String(countdown % 60).padStart(2, "0")}
+              </span>
+            </p>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 }

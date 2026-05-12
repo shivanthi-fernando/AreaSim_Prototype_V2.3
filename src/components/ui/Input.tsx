@@ -58,11 +58,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full rounded-[10px] border border-border bg-surface px-4 py-2.5 text-sm text-text font-body",
+              "w-full rounded-[10px] border border-[#C5C5C5] bg-surface px-4 py-2.5 text-sm text-text font-body",
               "placeholder:text-text-muted/60",
               "transition-all duration-200",
-              "focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20",
-              "hover:border-primary/50",
+              "focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)]",
+              "hover:border-[#AEAEAE]",
               error && "border-accent-warm focus:border-accent-warm focus:ring-accent-warm/20",
               icon && iconPosition === "left" && "pl-10",
               icon && iconPosition === "right" && "pr-10",

@@ -2,8 +2,8 @@
 
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { ChevronDown, CheckCircle2, SlidersHorizontal, ClipboardList, Gem, User } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { SlidersHorizontal, ClipboardList, Gem, User, Play } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
@@ -33,7 +33,7 @@ export default function FloorPage() {
     setSurveyModal, setCompletionModal,
   } = useCanvasStore();
 
-  const [floorDropdownOpen, setFloorDropdownOpen] = useState(false);
+  const [_floorDropdownOpen, _setFloorDropdownOpen] = useState(false);
 
   // Guide state
   const [showGuide, setShowGuide] = useState(true);
@@ -81,70 +81,58 @@ export default function FloorPage() {
 
         <span className="hidden sm:block w-1 h-1 rounded-full bg-border" />
 
-        {/* Floor selector */}
-        <div className="relative">
-          <button
-            onClick={() => setFloorDropdownOpen(!floorDropdownOpen)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm font-medium text-text font-body hover:border-primary/50 transition-colors"
+        {/* Floor selector — native select styled like counting page */}
+        <div className="relative min-w-[148px]">
+          <select
+            value={activeFloor?.id ?? ""}
+            onChange={(e) => {
+              setActiveFloor(e.target.value);
+              router.push(`/project/${projectId}/floor/${e.target.value}`);
+            }}
+            className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-9 py-1.5 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
           >
-            {activeFloor?.name ?? "Select Floor"}
-            <ChevronDown size={14} className="text-text-muted" />
-          </button>
-          <AnimatePresence>
-            {floorDropdownOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="absolute top-full left-0 mt-1 w-48 rounded-xl border border-border bg-surface shadow-lg z-50 py-1 overflow-hidden"
-              >
-                {floors.map((floor) => {
-                  const allDone = floor.rooms.length > 0 && floor.rooms.every((r) => r.status === "counted");
-                  return (
-                    <button
-                      key={floor.id}
-                      onClick={() => {
-                        setActiveFloor(floor.id);
-                        router.push(`/project/${projectId}/floor/${floor.id}`);
-                        setFloorDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-2 text-sm font-body hover:bg-surface-2 transition-colors ${floor.id === floorId ? "text-primary font-semibold" : "text-text"}`}
-                    >
-                      <span>{floor.name}</span>
-                      {allDone && <CheckCircle2 size={14} className="text-accent" />}
-                    </button>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
+            {floors.map((floor) => (
+              <option key={floor.id} value={floor.id}>{floor.name}</option>
+            ))}
+          </select>
+          <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2 py-2" />
-
         <div className="ml-auto flex items-center gap-2">
+          {/* Start room counting — primary */}
           <Button
             variant="primary"
             size="sm"
+            icon={<Play size={13} />}
+            onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
+            className="h-9 py-2 px-4"
+          >
+            <span className="hidden sm:inline">Start room counting</span>
+          </Button>
+
+          {/* Rooms list — secondary */}
+          <Button
+            variant="secondary"
+            size="sm"
             icon={<SlidersHorizontal size={14} />}
             onClick={() => setDetailPanel(!detailPanelOpen)}
-            className="h-10 py-2 px-4"
+            className="h-9 py-2 px-4"
           >
             <span className="hidden sm:inline">Rooms list</span>
           </Button>
 
-          {/* Conduct Survey */}
-          <div className="relative">
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<ClipboardList size={14} />}
-              onClick={() => setSurveyModal(true)}
-              className="border-primary text-primary hover:bg-primary/5 h-10 py-2 px-4"
-            >
-              <span className="hidden sm:inline">Conduct Survey</span>
-            </Button>
-          </div>
+          {/* Conduct Survey — secondary */}
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<ClipboardList size={14} />}
+            onClick={() => setSurveyModal(true)}
+            className="h-9 py-2 px-4"
+          >
+            <span className="hidden sm:inline">Conduct Survey</span>
+          </Button>
 
           {allCounted && (
             <Button
@@ -152,8 +140,8 @@ export default function FloorPage() {
               size="sm"
               icon={<Gem size={14} />}
               onClick={() => setCompletionModal(true)}
-              className="h-10 py-2 px-4"
-              style={{ background: "linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%)", boxShadow: "0 4px 14px rgba(180,83,9,0.35)", border: "none" }}
+              className="h-9 py-2 px-4"
+              style={{ background: "linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%)", boxShadow: "0 4px 14px rgba(180,83,9,0.35)" }}
             >
               <span className="hidden sm:inline">Room Program</span>
             </Button>

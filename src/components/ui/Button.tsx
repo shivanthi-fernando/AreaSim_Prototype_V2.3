@@ -15,9 +15,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconPosition?: "left" | "right";
 }
 
-/**
- * Primary UI button supporting multiple variants, sizes, loading state, and icon support.
- */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -37,16 +34,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "inline-flex items-center justify-center gap-2 font-body font-medium focus-ring select-none cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-all";
 
     const variants: Record<ButtonVariant, string> = {
-      primary:
-        "bg-primary text-white btn-3d rounded-full font-semibold",
-      secondary:
-        "bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full",
-      ghost:
-        "bg-transparent text-primary hover:bg-surface-2 active:scale-[0.98] rounded-[10px]",
-      danger:
-        "bg-accent-warm text-white hover:opacity-90 active:scale-[0.98] shadow-md hover:shadow-lg rounded-[10px]",
-      outline:
-        "bg-transparent border border-primary text-primary hover:bg-primary hover:text-white active:scale-[0.98] rounded-[10px]",
+      primary: "text-white rounded-full font-semibold",
+      secondary: "btn-secondary text-text rounded-full font-medium",
+      ghost: "bg-transparent text-primary hover:bg-surface-2 active:scale-[0.98] rounded-[10px]",
+      danger: "bg-accent-warm text-white hover:opacity-90 active:scale-[0.98] shadow-md hover:shadow-lg rounded-[10px]",
+      outline: "bg-transparent border border-primary text-primary hover:bg-primary hover:text-white active:scale-[0.98] rounded-[10px]",
+    };
+
+    // Primary gets size-specific shadow class; others use flat sizes
+    const primaryShadowClass: Record<ButtonSize, string> = {
+      sm: "btn-primary-sm",
+      md: "btn-primary",
+      lg: "btn-primary",
     };
 
     const sizes: Record<ButtonSize, string> = {
@@ -55,10 +54,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "text-base px-7 py-3.5 h-12",
     };
 
+    const shadowClass = variant === "primary" ? primaryShadowClass[size] : "";
+
     return (
       <button
         ref={ref}
-        className={cn(base, variants[variant], sizes[size], className)}
+        className={cn(base, variants[variant], sizes[size], shadowClass, className)}
         disabled={disabled || loading}
         {...props}
       >

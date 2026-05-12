@@ -1065,63 +1065,73 @@ export default function OnboardingPage() {
             <Step6Done />
           </div>
         ) : isLeaseStep ? (
-          // ── Step 2: multi-card scrollable layout ─────────────────────────────
+          // ── Step 2: single white card with bordered sections ──────────────────
           <div className="flex-1 overflow-y-auto" style={{ background: "var(--color-bg)" }}>
-            <div className="w-full max-w-[1080px] mx-auto px-8 py-10 space-y-5">
+            <div className="w-full max-w-[1080px] mx-auto px-8 py-10">
+              <div className="rounded-[18px] border border-border bg-surface shadow-card overflow-hidden">
 
-              {/* Page header */}
-              <div>
-                <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 2 of 3</p>
-                <h2 className="text-2xl mb-0.5" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Lease parameters</h2>
-                <p className="text-sm text-text-muted leading-relaxed">Type your figures — the preview updates live.</p>
-              </div>
+                {/* Section 1: Header */}
+                <div className="px-8 py-6 border-b border-border">
+                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 2 of 3</p>
+                  <h2 className="text-2xl mb-0.5" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Lease parameters</h2>
+                  <p className="text-sm text-text-muted leading-relaxed">Type your figures — the preview updates live.</p>
+                </div>
 
-              {/* Main grid: inputs left, preview cards right */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+                {/* Section 2: Main grid */}
+                <div className="px-8 py-8 border-b border-border">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
 
-                {/* Left card: form inputs & upload */}
-                <div className="flex flex-col gap-5">
-                  <div className="rounded-[18px] border border-border bg-surface shadow-card p-8">
-                    <Step3Lease onNext={nextStep} />
-                  </div>
+                    {/* Left: form inputs & upload */}
+                    <div className="flex flex-col gap-5">
+                      <div className="rounded-[14px] border border-border bg-surface/50 p-6">
+                        <Step3Lease onNext={nextStep} />
+                      </div>
 
-                  <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[18px] border-2 border-dashed border-primary/30 bg-surface hover:border-[#C4BAED] hover:bg-[#F0EEFF] transition-all cursor-pointer group">
-                    <div className="w-12 h-12 rounded-full border border-[#DDD8F7] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#F0EEFF" }}>
-                      <Upload size={22} style={{ color: "#6D5FAD" }} />
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-semibold text-text">Drop your lease & floor plans — we&apos;ll auto-fill what we can</p>
-                      <p className="text-xs text-text-muted mt-1 font-body">PDF · multiple files supported</p>
-                    </div>
-                    <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
-                  </label>
-                  {uploadedFiles.length > 0 && (
-                    <div className="space-y-1.5">
-                      {uploadedFiles.map((file, idx) => (
-                        <div key={idx} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-surface-2/60 group">
-                          <FileText size={14} className="text-primary shrink-0" />
-                          <span className="flex-1 text-xs font-medium text-text truncate min-w-0">{file.name}</span>
-                          <span className="text-[10px] text-text-muted font-mono shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
-                          <button type="button" onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))} className="text-text-muted hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><X size={13} /></button>
+                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-surface hover:border-[#C4BAED] hover:bg-[#F0EEFF] transition-all cursor-pointer group">
+                        <div className="w-12 h-12 rounded-full border border-[#DDD8F7] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#F0EEFF" }}>
+                          <Upload size={22} style={{ color: "#6D5FAD" }} />
                         </div>
-                      ))}
+                        <div className="text-center">
+                          <p className="text-sm font-semibold text-text">Drop your lease & floor plans — we&apos;ll auto-fill what we can</p>
+                          <p className="text-xs text-text-muted mt-1 font-body">PDF · multiple files supported</p>
+                        </div>
+                        <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
+                      </label>
+                      {uploadedFiles.length > 0 && (
+                        <div className="space-y-1.5">
+                          {uploadedFiles.map((file, idx) => (
+                            <div key={idx} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-surface-2/60 group">
+                              <FileText size={14} className="text-primary shrink-0" />
+                              <span className="flex-1 text-xs font-medium text-text truncate min-w-0">{file.name}</span>
+                              <span className="text-[10px] text-text-muted font-mono shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
+                              <button type="button" onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))} className="text-text-muted hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><X size={13} /></button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    {/* Right: two stacked cards */}
+                    <div className="flex flex-col gap-5 h-full">
+                      <HeadcountCard />
+                      <EfficiencyCard />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Right column: two stacked cards */}
-                <div className="flex flex-col gap-5 h-full">
-                  <HeadcountCard />
-                  <EfficiencyCard />
+                {/* Section 3: Navigation */}
+                <div className="px-8 py-5 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="flex items-center gap-1.5 text-sm font-semibold font-body text-text-muted hover:text-text transition-colors"
+                  >
+                    <ArrowLeft size={15} /> Back
+                  </button>
+                  <Button size="lg" type="submit" form="lease-form" icon={<ArrowRight size={16} />} iconPosition="right">Continue</Button>
                 </div>
-              </div>
 
-              {/* Nav */}
-              <div className="flex items-center justify-between pb-4">
-                <Button variant="secondary" size="lg" type="button" onClick={prevStep} icon={<ArrowLeft size={16} />}>Back</Button>
-                <Button size="lg" type="submit" form="lease-form" icon={<ArrowRight size={16} />} iconPosition="right">Continue</Button>
               </div>
-
             </div>
           </div>
         ) : isCreateStep ? (

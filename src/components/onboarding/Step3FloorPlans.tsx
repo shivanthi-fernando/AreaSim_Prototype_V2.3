@@ -309,15 +309,13 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
       {/* Navigation */}
       <div className="flex items-center justify-between pt-4 border-t border-border">
-        <Button
-          variant="secondary"
-          size="lg"
+        <button
+          type="button"
           onClick={onBack}
-          icon={<ArrowLeft size={16} />}
-          iconPosition="left"
+          className="flex items-center gap-1.5 text-sm font-semibold font-body text-text-muted hover:text-text transition-colors"
         >
-          Back
-        </Button>
+          <ArrowLeft size={15} /> Back
+        </button>
         <Button
           size="lg"
           onClick={onNext}
@@ -387,7 +385,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                   <span className="text-sm font-medium">AI detected 8 rooms automatically</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Button variant="secondary" onClick={() => setVerifyingFloor(null)}>Re-upload</Button>
+                  <Button variant="secondary" size="md" onClick={() => setVerifyingFloor(null)}>Re-upload</Button>
                   <Button icon={<Check size={18} />} onClick={handleVerifyFloorPlan}>
                     Verify this floor plan
                   </Button>

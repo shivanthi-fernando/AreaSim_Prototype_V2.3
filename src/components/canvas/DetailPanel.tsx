@@ -5,11 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Plus, CheckCircle2, Loader2, Circle,
   Sparkles, Trash2, ChevronDown, Check,
-  Layers, Group as GroupIcon, Pencil,
+  Layers, Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useCanvasStore } from "@/store/canvas";
-import { useRouter, useParams } from "next/navigation";
 import { IllustrationDrawRoom } from "@/components/canvas/IllustrationDrawRoom";
 import { Logo } from "@/components/ui/Logo";
 import { cn, formatNumber } from "@/lib/utils";
@@ -28,9 +27,6 @@ const STATUS_ICON: Record<string, React.ReactNode> = {
 };
 
 export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom = false }: DetailPanelProps) {
-  const router = useRouter();
-  const params = useParams();
-  const projectId = params.id as string;
 
   const {
     detailPanelOpen, setDetailPanel,
@@ -66,7 +62,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
   };
 
   const handleCreateZone = () => {
-    if (selectedForGroup.length < 2 || !groupZoneName.trim() || !floor) return;
+    if (selectedForGroup.length < 1 || !groupZoneName.trim() || !floor) return;
     const zoneId = `zone-${Date.now()}`;
     const color = ZONE_COLORS[zones.length % ZONE_COLORS.length];
     addZone(floor.id, {
@@ -112,7 +108,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
       </div>
 
       {/* Rooms / Zones Tabs */}
-      <div className="flex border-b border-[#E5EAF0] shrink-0 px-4 pt-3 gap-4" style={{ background: "#FFFFFF" }}>
+      <div className="flex items-center border-b border-[#E5EAF0] shrink-0 px-4 pt-3 gap-4" style={{ background: "#FFFFFF" }}>
         {(["rooms", "zones"] as const).map((tab) => (
           <button
             key={tab}
@@ -130,6 +126,15 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
             </span>
           </button>
         ))}
+        <div className="ml-auto pb-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => { setPanelTab("rooms"); setGroupMode(true); setSelectedForGroup([]); setGroupZoneName(""); }}
+          >
+            Name zones
+          </Button>
+        </div>
       </div>
 
       {/* Scrollable body */}
@@ -158,20 +163,21 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                       placeholder="Zone name…"
                       className="w-full rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-body text-text focus:outline-none focus:border-primary transition-all"
                     />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleCreateZone}
-                        disabled={selectedForGroup.length < 2 || !groupZoneName.trim()}
-                        className="flex-1 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold disabled:opacity-40 transition-opacity"
-                      >
-                        Create Zone
-                      </button>
+                    <div className="flex items-center justify-between gap-2">
                       <button
                         onClick={() => { setGroupMode(false); setSelectedForGroup([]); setGroupZoneName(""); }}
-                        className="px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-muted hover:text-text transition-colors"
+                        className="text-xs font-semibold text-text-muted hover:text-text transition-colors"
                       >
                         Cancel
                       </button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={handleCreateZone}
+                        disabled={selectedForGroup.length < 1 || !groupZoneName.trim()}
+                      >
+                        Create Zone
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -180,18 +186,6 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
 
             {(zones.length > 0 || rooms.length > 0) && (
               <>
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-[11px] text-[#0D1B2A] font-bold font-body tracking-wider uppercase">Rooms</p>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => router.push(`/project/${projectId}/floor/${floor.id}/count`)}
-                    className="h-8 text-[13px] font-bold"
-                  >
-                    Start room counting
-                  </Button>
-                </div>
-
                 <p className="text-[11px] text-text-muted font-body mb-3 leading-relaxed">
                   You can group multiple rooms and mark it as one zone.
                 </p>
@@ -209,10 +203,6 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                           prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
                         )
                       }
-                      onGroup={() => {
-                        setGroupMode(true);
-                        setSelectedForGroup([room.id]);
-                      }}
                       onVerify={() => {
                         setShowVerifyModal(true);
                         setTool("pen");
@@ -262,10 +252,6 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
         {/* ══ ZONES TAB ══ */}
         {panelTab === "zones" && (
           <div className="px-4 pt-4 pb-2">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] text-[#0D1B2A] font-bold font-body tracking-wider uppercase">Zones</p>
-            </div>
-
             {zones.length > 0 ? (
               <div className="space-y-2">
                 {zones.map((zone) => (
@@ -334,7 +320,6 @@ function RoomRow({
   groupMode,
   selectedForGroup,
   onToggleGroupSelect,
-  onGroup,
   onVerify,
   onDelete,
   onUpdate,
@@ -344,7 +329,6 @@ function RoomRow({
   groupMode: boolean;
   selectedForGroup: string[];
   onToggleGroupSelect: (id: string) => void;
-  onGroup: () => void;
   onVerify: () => void;
   onDelete: () => void;
   onUpdate: (data: Partial<Room>) => void;
@@ -406,12 +390,6 @@ function RoomRow({
               </div>
             ) : (
               <>
-                <button
-                  onClick={onGroup}
-                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-primary hover:bg-primary/5 transition-all text-[10px] font-bold"
-                >
-                  <GroupIcon size={11} /> Group
-                </button>
                 <button
                   onClick={onVerify}
                   className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-primary hover:bg-primary/5 transition-all text-[10px] font-bold"

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 // ─── Illustrations ────────────────────────────────────────────────────────────
 
@@ -373,18 +374,25 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
 
       {/* Nav bar */}
       <div className="flex items-center justify-between px-4 py-3 border-t border-[#E5DFD5]">
-        <button
-          onClick={onBack}
-          disabled={step === 0}
-          className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] disabled:opacity-30 hover:opacity-70 transition-opacity"
-        >
-          <ArrowLeft size={13} /> Back
-        </button>
+        {step > 0 ? (
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] hover:opacity-70 transition-opacity"
+          >
+            <ArrowLeft size={13} /> Back
+          </button>
+        ) : (
+          <span />
+        )}
 
-        <button onClick={onNext}
-          className="btn-3d rounded-full flex items-center gap-1.5 text-xs font-semibold font-body px-3 py-1.5 text-white">
-          {isLastStep ? "Done" : <><span>Next</span> <ArrowRight size={13} /></>}
-        </button>
+        <Button
+          size="sm"
+          onClick={onNext}
+          icon={!isLastStep ? <ArrowRight size={13} /> : undefined}
+          iconPosition="right"
+        >
+          {isLastStep ? "Done" : "Next"}
+        </Button>
       </div>
 
       {/* ── Arrows ──────────────────────────────────────────────────────────── */}

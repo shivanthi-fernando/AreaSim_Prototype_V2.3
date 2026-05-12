@@ -33,48 +33,29 @@ export default function OrganizationDetailsPage() {
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
-      <motion.div variants={itemVariants}>
-        <h1 className="text-2xl font-700 text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
-          Your organisation
-        </h1>
-        <p className="text-sm text-text-muted font-body">
-          Tell us about your workspace.
-        </p>
-      </motion.div>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4">
+      {/* White card */}
+      <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-[#ECECEC] shadow-sm p-8 space-y-6">
+        <div>
+          <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+            Your organisation
+          </h1>
+          <p className="text-sm text-text-muted font-body">Tell us about your workspace.</p>
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <motion.div variants={itemVariants}>
-          <Input
-            label="Organization name"
-            placeholder="Larsen & Partners AS"
-            icon={<Building2 size={16} />}
-            value={values.organization}
-            onChange={handleChange("organization")}
-          />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <Input
-            label="Organization number"
-            placeholder="e.g. 123 456 789"
-            icon={<Hash size={16} />}
-            value={values.organizationNumber}
-            onChange={handleChange("organizationNumber")}
-          />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            loading={loading}
-            icon={<ArrowRight size={16} />}
-            iconPosition="right"
-          >
-            Continue
-          </Button>
-        </motion.div>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input label="Organization name" placeholder="Larsen & Partners AS"
+            icon={<Building2 size={16} />} value={values.organization} onChange={handleChange("organization")} />
+          <Input label="Organization number" placeholder="e.g. 123 456 789"
+            icon={<Hash size={16} />} value={values.organizationNumber} onChange={handleChange("organizationNumber")} />
+
+          <div className="flex justify-end">
+            <Button type="submit" size="lg" loading={loading} icon={<ArrowRight size={16} />} iconPosition="right">
+              Continue
+            </Button>
+          </div>
+        </form>
+      </motion.div>
     </motion.div>
   );
 }

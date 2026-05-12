@@ -97,11 +97,10 @@ export function Step6Done() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.8 }}
-        className="w-full flex justify-center"
+        className="w-full flex justify-start"
       >
         <Button
           size="lg"
-          className="px-10 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25"
           icon={<ArrowRight size={18} />}
           iconPosition="right"
           onClick={() => router.push("/project/proj-1/floor/floor-1")}
