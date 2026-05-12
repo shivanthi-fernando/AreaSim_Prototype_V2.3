@@ -414,18 +414,13 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                 >
                   <X size={14} />
                 </button>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
-                    <AlertCircle size={20} className="text-red-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                      This floor plan is not clear enough
-                    </h2>
-                    <p className="text-xs text-text-muted font-body mt-0.5">
-                      Our system could not read this floor plan accurately.
-                    </p>
-                  </div>
+                <div className="mb-2">
+                  <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                    This floor plan is not clear enough
+                  </h2>
+                  <p className="text-xs text-text-muted font-body mt-0.5">
+                    Our system could not read this floor plan accurately.
+                  </p>
                 </div>
               </div>
 

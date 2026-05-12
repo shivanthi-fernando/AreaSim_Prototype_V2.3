@@ -49,8 +49,8 @@ export default function OrganizationDetailsPage() {
           <Input label="Organization number" placeholder="e.g. 123 456 789"
             icon={<Hash size={16} />} value={values.organizationNumber} onChange={handleChange("organizationNumber")} />
 
-          <div className="flex justify-end">
-            <Button type="submit" size="lg" loading={loading} icon={<ArrowRight size={16} />} iconPosition="right">
+          <div className="flex justify-center">
+            <Button type="submit" size="lg" loading={loading} icon={<ArrowRight size={16} />} iconPosition="right" className="w-full">
               Continue
             </Button>
           </div>

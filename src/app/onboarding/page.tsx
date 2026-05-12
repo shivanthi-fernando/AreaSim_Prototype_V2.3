@@ -1004,7 +1004,7 @@ function EfficiencyCard() {
   const { spacePerPerson, costPerPerson, hasPotential } = useLeaseMetrics();
 
   return (
-    <div className="flex-1 rounded-[14px] border border-border bg-surface p-5 flex flex-col">
+    <div className="flex-1 rounded-[14px] border border-border bg-[#F9F8F3] p-5 flex flex-col">
       <p className="text-sm font-medium text-text font-body mb-4">Efficiency charts</p>
       <div className="flex-1 flex flex-col gap-6">
         <BarChart label="Space efficiency · m² per person" value={spacePerPerson} marketAvg={MKT_SPACE} formatValue={(n) => `${n.toFixed(1)} m²`} />
@@ -1083,13 +1083,13 @@ export default function OnboardingPage() {
 
                     {/* Left: form inputs & upload */}
                     <div className="flex flex-col gap-5">
-                      <div className="rounded-[14px] border border-border bg-surface/50 p-6">
+                      <div className="rounded-[14px] border border-border bg-[#F9F8F3] p-6">
                         <Step3Lease onNext={nextStep} />
                       </div>
 
-                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-surface hover:border-[#C4BAED] hover:bg-[#F0EEFF] transition-all cursor-pointer group">
-                        <div className="w-12 h-12 rounded-full border border-[#DDD8F7] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#F0EEFF" }}>
-                          <Upload size={22} style={{ color: "#6D5FAD" }} />
+                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-[#F9F8F3] hover:bg-[#FAF3E9] hover:border-primary/50 transition-all cursor-pointer group">
+                        <div className="w-12 h-12 rounded-full border border-[#FAF3E9] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#FAF3E9" }}>
+                          <Upload size={22} className="text-accent" />
                         </div>
                         <div className="text-center">
                           <p className="text-sm font-semibold text-text">Drop your lease & floor plans — we&apos;ll auto-fill what we can</p>

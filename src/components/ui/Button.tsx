@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sizes: Record<ButtonSize, string> = {
       sm: "text-sm px-3 py-1.5 h-8",
       md: "text-sm px-5 py-2.5 h-10",
-      lg: "text-base px-7 py-3.5 h-12",
+      lg: "text-base px-7 py-3 h-11",
     };
 
     const shadowClass = variant === "primary" ? primaryShadowClass[size] : "";

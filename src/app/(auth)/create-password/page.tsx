@@ -110,8 +110,8 @@ export default function CreatePasswordPage() {
             </div>
           </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" size="lg" loading={loading}>Create account</Button>
+          <div className="flex justify-center">
+            <Button type="submit" size="lg" loading={loading} className="w-full">Create account</Button>
           </div>
         </form>
       </div>

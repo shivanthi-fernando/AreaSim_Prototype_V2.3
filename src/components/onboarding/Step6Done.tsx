@@ -97,7 +97,7 @@ export function Step6Done() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.8 }}
-        className="w-full flex justify-start"
+        className="w-full flex justify-center"
       >
         <Button
           size="lg"

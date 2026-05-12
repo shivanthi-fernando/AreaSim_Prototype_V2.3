@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { cn } from "@/lib/utils";
 
 const OTP_LENGTH = 6;
 
@@ -86,18 +88,21 @@ export default function VerifyEmailPage() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="flex items-center justify-center gap-2.5" onPaste={handlePaste}>
           {Array.from({ length: OTP_LENGTH }).map((_, i) => (
-            <input key={i} ref={(el) => { refs.current[i] = el; }} type="text" inputMode="numeric"
+            <Input key={i} ref={(el) => { refs.current[i] = el; }} type="text" inputMode="numeric"
               maxLength={1} value={otp[i]} onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
-              className={`w-12 h-14 text-center text-xl rounded-xl border-2 bg-surface text-text transition-all duration-200 focus:outline-none ${
-                otp[i] ? "border-primary ring-2 ring-primary/20" : "border-[#AEAEAE] focus:border-primary focus:ring-2 focus:ring-primary/20"
-              }`} style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 600 }} />
+              className={cn(
+                "w-12 h-14 text-center text-xl rounded-[10px] border bg-surface text-text px-0 transition-all duration-200",
+                otp[i] ? "border-primary ring-2 ring-primary/20" : "border-[#C5C5C5]"
+              )}
+              style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 600 }}
+            />
           ))}
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="flex justify-end">
-          <Button size="lg" onClick={() => handleVerify()} loading={verifying}>
+          className="flex justify-center">
+          <Button size="lg" onClick={() => handleVerify()} loading={verifying} className="w-full">
             Verify email
           </Button>
         </motion.div>
