@@ -63,7 +63,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "transition-all duration-200",
               "focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)]",
               "hover:border-[#AEAEAE]",
-              error && "border-accent-warm focus:border-accent-warm focus:ring-accent-warm/20",
+              error && "border-accent-warm focus:border-accent-warm focus:ring-[rgba(196,122,44,0.18)]",
               icon && iconPosition === "left" && "pl-10",
               icon && iconPosition === "right" && "pr-10",
               className
