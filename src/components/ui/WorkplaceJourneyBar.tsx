@@ -186,75 +186,78 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
   const activeIdx = STEPS.findIndex((s) => s.id === activeStep);
 
   return (
-    <div className="w-full px-4 py-3 border-b border-border flex items-stretch shrink-0 bg-white min-h-[80px]">
+    <div className="w-full px-4 py-2 border-b border-border flex items-stretch shrink-0 bg-white min-h-[72px]">
       {/* ── GO badge — flat left, pointy right ── */}
       <div
-        className="flex flex-col items-center justify-center pl-5 pr-8 py-2 text-white shrink-0"
+        className="flex flex-col items-center justify-center pl-3 pr-6 py-1.5 text-white shrink-0"
         style={{
-          background: "#B99F7D", // Tan/brown from screenshot
-          clipPath: "polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%)",
-          minWidth: 110,
-          filter: "drop-shadow(1px 0 0 #A68A66) drop-shadow(-1px 0 0 #A68A66) drop-shadow(0 1px 0 #A68A66) drop-shadow(0 -1px 0 #A68A66)",
-          zIndex: 20,
+          background: "#1FA7A0", // Tan/brown from screenshot
+          clipPath: "polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%)",
+          minWidth: 72,
+          zIndex: 30,
         }}
       >
-        <span className="text-[18px] font-black uppercase leading-none tracking-tight">GO</span>
-        <span className="text-[14px] font-semibold leading-none mt-0.5">Start</span>
+        <span className="text-[14px] font-black uppercase leading-none tracking-tight">GO</span>
+        <span className="text-[10px] font-semibold leading-none mt-0.5">Start</span>
       </div>
 
       {/* ── Steps — notched left, pointy right (except last) ── */}
-      {/* Removed ml-3 and using negative margin to connect GO to Step 1 */}
-      <div className="flex-1 flex items-stretch -ml-[16px]">
+      <div className="flex-1 flex items-stretch ml-1">
         {STEPS.map((step, i) => {
           const isActive = step.id === activeStep;
           const isPast = i < activeIdx;
+          const isFirstStep = i === 0;
           const isLast = i === STEPS.length - 1;
           const { Icon } = step;
+
+          // Special light shade for Step 1
+          const bgFill = isFirstStep ? "#F5F3FF" : (isActive ? step.activeGradient : step.bg);
           const borderColor = isActive ? step.activeBorder : step.border;
 
           return (
             <div
               key={step.id}
               className={cn(
-                "flex-1 flex items-center gap-3 py-2 pl-9 pr-7 transition-all duration-300 relative",
-                !isActive && !isPast && "opacity-75"
+                "flex-1 flex items-center gap-2 py-1.5 pl-7 pr-3 transition-all duration-300 relative",
+                !isActive && !isPast && "opacity-80"
               )}
               style={{
-                background: isActive ? step.activeGradient : step.bg,
+                background: bgFill,
                 // Notch/Point logic
                 clipPath: isLast
-                  ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 16px 50%)"
-                  : "polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%, 16px 50%)",
-                marginLeft: i >= 0 ? "0" : "0", // Handled by container and overlap
+                  ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 12px 50%)"
+                  : "polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%, 12px 50%)",
                 zIndex: STEPS.length - i,
-                // Solid border effect using 4-way drop-shadow to simulate 1px border
-                filter: `drop-shadow(0.6px 0 0 ${borderColor}) drop-shadow(-0.6px 0 0 ${borderColor}) drop-shadow(0 0.6px 0 ${borderColor}) drop-shadow(0 -0.6px 0 ${borderColor})`,
+                // Refined crisp border for Step 1
+                filter: isFirstStep
+                  ? `drop-shadow(0.5px 0 0 ${borderColor}) drop-shadow(-0.5px 0 0 ${borderColor}) drop-shadow(0 0.5px 0 ${borderColor}) drop-shadow(0 -0.5px 0 ${borderColor})`
+                  : undefined,
               }}
             >
-              {/* Icon box — always 3D with border as requested */}
+              {/* Icon box — Smaller Solid white 3D effect */}
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all"
+                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white"
                 style={{
-                  background: isActive ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.75)",
-                  border: `1.5px solid ${isActive ? step.activeBorder : step.border}`,
-                  boxShadow: isActive
-                    ? `0 3px 8px ${step.shadow}, inset 0 1px 0 rgba(255,255,255,0.95)`
-                    : `0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)`,
+                  border: `1.2px solid ${borderColor}`,
+                  boxShadow: `0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)`,
                 }}
               >
-                <Icon />
+                {/* Scale down the SVG icon slightly to fit smaller box */}
+                <div className="scale-75 flex items-center justify-center">
+                  <Icon />
+                </div>
               </div>
 
               {/* Text */}
               <div className="min-w-0 flex-1">
                 <p
-                  className="text-[9px] font-extrabold uppercase tracking-[0.1em] leading-none truncate"
+                  className="text-[8px] font-extrabold uppercase tracking-[0.05em] leading-none truncate"
                   style={{ color: step.color, opacity: isActive ? 1 : 0.65 }}
                 >
                   {step.label}
                 </p>
                 <p
-                  className="text-[13.5px] font-bold leading-tight mt-[5px] whitespace-nowrap truncate"
+                  className="text-[11px] font-bold leading-tight mt-[3px] whitespace-nowrap truncate"
                   style={{
                     color: isActive ? step.color : "#4A5568",
                     fontFamily: "var(--font-manrope)",
@@ -269,4 +272,4 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
       </div>
     </div>
   );
- }
+}
