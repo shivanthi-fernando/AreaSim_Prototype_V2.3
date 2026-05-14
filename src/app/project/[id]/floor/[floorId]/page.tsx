@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { SlidersHorizontal, ClipboardList, Gem, User, Play } from "lucide-react";
+import { SlidersHorizontal, Gem, User, Play } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
@@ -31,7 +31,7 @@ export default function FloorPage() {
   const {
     floors, setActiveFloor,
     setDetailPanel, detailPanelOpen,
-    setSurveyModal, setCompletionModal,
+    setCompletionModal,
   } = useCanvasStore();
 
   const [_floorDropdownOpen, _setFloorDropdownOpen] = useState(false);

@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { PotentialScoreWidget } from "./PotentialScoreWidget";
 
 // ─── Step icons (each uses its step's brand color) ─────────────────────────────
 
