@@ -28,10 +28,10 @@ export function Step6Done() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center text-center"
+      className="w-full h-full flex flex-col items-center justify-center py-24 px-8 text-center"
     >
-      {/* White card wrapping all content */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-[#F0F4F8] px-8 py-10 flex flex-col items-center space-y-8">
+      {/* White card — centered with space around it */}
+      <div className="w-full max-w-md bg-white shadow-2xl border border-[#F0F4F8] rounded-[32px] px-6 py-8 flex flex-col items-center gap-6">
 
       {/* Celebration icon */}
       <motion.div
@@ -66,7 +66,7 @@ export function Step6Done() {
       </div>
 
       {/* Animated checklist */}
-      <div className="w-full max-w-sm space-y-3">
+      <div className="w-full max-w-sm space-y-2">
         {checklist.map((item, i) => (
           <motion.div
             key={item}
@@ -77,7 +77,7 @@ export function Step6Done() {
                 : { opacity: 0, x: -16 }
             }
             transition={{ duration: 0.35, type: "spring", stiffness: 200, damping: 20 }}
-            className="flex items-center gap-3 py-1"
+            className="flex items-center gap-3 py-0.5"
           >
             <motion.span
               initial={{ scale: 0 }}
@@ -92,12 +92,12 @@ export function Step6Done() {
         ))}
       </div>
 
-      {/* CTA */}
+      {/* CTA — pushed to bottom */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.8 }}
-        className="w-full flex justify-center"
+        className="w-full flex justify-center pb-2"
       >
         <Button
           size="lg"

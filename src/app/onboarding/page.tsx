@@ -8,6 +8,7 @@ import { X, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCa
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { PotentialScoreWidget } from "@/components/ui/PotentialScoreWidget";
 import { Step1Project } from "@/components/onboarding/Step1Project";
 import { Step3Lease } from "@/components/onboarding/Step3Lease";
 import { Step3FloorPlans } from "@/components/onboarding/Step3FloorPlans";
@@ -1050,7 +1051,10 @@ export default function OnboardingPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 bg-surface" style={{ borderBottom: "1px solid #EAE5DC" }}>
         <Logo size="md" />
-        <LanguageSelector />
+        <div className="flex items-center gap-4">
+          <PotentialScoreWidget />
+          <LanguageSelector />
+        </div>
       </header>
 
       {/* ── Workplace Journey Bar ── */}
@@ -1067,8 +1071,8 @@ export default function OnboardingPage() {
 
       <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {isLastStep ? (
-          // ── Done step: centred ────────────────────────────────────────────────
-          <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+          // ── Done step: full height ────────────────────────────────────────────
+          <div className="flex-1 flex flex-col items-center overflow-hidden">
             <Step6Done />
           </div>
         ) : isLeaseStep ? (

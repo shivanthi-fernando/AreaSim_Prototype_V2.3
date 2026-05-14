@@ -148,15 +148,29 @@ function SortableFloorCard({
                   className="w-full h-full object-contain p-2"
                 />
                 <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <Button size="sm" variant="secondary" className="bg-white" onClick={onVerify}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="hover:!bg-white transition-none"
+                    onClick={onVerify}
+                  >
                     View
                   </Button>
-                  <label className="cursor-pointer">
-                    <div className="h-9 px-4 rounded-xl bg-white text-text text-sm font-medium flex items-center justify-center hover:bg-surface-2 transition-colors">
-                      Change
-                    </div>
-                    <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf" onChange={onFileChange} />
-                  </label>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="hover:!bg-white transition-none"
+                    onClick={() => document.getElementById(`change-file-${floor.id}`)?.click()}
+                  >
+                    Change
+                  </Button>
+                  <input
+                    id={`change-file-${floor.id}`}
+                    type="file"
+                    className="hidden"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onChange={onFileChange}
+                  />
                 </div>
                 {isVerified && (
                   <div className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-accent/90 text-white px-2 py-1 rounded-lg text-[10px] font-bold tracking-wider">

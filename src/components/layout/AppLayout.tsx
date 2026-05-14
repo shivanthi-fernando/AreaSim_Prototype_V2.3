@@ -9,6 +9,7 @@ import {
   Bell, Search, Settings, CreditCard, HelpCircle, LogOut, ChevronDown,
 } from "lucide-react";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { PotentialScoreWidget } from "@/components/ui/PotentialScoreWidget";
 import { Logo } from "@/components/ui/Logo";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { mockUser } from "@/lib/mockData";
@@ -80,6 +81,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Right side actions */}
         <div className="ml-auto flex items-center gap-1.5">
           {/* Language selector */}
+          <PotentialScoreWidget />
           <LanguageSelector />
 
           {/* Global search */}

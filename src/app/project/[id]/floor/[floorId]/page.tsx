@@ -9,7 +9,7 @@ import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
-import { ScoreWidget } from "@/components/canvas/ScoreWidget";
+import { PotentialScoreWidget } from "@/components/ui/PotentialScoreWidget";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
 import { SurveyModal } from "@/components/canvas/SurveyModal";
 import { CompletionModal } from "@/components/canvas/CompletionModal";
@@ -67,7 +67,7 @@ export default function FloorPage() {
   return (
     <div className="h-screen flex flex-col bg-bg overflow-hidden relative">
       {/* ── Top Bar ── */}
-      <header className="flex items-center gap-3 px-3 py-2 border-b border-border bg-surface shrink-0">
+      <header className="flex items-center gap-3 px-3 py-2 bg-surface shrink-0">
         {/* Logo — navigates to dashboard */}
         <button onClick={() => router.push("/dashboard")} className="shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
           <Logo size="md" showText={false} />
@@ -97,7 +97,7 @@ export default function FloorPage() {
             ))}
           </select>
           <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
 
@@ -124,16 +124,7 @@ export default function FloorPage() {
             <span className="hidden sm:inline">Rooms list</span>
           </Button>
 
-          {/* Conduct Survey — secondary */}
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<ClipboardList size={14} />}
-            onClick={() => setSurveyModal(true)}
-            className="h-9 py-2 px-4"
-          >
-            <span className="hidden sm:inline">Conduct Survey</span>
-          </Button>
+
 
           {allCounted && (
             <Button
@@ -148,16 +139,17 @@ export default function FloorPage() {
             </Button>
           )}
 
+          <PotentialScoreWidget />
           <LanguageSelector />
 
           {/* User avatar */}
           <button
             onClick={() => router.push("/settings")}
             className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 hover:opacity-80 transition-opacity"
-            style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
+            style={{ background: "linear-gradient(106deg, #E8E2F5 0%, #B8AFDF 100%)" }}
             title="Settings"
           >
-            <User size={14} color="#139485" />
+            <User size={14} color="#6C62AA" />
           </button>
         </div>
       </header>
@@ -169,11 +161,6 @@ export default function FloorPage() {
       <div className="flex-1 overflow-hidden relative">
         {/* Canvas always full width */}
         <div className="w-full h-full flex flex-col relative">
-          {/* Floating ScoreWidget */}
-          <div className="absolute top-4 left-4 z-40">
-            <ScoreWidget />
-          </div>
-
           <FloorCanvas
             floorId={floorId}
             imageUrl={activeFloor?.imageUrl ?? "/mock/floorplan-oslo.svg"}

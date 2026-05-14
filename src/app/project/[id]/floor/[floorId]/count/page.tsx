@@ -46,7 +46,7 @@ const getFormattedDate = (date: Date) => date.toISOString().split("T")[0];
 // ─── Round schedule ───────────────────────────────────────────────────────────
 // 5 rounds per day, each 2 hours, starting 08:00
 const ROUNDS = [
-  { round: 1, label: "Round 1", start: "08:00 AM", end: "10:00 AM", startH: 8,  endH: 10 },
+  { round: 1, label: "Round 1", start: "08:00 AM", end: "10:00 AM", startH: 8, endH: 10 },
   { round: 2, label: "Round 2", start: "10:00 AM", end: "12:00 PM", startH: 10, endH: 12 },
   { round: 3, label: "Round 3", start: "12:00 PM", end: "02:00 PM", startH: 12, endH: 14 },
   { round: 4, label: "Round 4", start: "02:00 PM", end: "04:00 PM", startH: 14, endH: 16 },
@@ -69,10 +69,10 @@ type CountingPhase = "setup" | "ready" | "session";
 type RoomStatus = "pending" | "ongoing" | "counted";
 
 const FLOOR_CATEGORIES: { id: Category; label: string; desc: string; color: string; badge: string; text: string }[] = [
-  { id: "meeting", label: "Meeting",  desc: "Collaborative rooms with shared tables",       color: "border-blue-200 bg-blue-50",      badge: "bg-blue-100 text-blue-700",     text: "text-blue-700" },
-  { id: "focus",   label: "Focus",    desc: "Quiet individual workspaces",                   color: "border-violet-200 bg-violet-50",  badge: "bg-violet-100 text-violet-700", text: "text-violet-700" },
-  { id: "social",  label: "Social",   desc: "Casual lounge areas for informal gatherings",   color: "border-emerald-200 bg-emerald-50",badge: "bg-emerald-100 text-emerald-700",text: "text-emerald-700" },
-  { id: "empty",   label: "Empty",    desc: "Vacant or transitional spaces",                 color: "border-gray-200 bg-gray-50",      badge: "bg-gray-100 text-gray-600",     text: "text-gray-600" },
+  { id: "meeting", label: "Meeting", desc: "Collaborative rooms with shared tables", color: "border-blue-200 bg-blue-50", badge: "bg-blue-100 text-blue-700", text: "text-blue-700" },
+  { id: "focus", label: "Focus", desc: "Quiet individual workspaces", color: "border-violet-200 bg-violet-50", badge: "bg-violet-100 text-violet-700", text: "text-violet-700" },
+  { id: "social", label: "Social", desc: "Casual lounge areas for informal gatherings", color: "border-emerald-200 bg-emerald-50", badge: "bg-emerald-100 text-emerald-700", text: "text-emerald-700" },
+  { id: "empty", label: "Empty", desc: "Vacant or transitional spaces", color: "border-gray-200 bg-gray-50", badge: "bg-gray-100 text-gray-600", text: "text-gray-600" },
 ];
 
 interface RoomMeta {
@@ -440,7 +440,7 @@ export default function FloorCountPage() {
   if (countingPhase === "setup") {
     return (
       <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
-        <header className="border-b border-[#E2E8F0] px-6 py-3 shrink-0 bg-white">
+        <header className="px-6 py-3 shrink-0 bg-white">
           <div className="max-w-[1200px] mx-auto flex items-center gap-4">
             <button
               onClick={handleBackToCanvas}
@@ -521,13 +521,12 @@ export default function FloorCountPage() {
                 <div className="flex items-center">
                   <button
                     onClick={toggleSelectAll}
-                    className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                      selectedRoomIds.size === rooms.length && rooms.length > 0
+                    className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selectedRoomIds.size === rooms.length && rooms.length > 0
                         ? "bg-primary border-primary"
                         : selectedRoomIds.size > 0
-                        ? "bg-primary/30 border-primary"
-                        : "border-[#C0D0DC] bg-white"
-                    }`}
+                          ? "bg-primary/30 border-primary"
+                          : "border-[#C0D0DC] bg-white"
+                      }`}
                     title="Select all rooms"
                   >
                     {selectedRoomIds.size > 0 && <Check size={11} className="text-white" strokeWidth={3} />}
@@ -555,9 +554,8 @@ export default function FloorCountPage() {
                       {/* Checkbox */}
                       <button
                         onClick={() => toggleRoomSelect(room.id)}
-                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${
-                          isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
-                        }`}
+                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
+                          }`}
                       >
                         {isChecked && <Check size={11} className="text-white" strokeWidth={3} />}
                       </button>
@@ -748,11 +746,10 @@ export default function FloorCountPage() {
                     <button
                       key={fc.id}
                       onClick={() => setBulkCategory(fc.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${
-                        bulkCategory === fc.id
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${bulkCategory === fc.id
                           ? `${fc.color} border-opacity-100 shadow-sm`
                           : "border-[#E2E8F0] bg-white hover:border-[#C0D0DC]"
-                      }`}
+                        }`}
                     >
                       <div className="flex-1">
                         <p className={`text-sm font-bold ${bulkCategory === fc.id ? fc.text : "text-text"}`}>{fc.label}</p>
@@ -1029,8 +1026,8 @@ export default function FloorCountPage() {
                               isLockedByOther
                                 ? "bg-amber-50/40 opacity-70"
                                 : meta.status === "counted"
-                                ? "bg-emerald-50/30"
-                                : "hover:bg-[#F8FAFC]"
+                                  ? "bg-emerald-50/30"
+                                  : "hover:bg-[#F8FAFC]"
                             )}
                           >
                             {/* Room name */}

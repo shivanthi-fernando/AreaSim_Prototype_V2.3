@@ -217,8 +217,8 @@ p {
   }
 
   .btn-secondary:hover {
-    background: linear-gradient(180deg, rgba(196, 122, 44, 0.05) 0%, rgba(196, 122, 44, 0.10) 100%);
-    border-color: rgba(196, 122, 44, 0.38);
+    background: linear-gradient(180deg, rgba(221, 179, 134, 0.05) 0%, rgba(214, 187, 159, 0.1) 100%);
+    border-color: rgba(220, 203, 185, 0.38);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.85) inset,
       0 3px 10px rgba(0, 0, 0, 0.09);
