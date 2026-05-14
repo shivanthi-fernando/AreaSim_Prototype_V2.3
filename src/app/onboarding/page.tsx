@@ -13,6 +13,7 @@ import { Step3Lease } from "@/components/onboarding/Step3Lease";
 import { Step3FloorPlans } from "@/components/onboarding/Step3FloorPlans";
 import { Step6Done } from "@/components/onboarding/Step6Done";
 import { useOnboardingStore } from "@/store/onboarding";
+import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 
 // ─── Consultant Modal ─────────────────────────────────────────────────────────
 const CONSULTANTS = [
@@ -1051,6 +1052,9 @@ export default function OnboardingPage() {
         <Logo size="md" />
         <LanguageSelector />
       </header>
+
+      {/* ── Workplace Journey Bar ── */}
+      <WorkplaceJourneyBar activeStep="1-2" />
 
       {/* ── Centered fixed stepper ─────────────────────────────────────────── */}
       {!isLastStep && (

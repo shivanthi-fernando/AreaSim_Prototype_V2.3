@@ -127,7 +127,7 @@ export function Step1Project({ onNext }: Props) {
               inputMode="numeric"
               maxLength={4}
               placeholder="e.g. 0123"
-              className="w-full rounded-[10px] border border-[#C5C5C5] bg-surface px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#AEAEAE] transition-all duration-200"
+              className="w-full rounded-xl border-[1.5px] border-[#B8B8B8] bg-white px-4 py-2.5 text-sm text-[#222B27] font-body placeholder:text-[#98A1B2] hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] transition-all duration-200"
               {...register("postalCode")}
             />
             {errors.postalCode && (
@@ -141,7 +141,7 @@ export function Step1Project({ onNext }: Props) {
               placeholder="Oslo"
               readOnly
               value={detectedCity || ""}
-              className="w-full rounded-[10px] border border-[#C5C5C5] bg-surface-2/60 px-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 cursor-default transition-all duration-200"
+              className="w-full rounded-xl border-[1.5px] border-[#B8B8B8] bg-[#F5F5F5] px-4 py-2.5 text-sm text-[#222B27] font-body placeholder:text-[#98A1B2] cursor-default opacity-60 transition-all duration-200"
             />
           </div>
         </div>

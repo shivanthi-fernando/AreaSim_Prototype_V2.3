@@ -18,7 +18,10 @@ const itemVariants = {
 };
 
 const inputCls =
-  "w-full rounded-[10px] border border-[#AEAEAE] bg-surface pl-10 pr-4 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 hover:border-[#8B8B8B]";
+  "w-full rounded-xl border-[1.5px] border-[#B8B8B8] bg-white pl-10 pr-4 py-2.5 text-sm text-[#222B27] font-body placeholder:text-[#98A1B2] " +
+  "hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] " +
+  "focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] " +
+  "transition-all duration-200";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -66,7 +69,7 @@ export default function SignInPage() {
               <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
               <input type={showPassword ? "text" : "password"} placeholder="Enter your password" required
                 value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-[10px] border border-[#AEAEAE] bg-surface pl-10 pr-10 py-2.5 text-sm text-text font-body placeholder:text-text-muted/60 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 hover:border-[#8B8B8B]" />
+                className={`${inputCls} pr-10`} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text transition-colors">
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}

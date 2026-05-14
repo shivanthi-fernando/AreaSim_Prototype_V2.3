@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Logo } from "@/components/ui/Logo";
+import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { mockUser } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 
@@ -213,6 +214,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       </header>
+
+      {/* ── Workplace Journey Bar ── */}
+      <WorkplaceJourneyBar activeStep="1-2" />
 
       {/* ── Page Content ── */}
       <main className="flex-1 overflow-y-auto">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Plus, Trash2, Upload, Check, AlertCircle, X,
+  Plus, Trash2, Upload, Check, X,
   ArrowLeft, ArrowRight, GripVertical,
   Building2, ShoppingCart, Mail,
 } from "lucide-react";
@@ -87,7 +87,7 @@ function SortableFloorCard({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.08 }}
-        className="group relative p-6 rounded-2xl border border-border bg-surface hover:border-primary/30 transition-all shadow-sm"
+        className="group relative p-6 rounded-2xl border border-border bg-[#FDFBF7] hover:border-primary/30 transition-all shadow-sm"
       >
         <div className="flex flex-col md:flex-row gap-6">
           {/* Floor Info */}
@@ -140,7 +140,7 @@ function SortableFloorCard({
           <div className="flex-1">
             <p className="text-sm font-medium text-text mb-2">Floor plan</p>
             {floor.file ? (
-              <div className="relative aspect-[4/3] rounded-xl border border-border overflow-hidden bg-surface-2 group/image">
+              <div className="relative aspect-[4/3] rounded-xl border border-border overflow-hidden group/image">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={floor.file.preview}
@@ -149,7 +149,7 @@ function SortableFloorCard({
                 />
                 <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <Button size="sm" variant="secondary" className="bg-white" onClick={onVerify}>
-                    Verify
+                    View
                   </Button>
                   <label className="cursor-pointer">
                     <div className="h-9 px-4 rounded-xl bg-white text-text text-sm font-medium flex items-center justify-center hover:bg-surface-2 transition-colors">
@@ -210,8 +210,6 @@ function ConsultantCards() {
 export function Step3FloorPlans({ onNext, onBack }: Props) {
   const { floors, addFloor, removeFloor, updateFloor, setFloors } = useOnboardingStore();
   const [verifyingFloor, setVerifyingFloor] = useState<Floor | null>(null);
-  const [showUnclearModal, setShowUnclearModal] = useState(false);
-  const [unclearShowContacts, setUnclearShowContacts] = useState(false);
   const [showNoFloorPlanModal, setShowNoFloorPlanModal] = useState(false);
   const [noFloorShowContacts, setNoFloorShowContacts] = useState(false);
   const [verifiedFloorIds, setVerifiedFloorIds] = useState<string[]>([]);
@@ -252,17 +250,11 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
   const handleVerifyFloorPlan = () => {
     if (!verifyingFloor) return;
-    const idx = floors.findIndex((f) => f.id === verifyingFloor.id);
+    // Always mark as verified — never show the unclear modal
+    setVerifiedFloorIds((prev) =>
+      prev.includes(verifyingFloor.id) ? prev : [...prev, verifyingFloor.id]
+    );
     setVerifyingFloor(null);
-    if (idx === 0) {
-      // First floor plan is always "unclear" in the prototype
-      setShowUnclearModal(true);
-    } else {
-      // Other floors are "clear" — mark as verified
-      setVerifiedFloorIds((prev) =>
-        prev.includes(verifyingFloor.id) ? prev : [...prev, verifyingFloor.id]
-      );
-    }
   };
 
   return (
@@ -298,7 +290,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
       {/* Add Floor Button */}
       <button
         onClick={handleAddFloor}
-        className="w-full py-5 rounded-2xl border-2 border-dashed border-border text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/[0.02] transition-all flex items-center justify-center gap-2 group"
+        className="w-full py-5 rounded-2xl border-2 border-dashed border-border bg-[#FDFBF7] text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/[0.02] transition-all flex items-center justify-center gap-2 group"
       >
         <Plus size={18} className="group-hover:scale-110 transition-transform" />
         <span className="text-sm font-medium">Add floor</span>
@@ -376,117 +368,11 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t border-border bg-surface flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2 text-accent">
-                  <AlertCircle size={18} />
-                  <span className="text-sm font-medium">AI detected 8 rooms automatically</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Button variant="secondary" size="md" onClick={() => setVerifyingFloor(null)}>Re-upload</Button>
-                  <Button icon={<Check size={18} />} onClick={handleVerifyFloorPlan}>
-                    Verify this floor plan
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Unclear Floor Plan Modal ────────────────────────────────────────── */}
-      <AnimatePresence>
-        {showUnclearModal && (
-          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", stiffness: 280, damping: 24 }}
-              className="w-full max-w-lg bg-surface rounded-3xl border border-border shadow-2xl overflow-hidden"
-            >
-              <div className="relative px-6 pt-6 pb-5 border-b border-border">
-                <button
-                  className="absolute top-4 right-4 w-7 h-7 rounded-full bg-surface-2 flex items-center justify-center text-text-muted hover:bg-border transition-colors"
-                  onClick={() => { setShowUnclearModal(false); setUnclearShowContacts(false); }}
-                >
-                  <X size={14} />
-                </button>
-                <div className="mb-2">
-                  <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                    This floor plan is not clear enough
-                  </h2>
-                  <p className="text-xs text-text-muted font-body mt-0.5">
-                    Our system could not read this floor plan accurately.
-                  </p>
-                </div>
-              </div>
-
-              <div className="px-6 py-5 space-y-3 max-h-[65vh] overflow-y-auto">
-                {/* Upload clearer */}
-                <button
-                  className="w-full flex items-center gap-4 p-4 rounded-2xl border border-border bg-surface hover:border-primary/40 hover:bg-primary/[0.02] transition-all text-left group"
-                  onClick={() => { setShowUnclearModal(false); setUnclearShowContacts(false); }}
-                >
-                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                    <Upload size={18} className="text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-text font-body">Upload a clearer floor plan</p>
-                    <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                      Scan or photograph at a higher resolution — ensure lines and room labels are clearly visible.
-                    </p>
-                  </div>
-                  <ArrowRight size={16} className="text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
-                </button>
-
-                {/* Buy professional floor plan */}
-                <button
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${
-                    unclearShowContacts
-                      ? "border-accent/40 bg-accent/5"
-                      : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
-                  }`}
-                  onClick={() => setUnclearShowContacts((v) => !v)}
-                >
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
-                    unclearShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
-                  }`}>
-                    <ShoppingCart size={18} className="text-accent" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-text font-body">Buy a professional floor plan</p>
-                    <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                      Our team can procure a professional, scan-ready version for your building.
-                    </p>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: unclearShowContacts ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="shrink-0"
-                  >
-                    <ArrowRight size={16} className="text-text-muted group-hover:text-accent transition-colors" />
-                  </motion.div>
-                </button>
-
-                {/* Expert contacts — revealed on demand */}
-                <AnimatePresence>
-                  {unclearShowContacts && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-1 pb-1">
-                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-mono mb-3 px-1">
-                          Contact our experts
-                        </p>
-                        <ConsultantCards />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              <div className="px-6 py-4 border-t border-border bg-surface flex items-center justify-end gap-3 shrink-0">
+                <Button variant="secondary" size="md" onClick={() => setVerifyingFloor(null)}>Re-upload</Button>
+                <Button icon={<Check size={18} />} onClick={handleVerifyFloorPlan}>
+                  Save
+                </Button>
               </div>
             </motion.div>
           </div>
