@@ -27,6 +27,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { useCanvasStore } from "@/store/canvas";
 import { mockProject, mockCountHistory } from "@/lib/mockData";
 import { cn, formatNumber } from "@/lib/utils";
@@ -478,6 +479,10 @@ export default function FloorCountPage() {
             </div>
           </div>
         </header>
+
+        {/* ── Workplace Journey Bar ── */}
+        <WorkplaceJourneyBar activeStep="1-2" />
+
         <main className="flex-1 overflow-y-auto p-8">
           <div className="max-w-[1200px] mx-auto space-y-6">
             {/* Title */}

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
+import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { ScoreWidget } from "@/components/canvas/ScoreWidget";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
 import { SurveyModal } from "@/components/canvas/SurveyModal";
@@ -160,6 +161,9 @@ export default function FloorPage() {
           </button>
         </div>
       </header>
+
+      {/* ── Workplace Journey Bar ── */}
+      <WorkplaceJourneyBar activeStep="1-2" />
 
       {/* ── Main Area ── */}
       <div className="flex-1 overflow-hidden relative">
