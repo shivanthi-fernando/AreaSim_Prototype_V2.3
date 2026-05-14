@@ -33,7 +33,6 @@ import {
   Phone,
   Eye,
   EyeOff,
-  Lock,
   X as XIcon,
 } from "lucide-react";
 
