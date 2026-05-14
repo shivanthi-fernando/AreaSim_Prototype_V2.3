@@ -92,10 +92,10 @@ export default function VerifyEmailPage() {
               maxLength={1} value={otp[i]} onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               className={cn(
-                "w-12 h-14 text-center text-xl rounded-xl border-[1.5px] bg-white text-[#222B27] px-0 transition-all duration-200",
+                "w-12 h-14 text-center text-xl rounded-xl border bg-white text-[#222B27] px-0 transition-all duration-200",
                 otp[i]
                   ? "border-[#139485] ring-4 ring-[rgba(19,148,133,0.18)]"
-                  : "border-[#B8B8B8] hover:border-[#999999]"
+                  : "border-[#D1D1D1] hover:border-[#999999]"
               )}
               style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 600 }}
             />

@@ -338,7 +338,6 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                   <h2 className="text-lg font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                     {verifyingFloor.name}
                   </h2>
-                  <p className="text-sm text-text-muted">Verify the floor plan layout</p>
                 </div>
                 <button
                   onClick={() => setVerifyingFloor(null)}
@@ -349,28 +348,15 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
               </div>
 
               <div className="flex-1 overflow-auto bg-surface-2 p-8">
-                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-border p-4 relative">
+                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-border p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={verifyingFloor.file?.preview} alt={verifyingFloor.name} className="w-full h-auto" />
-                  <div className="absolute inset-0 pointer-events-none p-4">
-                    <div className="w-full h-full border-2 border-accent/30 rounded-lg relative overflow-hidden">
-                      <motion.div
-                        className="absolute inset-0 bg-accent/5"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0, 0.1, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                      <div className="absolute top-[20%] left-[10%] w-[15%] h-[20%] border border-accent bg-accent/10 rounded" />
-                      <div className="absolute top-[20%] left-[28%] w-[12%] h-[20%] border border-accent bg-accent/10 rounded" />
-                      <div className="absolute top-[50%] left-[40%] w-[40%] h-[30%] border border-accent bg-accent/10 rounded" />
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div className="px-6 py-4 border-t border-border bg-surface flex items-center justify-end gap-3 shrink-0">
                 <Button variant="secondary" size="md" onClick={() => setVerifyingFloor(null)}>Re-upload</Button>
-                <Button icon={<Check size={18} />} onClick={handleVerifyFloorPlan}>
+                <Button onClick={handleVerifyFloorPlan}>
                   Save
                 </Button>
               </div>

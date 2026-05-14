@@ -52,8 +52,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "btn-primary rounded-full" // Keeping existing btn-primary for gradient/shadow logic
       ),
       secondary: cn(
-        "bg-surface border border-border text-text font-medium",
-        "btn-secondary rounded-full" // hover handled by .btn-secondary CSS class
+        "text-text font-medium",
+        "btn-secondary rounded-full" // all bg/border/shadow handled by .btn-secondary CSS
       ),
       tertiary: "bg-primary/5 text-primary hover:bg-primary/10 rounded-full",
       ghost: "bg-transparent text-text-muted hover:bg-surface-2 hover:text-text rounded-full",

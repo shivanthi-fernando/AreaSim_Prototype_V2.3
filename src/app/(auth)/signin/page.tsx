@@ -18,7 +18,7 @@ const itemVariants = {
 };
 
 const inputCls =
-  "w-full rounded-xl border-[1.5px] border-[#B8B8B8] bg-white pl-10 pr-4 py-2.5 text-sm text-[#222B27] font-body placeholder:text-[#98A1B2] " +
+  "w-full rounded-xl border border-[#D1D1D1] bg-white pl-10 pr-4 py-2.5 text-sm text-[#222B27] font-body placeholder:text-[#98A1B2] " +
   "hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] " +
   "focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] " +
   "transition-all duration-200";
