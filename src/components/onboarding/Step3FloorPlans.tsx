@@ -385,7 +385,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
             >
               <div className="relative px-6 pt-6 pb-5 border-b border-border">
                 <button
-                  className="absolute top-4 right-4 w-7 h-7 rounded-full bg-surface-2 flex items-center justify-center text-text-muted hover:bg-border transition-colors"
+                  className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors"
                   onClick={() => { setShowNoFloorPlanModal(false); setNoFloorShowContacts(false); }}
                 >
                   <X size={14} />

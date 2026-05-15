@@ -59,7 +59,7 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
           </h3>
           <button
             onClick={onClose}
-            className="w-6 h-6 flex items-center justify-center rounded-full text-text-muted hover:bg-[#F1F5F9] hover:text-text transition-colors"
+            className="p-1 text-text-muted hover:text-text transition-colors"
           >
             <X size={14} />
           </button>

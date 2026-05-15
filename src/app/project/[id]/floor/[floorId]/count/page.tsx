@@ -1365,7 +1365,7 @@ export default function FloorCountPage() {
 
                   {/* Comments card */}
                   <div className="rounded-2xl border border-[#E2E8F0] bg-[#FAFBFC] p-4 text-left">
-                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
+                    <p className="text-xs font-bold text-text-muted mb-2">
                       Comments
                     </p>
                     <textarea
@@ -1553,7 +1553,7 @@ export default function FloorCountPage() {
             >
               <button
                 onClick={() => setStartModalDismissed(true)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-text-muted hover:bg-[#E2E8F0] hover:text-text transition-colors z-10"
+                className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors z-10"
               >
                 <X size={16} />
               </button>

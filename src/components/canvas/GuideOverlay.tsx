@@ -355,7 +355,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
       {/* Close */}
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full text-[#94A3B8] hover:bg-[#F1F5F9] transition-colors z-10"
+        className="absolute top-3 right-3 p-1 text-[#94A3B8] hover:text-[#0D1B2A] transition-colors z-10"
       >
         <X size={13} />
       </button>
@@ -516,7 +516,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "170px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "220px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
@@ -529,7 +529,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
     // arrowRightPx doubles as card position hint:
     // step 5 = Count Room Capacity (Start room counting button, rightmost)
     // step 6 = Conduct a Survey (Conduct survey button)
-    const cardRight = step === 4 ? "110px" : "280px";
+    const cardRight = step === 4 ? "140px" : "330px";
     return (
       <>
         <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: cardRight }}>
@@ -543,7 +543,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (isScoreWidget) {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ top: "160px", left: "8px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "195px", left: "8px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

@@ -126,7 +126,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
             }}
           />
           <button onClick={onClose}
-            className="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white/80 hover:bg-white/30 transition-colors">
+            className="absolute top-4 right-4 p-1.5 text-white/80 hover:text-white transition-colors">
             <X size={14} />
           </button>
           {/* Illustration: avatar cluster */}

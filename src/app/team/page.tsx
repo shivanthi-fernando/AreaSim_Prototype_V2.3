@@ -73,7 +73,7 @@ function AddMemberModal({ onClose, onAdd }: { onClose: () => void; onAdd: (m: Me
         <div className="bg-gradient-to-br from-primary via-primary to-accent px-6 pt-6 pb-8 relative">
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-          <button onClick={onClose} className="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white/80 hover:bg-white/30 transition-colors">
+          <button onClick={onClose} className="absolute top-4 right-4 p-1.5 text-white/80 hover:text-white transition-colors">
             <X size={14} />
           </button>
           <div className="flex items-center gap-3 mb-3 relative z-10">

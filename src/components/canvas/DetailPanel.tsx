@@ -97,9 +97,9 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
         </div>
         <button
           onClick={() => setDetailPanel(false)}
-          className="w-7 h-7 rounded-full bg-[#F0F4F8] flex items-center justify-center text-[#5C7A8A] hover:bg-[#E5EAF0] transition-colors"
+          className="p-1.5 text-[#5C7A8A] hover:text-[#0D1B2A] transition-colors"
         >
-          <X size={14} />
+          <X size={16} />
         </button>
       </div>
 
@@ -303,7 +303,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                   To verify this room on the floor plan, pick the{" "}
                   <span className="font-bold text-primary">Draw</span> tool from the toolbar and trace the room boundaries.
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center gap-3">
                   <button
                     onClick={() => setShowVerifyModal(false)}
                     className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1.5"

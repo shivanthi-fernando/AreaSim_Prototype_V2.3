@@ -104,15 +104,14 @@ export function ScoreWidget() {
               <motion.div
                 className="relative w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                 style={{
-                  background: "linear-gradient(145deg, #f8e19cff 45%, #ffcb71ff 100%)",
-                  border: "1.5px solid #e3b069ff",
-                  boxShadow: "0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55)",
+                  background: "linear-gradient(106deg, #FDF3DC 16.06%, #E1C17F 86.59%)",
+                  boxShadow: "0 2px 5px rgba(180,83,9,0.20)",
                 }}
                 animate={{
                   boxShadow: [
-                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 0px ${glow.replace("0.35", "0")}`,
-                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 10px ${glow}`,
-                    `0 2px 5px rgba(180,83,9,0.30), inset 0 1px 0 rgba(255,255,255,0.55), 0 0 0px ${glow.replace("0.35", "0")}`,
+                    `0 2px 5px rgba(180,83,9,0.20), 0 0 0px ${glow.replace("0.35", "0")}`,
+                    `0 2px 5px rgba(180,83,9,0.20), 0 0 10px ${glow}`,
+                    `0 2px 5px rgba(180,83,9,0.20), 0 0 0px ${glow.replace("0.35", "0")}`,
                   ],
                   ...(isRooms && roomBurst ? { scale: [1, 1.35, 0.95, 1.1, 1] } : {}),
                 }}
@@ -121,8 +120,8 @@ export function ScoreWidget() {
                   scale: { duration: 0.5, times: [0, 0.3, 0.6, 0.8, 1] },
                 }}
               >
-                <span className="text-[11px] font-extrabold tabular-nums leading-none"
-                  style={{ color: "#cc6f35ff", fontFamily: "var(--font-jetbrains-mono)" }}>
+                <span className="text-[11px] font-semibold tabular-nums leading-none"
+                  style={{ color: "#cc6f35ff", fontFamily: "var(--font-manrope)" }}>
                   <AnimatedNumber value={value} />
                 </span>
               </motion.div>
