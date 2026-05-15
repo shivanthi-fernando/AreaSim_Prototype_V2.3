@@ -165,7 +165,7 @@ function CountingIllustration() {
   );
 }
 
-function ScoreWidgetIllustration() {
+function _ScoreWidgetIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <defs>
@@ -296,13 +296,13 @@ const STEPS: StepDef[] = [
     arrowRightPx: 130,
     Illustration: SurveyIllustration,
   },
-  {
-    title: "Track Your Progress",
-    description: "Here you can see the count of identified rooms, identified zones and number of surveys conducted.",
-    position: "score-widget",
-    arrowLeftPx: 60,
-    Illustration: ScoreWidgetIllustration,
-  },
+  // {
+  //   title: "Track Your Progress",
+  //   description: "Here you can see the count of identified rooms, identified zones and number of surveys conducted.",
+  //   position: "score-widget",
+  //   arrowLeftPx: 60,
+  //   Illustration: _ScoreWidgetIllustration,
+  // },
 ];
 
 export const GUIDE_TOTAL = STEPS.length;
@@ -377,7 +377,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
         {step > 0 ? (
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] hover:opacity-70 transition-opacity"
+            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] px-3 py-1.5 rounded-lg border border-[#D1D0D0] bg-white hover:border-[#917963] transition-all"
           >
             <ArrowLeft size={13} /> Back
           </button>
@@ -516,7 +516,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "260px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "310px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

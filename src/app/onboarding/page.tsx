@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useAppI18n } from "@/hooks/use-app-i18n";
@@ -321,6 +321,32 @@ function _CreateProjectPanel() {
 const DIAGRAM_CAPTION_FONT =
   'var(--font-manrope,ui-sans-serif,system-ui),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
 
+/**
+ * Resolves the computed font family from the CSS variable so Firefox and Safari
+ * render SVG <text> with the correct font (they don't resolve CSS vars in SVG text).
+ */
+function readResolvedDiagramCaptionFont(): string {
+  if (typeof window === "undefined") return DIAGRAM_CAPTION_FONT;
+  try {
+    const raw = window.getComputedStyle(document.documentElement)
+      .getPropertyValue("--font-manrope")
+      .trim();
+    if (raw) return `${raw},ui-sans-serif,system-ui,sans-serif`;
+  } catch {
+    // ignore
+  }
+  return DIAGRAM_CAPTION_FONT;
+}
+
+/** Returns the resolved font family string, updating after first mount. */
+function useDiagramCaptionFontFamily(): string {
+  const [fontFamily, setFontFamily] = useState(DIAGRAM_CAPTION_FONT);
+  useEffect(() => {
+    setFontFamily(readResolvedDiagramCaptionFont());
+  }, []);
+  return fontFamily;
+}
+
 const DIAGRAM_NODE_CY = 81;
 /** All methodology step circles share the same radius */
 const DIAGRAM_NODE_R = 16;
@@ -345,17 +371,19 @@ function MethodologyCaption({
   fill,
   line1,
   line2,
+  fontFamily: fontFamilyProp,
 }: {
   cx: number;
   yStart: number;
   fill: string;
   line1: string;
   line2: string;
+  fontFamily?: string;
 }) {
   const a = line1.toUpperCase();
   const b = line2.trim();
   const captionStyle = {
-    fontFamily: DIAGRAM_CAPTION_FONT,
+    fontFamily: fontFamilyProp ?? DIAGRAM_CAPTION_FONT,
     fontSize: 7.15,
     fontWeight: 700,
     letterSpacing: "0.07em",
@@ -385,9 +413,10 @@ function MethodologyCaption({
  * Detailed city / journey illustration aligned with the Next.js onboarding reference.
  * SVG schematic labels stay English; overlay copy is i18n.
  */
-function CityIllusPanel() {
+function CityIllustrationPanel() {
   const { t } = useAppI18n();
   const reduceMotion = useReducedMotion();
+  const fontFamily = useDiagramCaptionFontFamily();
 
   return (
     <div
@@ -678,43 +707,43 @@ function CityIllusPanel() {
               <circle cx="54" cy="81" r={DIAGRAM_NODE_R + 5} fill="rgba(19,148,133,.14)" filter="url(#as-ci-blur4)" />
               <circle cx="54" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-teal)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="54" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#4DC4B0" strokeWidth="1.7" />
-              <text x="54" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" letterSpacing="-0.02em" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>1-2</text>
-              <MethodologyCaption cx={54} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.countCollect.line1")} line2={t("onboarding.methodology.diagram.countCollect.line2")} />
+              <text x="54" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" letterSpacing="-0.02em" fill="white" fontFamily={fontFamily}>1-2</text>
+              <MethodologyCaption cx={54} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.countCollect.line1")} line2={t("onboarding.methodology.diagram.countCollect.line2")} fontFamily={fontFamily} />
             </g>
             {/* Node 3 */}
             <g>
               <circle cx="144" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-teal)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="144" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#4DC4B0" strokeWidth="1.7" />
-              <text x="144" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>3</text>
-              <MethodologyCaption cx={144} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.analysisAdvice.line1")} line2={t("onboarding.methodology.diagram.analysisAdvice.line2")} />
+              <text x="144" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={fontFamily}>3</text>
+              <MethodologyCaption cx={144} yStart={108} fill="#0F7A6C" line1={t("onboarding.methodology.diagram.analysisAdvice.line1")} line2={t("onboarding.methodology.diagram.analysisAdvice.line2")} fontFamily={fontFamily} />
             </g>
             {/* Node 4 */}
             <g>
               <circle cx="235" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-purple)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="235" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#B6ACEB" strokeWidth="1.7" />
-              <text x="235" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>4</text>
-              <MethodologyCaption cx={235} yStart={108} fill="#5A4F95" line1={t("onboarding.methodology.diagram.workplaceConcept.line1")} line2={t("onboarding.methodology.diagram.workplaceConcept.line2")} />
+              <text x="235" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={fontFamily}>4</text>
+              <MethodologyCaption cx={235} yStart={108} fill="#5A4F95" line1={t("onboarding.methodology.diagram.workplaceConcept.line1")} line2={t("onboarding.methodology.diagram.workplaceConcept.line2")} fontFamily={fontFamily} />
             </g>
             {/* Node 5 */}
             <g>
               <circle cx="325" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-amber)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="325" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#FFD78A" strokeWidth="1.7" />
-              <text x="325" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>5</text>
-              <MethodologyCaption cx={325} yStart={108} fill="#A06A08" line1={t("onboarding.methodology.diagram.roomProgram.line1")} line2={t("onboarding.methodology.diagram.roomProgram.line2")} />
+              <text x="325" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={fontFamily}>5</text>
+              <MethodologyCaption cx={325} yStart={108} fill="#A06A08" line1={t("onboarding.methodology.diagram.roomProgram.line1")} line2={t("onboarding.methodology.diagram.roomProgram.line2")} fontFamily={fontFamily} />
             </g>
             {/* Node 6 */}
             <g>
               <circle cx="415" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-blue)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="415" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#93BCE8" strokeWidth="1.7" />
-              <text x="415" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>6</text>
-              <MethodologyCaption cx={415} yStart={108} fill="#2E5E96" line1={t("onboarding.methodology.diagram.designPhase.line1")} line2={t("onboarding.methodology.diagram.designPhase.line2")} />
+              <text x="415" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={fontFamily}>6</text>
+              <MethodologyCaption cx={415} yStart={108} fill="#2E5E96" line1={t("onboarding.methodology.diagram.designPhase.line1")} line2={t("onboarding.methodology.diagram.designPhase.line2")} fontFamily={fontFamily} />
             </g>
             {/* Node 7 */}
             <g>
               <circle cx="505" cy="81" r={DIAGRAM_NODE_R} fill="url(#as-ci-node-fill-sage)" filter="url(#as-ci-diagram-node-shadow)" />
               <circle cx="505" cy="81" r={DIAGRAM_NODE_R} fill="none" stroke="#A9CBB5" strokeWidth="1.7" />
-              <text x="505" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={DIAGRAM_CAPTION_FONT}>7</text>
-              <MethodologyCaption cx={505} yStart={108} fill="#4A7358" line1={t("onboarding.methodology.diagram.optimization.line1")} line2={t("onboarding.methodology.diagram.optimization.line2")} />
+              <text x="505" y={DIAGRAM_NODE_CY} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="white" fontFamily={fontFamily}>7</text>
+              <MethodologyCaption cx={505} yStart={108} fill="#4A7358" line1={t("onboarding.methodology.diagram.optimization.line1")} line2={t("onboarding.methodology.diagram.optimization.line2")} fontFamily={fontFamily} />
             </g>
           </g>
 
@@ -725,7 +754,7 @@ function CityIllusPanel() {
             transition={reduceMotion ? undefined : { duration: 1.9, ease: "easeInOut", repeat: Infinity }}
           >
             <rect x="7" y="42" width="94" height="16" fill="#139485" rx="4" filter="url(#as-ci-diagram-node-shadow)" />
-            <text x="54" y="53" textAnchor="middle" fontSize="7" fontWeight="600" fill="white" fontFamily={DIAGRAM_CAPTION_FONT} letterSpacing="0.06em">
+            <text x="54" y="53" textAnchor="middle" fontSize="7" fontWeight="600" fill="white" fontFamily={fontFamily} letterSpacing="0.06em">
               {t("onboarding.projectDetails.hero.illustration.youAreHere")}
             </text>
           </motion.g>
@@ -1138,7 +1167,7 @@ export default function OnboardingPage() {
             <div className="hidden lg:block relative overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div key={currentStep} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="absolute inset-0">
-                  <CityIllusPanel />
+                  <CityIllustrationPanel />
                 </motion.div>
               </AnimatePresence>
             </div>

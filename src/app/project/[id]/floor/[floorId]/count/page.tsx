@@ -1478,47 +1478,45 @@ export default function FloorCountPage() {
               transition={{ type: "spring", stiffness: 300, damping: 35 }}
               className="flex flex-col h-full bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden"
             >
-              {/* Comments — pinned to top of panel */}
-              <div className="px-6 py-4 border-b border-[#F1F5F9] shrink-0">
-                <p className="text-xs font-bold text-text-muted mb-2">Comments</p>
-                <textarea
-                  value={roomComment}
-                  onChange={(e) => setRoomComment(e.target.value)}
-                  placeholder="Add any observations, issues, or notes about this floor…"
-                  rows={3}
-                  className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
-                />
-                <div className="flex justify-end gap-2 mt-2">
-                  <Button
-                    variant="text"
-                    size="sm"
-                    onClick={() => setRoomComment("")}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    size="sm"
-                    disabled={!roomComment.trim()}
-                    onClick={() => {
-                      if (roomComment.trim()) {
-                        setRoomComments((prev) => ({
-                          ...prev,
-                          [selectedRoomId ?? "floor"]: roomComment.trim(),
-                        }));
-                      }
-                    }}
-                  >
-                    Save
-                  </Button>
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Comments — scrolls with content */}
+                <div>
+                  <h4 className="text-sm font-bold text-text mb-3" style={{ fontFamily: "var(--font-manrope)" }}>Comments</h4>
+                  <textarea
+                    value={roomComment}
+                    onChange={(e) => setRoomComment(e.target.value)}
+                    placeholder="Add any observations, issues, or notes about this floor…"
+                    rows={3}
+                    className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
+                  />
+                  <div className="flex justify-end gap-2 mt-2">
+                    <Button
+                      variant="text"
+                      size="sm"
+                      onClick={() => setRoomComment("")}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      disabled={!roomComment.trim()}
+                      onClick={() => {
+                        if (roomComment.trim()) {
+                          setRoomComments((prev) => ({
+                            ...prev,
+                            [selectedRoomId ?? "floor"]: roomComment.trim(),
+                          }));
+                        }
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Room name section heading */}
-              <div className="px-6 py-3 border-b border-[#F1F5F9] shrink-0">
+                {/* Room name heading */}
                 <h4 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Room name</h4>
-              </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-8">
                 <div className="text-center space-y-8">
                   {/* Room name + zone — shown above round indicator */}
                   <div>

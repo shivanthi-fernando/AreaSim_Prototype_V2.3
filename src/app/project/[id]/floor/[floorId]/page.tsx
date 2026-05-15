@@ -36,13 +36,22 @@ export default function FloorPage() {
 
   const [_floorDropdownOpen, _setFloorDropdownOpen] = useState(false);
 
-  // Guide state
-  const [showGuide, setShowGuide] = useState(true);
+  // Guide state — only shown when arriving from Step6Done ("Great! You're all set" page via #show-guide hash)
+  const [showGuide, setShowGuide] = useState(false);
   const [guideStep, setGuideStep] = useState(0);
+
+  // Show guide only when arriving from Step6Done via #show-guide hash
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#show-guide") {
+      setShowGuide(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Open/close detail panel based on guide step
   const panelSteps = new Set([0, 3]);
-  const noPanelSteps = new Set([4, 5, 6]);
+  const noPanelSteps = new Set([4, 5]);
   useEffect(() => {
     if (!showGuide) return;
     if (panelSteps.has(guideStep)) setDetailPanel(true);
