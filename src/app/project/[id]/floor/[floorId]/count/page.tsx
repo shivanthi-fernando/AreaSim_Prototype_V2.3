@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   Play,
   ChevronRight,
-  ChevronLeft,
   ChevronDown,
   ArrowRight,
   Check,
@@ -31,7 +30,6 @@ import {
   Coffee,
   Box,
   CheckCircle2,
-  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -73,7 +71,7 @@ function getNextRound() {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Category = "meeting" | "focus" | "social" | "empty";
-type CountingPhase = "instructions" | "setup" | "ready" | "session";
+type CountingPhase = "setup" | "ready" | "session";
 type RoomStatus = "pending" | "ongoing" | "counted";
 
 const FLOOR_CATEGORIES: { id: Category; label: string; desc: string; color: string; badge: string; text: string }[] = [
@@ -174,7 +172,9 @@ export default function FloorCountPage() {
   const floor = floors.find((f) => f.id === activeFloorId) || floors[0];
   const rooms = floor?.rooms || [];
 
-  const [countingPhase, setCountingPhase] = useState<CountingPhase>("instructions");
+  const [countingPhase, setCountingPhase] = useState<CountingPhase>("setup");
+  const [showInstructionsModal, setShowInstructionsModal] = useState(true);
+  const [showVerifyConfirmModal, setShowVerifyConfirmModal] = useState(false);
   const [startModalDismissed, setStartModalDismissed] = useState(true);
   const [editRoomSettings, setEditRoomSettings] = useState(false);
   // Per-room category selected during setup
@@ -484,135 +484,6 @@ export default function FloorCountPage() {
 
   const _allRoomsSetup = rooms.every((r) => roomCategories[r.id] && verifiedRooms.has(r.id));
 
-  // ── Instructions page ──────────────────────────────────────────────────────
-  if (countingPhase === "instructions") {
-    const instructionSteps = [
-      {
-        icon: <Users size={26} className="text-primary" />,
-        iconBg: "#F0FAFA",
-        iconBorder: "rgba(19,148,133,0.3)",
-        title: "Plan your route",
-        description: "Walk the floor in a logical order — room by room. Make sure you have the floor plan open on the counting page before you start.",
-        color: "#139485",
-      },
-      {
-        icon: <Clock size={26} className="text-[#0A4F6E]" />,
-        iconBg: "#EEF4FF",
-        iconBorder: "rgba(10,79,110,0.3)",
-        title: "Count at the right time",
-        description: "Each round lasts 2 hours. There are 5 rounds per day (08:00–18:00). Start a round only when it's active — the system will tell you.",
-        color: "#0A4F6E",
-      },
-      {
-        icon: <Target size={26} className="text-amber-600" />,
-        iconBg: "#FFFBF0",
-        iconBorder: "rgba(245,158,11,0.35)",
-        title: "Enter the occupied seats",
-        description: "For each room, count how many seats are occupied right now. Enter the number and tap Save count & continue to move to the next room.",
-        color: "#F59E0B",
-      },
-      {
-        icon: <MessageSquare size={26} style={{ color: "#7C3AED" }} />,
-        iconBg: "#F5F3FF",
-        iconBorder: "rgba(124,58,237,0.3)",
-        title: "Add notes if needed",
-        description: "Use the Comments field to flag anything unusual — a room that's set up differently, or spaces that are blocked off.",
-        color: "#7C3AED",
-      },
-      {
-        icon: <CheckCircle2 size={26} style={{ color: "#00C9A7" }} />,
-        iconBg: "#F0FEFB",
-        iconBorder: "rgba(0,201,167,0.35)",
-        title: "Finish the session",
-        description: "Once all rooms are counted, tap Verify and continue to lock in the session data. You can view full history from the Dashboard.",
-        color: "#00C9A7",
-      },
-    ];
-
-    return (
-      <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
-        {/* Header — same design as setup page */}
-        <header className="px-6 py-3 shrink-0 bg-white border-b border-[#E2E8F0]">
-          <div className="max-w-[1200px] mx-auto flex items-center gap-4">
-            <button
-              onClick={handleBackToCanvas}
-              className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
-            >
-              <ArrowLeft size={14} /> Back to canvas
-            </button>
-            <div className="w-px h-6 bg-[#E2E8F0]" />
-            <span className="text-sm font-semibold text-text font-body truncate max-w-[180px]">
-              {mockProject.name}
-            </span>
-            <div className="ml-auto">
-              <Button
-                size="sm"
-                className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
-                icon={<ClipboardList size={14} />}
-                onClick={() => setCountingPhase("setup")}
-              >
-                Got it, set up rooms
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        <WorkplaceJourneyBar activeStep="1-2" />
-
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[1200px] mx-auto space-y-8">
-            {/* Hero — left-aligned */}
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                <ClipboardList size={22} className="text-primary" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                  How to use the counting tool
-                </h1>
-                <p className="text-sm text-text-muted leading-relaxed max-w-xl">
-                  Room counting gives you a real snapshot of how your office space is used throughout the day. Follow these steps to get accurate, consistent data.
-                </p>
-              </div>
-            </div>
-
-            {/* Steps — 5 cards centered */}
-            <div className="flex flex-wrap justify-center gap-4">
-              {instructionSteps.map((step, i) => (
-                <motion.div
-                  key={step.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07 }}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-6 flex flex-col gap-4 shadow-sm"
-                  style={{ width: "200px", minWidth: "180px", flex: "0 0 200px" }}
-                >
-                  {/* Icon */}
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                    style={{
-                      background: step.iconBg,
-                      border: `1.5px solid ${step.iconBorder}`,
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
-                    }}
-                  >
-                    {step.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-text mb-1.5" style={{ fontFamily: "var(--font-manrope)" }}>
-                      {step.title}
-                    </h3>
-                    <p className="text-xs text-text-muted leading-relaxed">{step.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   if (countingPhase === "setup") {
     return (
       <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
@@ -648,10 +519,7 @@ export default function FloorCountPage() {
                 size="sm"
                 className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
                 icon={<CheckCircle2 size={14} />}
-                onClick={() => {
-                  setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
-                  handleSetupConfirm();
-                }}
+                onClick={() => setShowVerifyConfirmModal(true)}
               >
                 Verify and continue
               </Button>
@@ -931,6 +799,192 @@ export default function FloorCountPage() {
           </div>
         </main>
 
+        {/* ── Instructions Modal ─────────────────────────────────────────────────── */}
+        <AnimatePresence>
+          {showInstructionsModal && (
+            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
+                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-4xl"
+              >
+                {/* Modal header */}
+                <div className="flex items-start justify-between px-7 pt-7 pb-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <ClipboardList size={20} className="text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                        How to use the counting tool
+                      </h2>
+                      <p className="text-sm text-text-muted mt-1 leading-relaxed max-w-lg">
+                        Follow these steps to get accurate, consistent room data.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowInstructionsModal(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-text-muted hover:text-text transition-colors shrink-0"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Cards row */}
+                <div className="px-7 pb-2">
+                  <div className="flex items-start gap-0">
+                    {[
+                      {
+                        icon: <Users size={22} className="text-primary" />,
+                        iconBg: "#F0FAFA",
+                        iconBorder: "rgba(19,148,133,0.3)",
+                        title: "Plan your route",
+                        description: "Walk the floor room by room. Keep the floor plan open before you start.",
+                        color: "#139485",
+                      },
+                      {
+                        icon: <Clock size={22} className="text-[#0A4F6E]" />,
+                        iconBg: "#EEF4FF",
+                        iconBorder: "rgba(10,79,110,0.3)",
+                        title: "Count at the right time",
+                        description: "5 rounds per day (08:00–18:00), 2 hours each. Start only when a round is active.",
+                        color: "#0A4F6E",
+                      },
+                      {
+                        icon: <Target size={22} className="text-amber-600" />,
+                        iconBg: "#FFFBF0",
+                        iconBorder: "rgba(245,158,11,0.35)",
+                        title: "Enter occupied seats",
+                        description: "Count occupied seats per room, enter the number and tap Save count & continue.",
+                        color: "#F59E0B",
+                      },
+                      {
+                        icon: <MessageSquare size={22} style={{ color: "#7C3AED" }} />,
+                        iconBg: "#F5F3FF",
+                        iconBorder: "rgba(124,58,237,0.3)",
+                        title: "Add notes if needed",
+                        description: "Use Comments to flag unusual setups or blocked-off spaces.",
+                        color: "#7C3AED",
+                      },
+                      {
+                        icon: <CheckCircle2 size={22} style={{ color: "#00C9A7" }} />,
+                        iconBg: "#F0FEFB",
+                        iconBorder: "rgba(0,201,167,0.35)",
+                        title: "Finish the session",
+                        description: "Once all rooms are counted, tap Verify and continue to lock in the data.",
+                        color: "#00C9A7",
+                      },
+                    ].map((step, i, arr) => (
+                      <div key={step.title} className="flex items-start">
+                        {/* Card */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.07 }}
+                          className="rounded-2xl border border-[#E2E8F0] bg-white p-5 flex flex-col gap-3 shadow-sm"
+                          style={{ width: "168px", minWidth: "168px" }}
+                        >
+                          <div
+                            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                            style={{
+                              background: step.iconBg,
+                              border: `1.5px solid ${step.iconBorder}`,
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
+                            }}
+                          >
+                            {step.icon}
+                          </div>
+                          <div>
+                            <h3 className="text-[13px] font-bold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
+                              {step.title}
+                            </h3>
+                            <p className="text-[11px] text-text-muted leading-relaxed">{step.description}</p>
+                          </div>
+                        </motion.div>
+
+                        {/* Animated arrow between cards */}
+                        {i < arr.length - 1 && (
+                          <div className="flex items-center self-center px-1 shrink-0">
+                            <motion.div
+                              animate={{ x: [0, 4, 0] }}
+                              transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut", delay: i * 0.2 }}
+                            >
+                              <ChevronRight size={18} className="text-text-muted" strokeWidth={2.5} />
+                            </motion.div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="px-7 py-6 flex justify-center">
+                  <Button
+                    size="lg"
+                    className="px-10 rounded-full shadow-md shadow-primary/20 font-bold"
+                    icon={<Play size={15} />}
+                    onClick={() => setShowInstructionsModal(false)}
+                  >
+                    Got it! Start room counting
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Verify Confirm Modal ────────────────────────────────────────────────── */}
+        <AnimatePresence>
+          {showVerifyConfirmModal && (
+            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ duration: 0.22 }}
+                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-md"
+              >
+                <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
+                  <button
+                    onClick={() => setShowVerifyConfirmModal(false)}
+                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-text-muted hover:text-text transition-colors shrink-0"
+                  >
+                    <X size={15} />
+                  </button>
+                  <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                    Verify and continue
+                  </h3>
+                </div>
+                <div className="px-6 py-5">
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    This will verify all the rooms in this sectioned floor. Are you sure you want to verify and continue?
+                  </p>
+                </div>
+                <div className="flex items-center justify-end gap-3 px-6 pb-5">
+                  <Button variant="secondary" size="sm" onClick={() => setShowVerifyConfirmModal(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    icon={<CheckCircle2 size={14} />}
+                    onClick={() => {
+                      setShowVerifyConfirmModal(false);
+                      setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
+                      handleSetupConfirm();
+                    }}
+                  >
+                    Verify and continue
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
         {/* ── Add Category Modal ──────────────────────────────────────────────────── */}
         <AnimatePresence>
           {showAddCategoryModal && (
@@ -1027,10 +1081,10 @@ export default function FloorCountPage() {
               size="sm"
               disabled={activeSection === "right"}
               className="h-9 px-5"
-              icon={<LayoutDashboard size={14} />}
+              icon={<ClipboardList size={14} />}
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/history`)}
             >
-              Dashboard
+              Counting history
             </Button>
 
             <AnimatePresence mode="wait">
@@ -1420,28 +1474,60 @@ export default function FloorCountPage() {
               transition={{ type: "spring", stiffness: 300, damping: 35 }}
               className="flex flex-col h-full bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden"
             >
-              <div className="px-6 py-5 border-b border-[#F1F5F9] flex items-center justify-between">
-                <div>
-                  <h3
-                    className="text-lg font-bold text-text leading-none mb-1"
-                    style={{ fontFamily: "var(--font-manrope)" }}
+              {/* Comments — pinned to top of panel */}
+              <div className="px-6 py-4 border-b border-[#F1F5F9] shrink-0">
+                <p className="text-xs font-bold text-text-muted mb-2">Comments</p>
+                <textarea
+                  value={roomComment}
+                  onChange={(e) => setRoomComment(e.target.value)}
+                  placeholder="Add any observations, issues, or notes about this floor…"
+                  rows={3}
+                  className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
+                />
+                <div className="flex justify-end gap-2 mt-2">
+                  <Button
+                    variant="text"
+                    size="sm"
+                    onClick={() => setRoomComment("")}
                   >
-                    {selectedRoom?.name}
-                  </h3>
-                  <p className="text-xs text-text-muted">
-                    {selectedZone ? selectedZone.name : "Unzoned room"}
-                  </p>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    disabled={!roomComment.trim()}
+                    onClick={() => {
+                      if (roomComment.trim()) {
+                        setRoomComments((prev) => ({
+                          ...prev,
+                          [selectedRoomId ?? "floor"]: roomComment.trim(),
+                        }));
+                      }
+                    }}
+                  >
+                    Save
+                  </Button>
                 </div>
-                <button
-                  onClick={() => setActiveSection("left")}
-                  className="w-10 h-10 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:text-primary transition-all"
-                >
-                  <ChevronLeft size={20} />
-                </button>
+              </div>
+
+              {/* Room name label */}
+              <div className="px-6 py-3 border-b border-[#F1F5F9] shrink-0">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Room name</p>
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-8">
                 <div className="text-center space-y-8">
+                  {/* Room name + zone — shown above round indicator */}
+                  <div>
+                    <h3
+                      className="text-lg font-bold text-text leading-none mb-1"
+                      style={{ fontFamily: "var(--font-manrope)" }}
+                    >
+                      {selectedRoom?.name}
+                    </h3>
+                    <p className="text-xs text-text-muted">
+                      {selectedZone ? selectedZone.name : "Unzoned room"}
+                    </p>
+                  </div>
                   <p
                     className="text-sm font-bold text-primary"
                     style={{ fontFamily: "var(--font-manrope)" }}
@@ -1486,42 +1572,6 @@ export default function FloorCountPage() {
                     </Button>
                   </div>
 
-                  {/* Comments card */}
-                  <div className="rounded-2xl border border-[#E2E8F0] bg-[#FAFBFC] p-4 text-left">
-                    <p className="text-xs font-bold text-text-muted mb-2">
-                      Comments
-                    </p>
-                    <textarea
-                      value={roomComment}
-                      onChange={(e) => setRoomComment(e.target.value)}
-                      placeholder="Add any observations, issues, or notes about this floor…"
-                      rows={3}
-                      className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
-                    />
-                    <div className="flex justify-end gap-2 mt-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setRoomComment("")}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        size="sm"
-                        disabled={!roomComment.trim()}
-                        onClick={() => {
-                          if (roomComment.trim()) {
-                            setRoomComments((prev) => ({
-                              ...prev,
-                              [selectedRoomId ?? "floor"]: roomComment.trim(),
-                            }));
-                          }
-                        }}
-                      >
-                        Save
-                      </Button>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Room history */}

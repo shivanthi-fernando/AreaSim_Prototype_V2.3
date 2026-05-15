@@ -24,7 +24,7 @@ const ICON_PAD: Record<InputFieldSize, { l: string; r: string }> = {
 
 // ─── Base classes ─────────────────────────────────────────────────────────────
 const BASE = [
-  "w-full rounded-xl border border-[#D1D1D1]",
+  "w-full rounded-xl border border-[#969696]",
   "bg-white text-[#222B27] placeholder:text-[#98A1B2]",
   "transition-all duration-200",
   // Hover

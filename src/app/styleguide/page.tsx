@@ -1150,7 +1150,7 @@ function SelectFieldDemo({
         <select
           disabled={isDisabled}
           className={cn(
-            "w-full appearance-none rounded-xl border-[1.5px] border-[#B8B8B8] bg-white text-[#222B27]",
+            "w-full appearance-none rounded-xl border border-[#969696] bg-white text-[#222B27]",
             "transition-all duration-200 pr-10 cursor-pointer",
             "hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)]",
             "focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)]",

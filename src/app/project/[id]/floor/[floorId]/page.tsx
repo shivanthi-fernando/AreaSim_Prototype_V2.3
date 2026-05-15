@@ -10,7 +10,7 @@ import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
-import { ScoreWidget } from "@/components/canvas/ScoreWidget";
+// import { ScoreWidget } from "@/components/canvas/ScoreWidget"; // commented out — may be needed in future
 import { SurveyModal } from "@/components/canvas/SurveyModal";
 import { CompletionModal } from "@/components/canvas/CompletionModal";
 import { GuideOverlay, GUIDE_TOTAL } from "@/components/canvas/GuideOverlay";
@@ -178,10 +178,10 @@ export default function FloorPage() {
             guideStep={guideStep}
             onOpenGuide={handleOpenGuide}
           />
-          {/* Score widget — top-left of canvas */}
-          <div className="absolute top-3 left-3 z-30">
+          {/* Score widget — top-left of canvas (commented out, may be needed in future) */}
+          {/* <div className="absolute top-3 left-3 z-30">
             <ScoreWidget />
-          </div>
+          </div> */}
         </div>
 
         {/* Detail panel — absolute overlay, right-aligned, 1/3 screen width */}

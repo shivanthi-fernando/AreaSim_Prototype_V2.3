@@ -340,21 +340,28 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-5xl bg-surface rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             >
-              <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-surface shrink-0">
-                <div>
+              <div className="px-6 py-4 border-b border-border flex flex-col gap-2 bg-surface shrink-0">
+                <div className="flex items-center justify-between">
                   <h2 className="text-lg font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                     {verifyingFloor.name}
                   </h2>
+                  <button
+                    onClick={() => setVerifyingFloor(null)}
+                    className="p-1.5 text-text-muted hover:text-text transition-colors"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setVerifyingFloor(null)}
-                  className="p-2 rounded-lg hover:bg-surface-2 text-text-muted transition-colors"
-                >
-                  <X size={20} />
-                </button>
+                {/* Warning */}
+                <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl" style={{ background: "rgba(226,117,0,0.08)", border: "1px solid rgba(226,117,0,0.2)" }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0"><path d="M8 1.5L14.5 13H1.5L8 1.5Z" fill="#E27500" fillOpacity="0.15" stroke="#E27500" strokeWidth="1.3" strokeLinejoin="round"/><path d="M8 6v3.5" stroke="#E27500" strokeWidth="1.5" strokeLinecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="#E27500"/></svg>
+                  <p className="text-xs font-semibold" style={{ color: "#E27500" }}>
+                    Make sure your floor plan is clear, as it will be used in future steps.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex-1 overflow-auto p-8" style={{ background: "#F2E7DB" }}>
+              <div className="flex-1 overflow-auto p-8" style={{ background: "#FBF6EE" }}>
                 <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-border p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={verifyingFloor.file?.preview} alt={verifyingFloor.name} className="w-full h-auto" />

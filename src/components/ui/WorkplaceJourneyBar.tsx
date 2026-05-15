@@ -191,8 +191,8 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
           zIndex: 30,
         }}
       >
-        <span className="text-[14px] font-black uppercase leading-none tracking-tight">GO</span>
-        <span className="text-[10px] font-semibold leading-none mt-0.5">Start</span>
+        <span className="text-[14px] font-black uppercase leading-none tracking-tight">Start</span>
+        <span className="text-[10px] font-semibold leading-none mt-0.5">Journey</span>
       </div>
 
       {/* ── Steps — notched left, pointy right (except last) ── */}

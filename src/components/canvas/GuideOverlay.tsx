@@ -516,7 +516,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "220px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "260px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
@@ -529,7 +529,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
     // arrowRightPx doubles as card position hint:
     // step 5 = Count Room Capacity (Start room counting button, rightmost)
     // step 6 = Conduct a Survey (Conduct survey button)
-    const cardRight = step === 4 ? "140px" : "330px";
+    const cardRight = step === 4 ? "140px" : "380px";
     return (
       <>
         <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: cardRight }}>

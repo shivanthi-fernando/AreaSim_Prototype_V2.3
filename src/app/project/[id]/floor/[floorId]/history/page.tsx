@@ -8,11 +8,6 @@ import {
   Clock,
   ChevronDown,
   LayoutGrid,
-  BarChart2,
-  TrendingUp,
-  Activity,
-  PieChart as PieChartIcon,
-  LineChart as LineChartIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import {
@@ -48,6 +43,15 @@ const C = {
   accent:   "#00C9A7",
 };
 
+// Light bg tints for each chart section
+const BG = {
+  area:  "rgba(19,148,133,0.05)",   // primary tint
+  bar:   "rgba(245,158,11,0.05)",   // amber tint
+  line:  "rgba(124,58,237,0.05)",   // purple tint
+  radar: "rgba(0,201,167,0.05)",    // accent tint
+  pie:   "rgba(10,79,110,0.05)",    // dark tint
+};
+
 // ── Mock data generation ──────────────────────────────────────────────────────
 const ROUNDS = ["Round 1", "Round 2", "Round 3", "Round 4", "Round 5"];
 
@@ -66,7 +70,6 @@ const generateRoomHistory = (roomName: string) => {
   });
 };
 
-// 14-day trend (one number per day)
 const generate14DayTrend = (roomName: string) => {
   const hash = roomName.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return Array.from({ length: 14 }, (_, i) => ({
@@ -76,7 +79,6 @@ const generate14DayTrend = (roomName: string) => {
   }));
 };
 
-// 5-session multi-metric bar data
 const generateSessionData = (roomName: string) => {
   const hash = roomName.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return ROUNDS.map((round, i) => ({
@@ -87,7 +89,6 @@ const generateSessionData = (roomName: string) => {
   }));
 };
 
-// Radar: 5 metrics
 const generateRadarData = (roomName: string) => {
   const hash = roomName.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return [
@@ -99,33 +100,17 @@ const generateRadarData = (roomName: string) => {
   ];
 };
 
-// Pie: category breakdown
 const generatePieData = (roomName: string) => {
   const hash = roomName.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const meeting  = Math.max(5, (hash % 35) + 15);
-  const focus    = Math.max(5, ((hash * 2) % 25) + 10);
-  const collab   = Math.max(5, ((hash * 3) % 20) + 10);
-  const empty    = Math.max(3, ((hash * 4) % 15) + 5);
   return [
-    { name: "Meeting",       value: meeting,  color: C.primary },
-    { name: "Focus work",    value: focus,    color: C.dark },
-    { name: "Collaboration", value: collab,   color: C.amber },
-    { name: "Empty",         value: empty,    color: C.purple },
+    { name: "Meeting",       value: Math.max(5, (hash % 35) + 15),          color: C.primary },
+    { name: "Focus work",    value: Math.max(5, ((hash * 2) % 25) + 10),    color: C.dark },
+    { name: "Collaboration", value: Math.max(5, ((hash * 3) % 20) + 10),    color: C.amber },
+    { name: "Empty",         value: Math.max(3, ((hash * 4) % 15) + 5),     color: C.purple },
   ];
 };
 
-// ── Chart type config ─────────────────────────────────────────────────────────
-const CHART_TYPES = [
-  { id: "area",  label: "Area trend",    Icon: TrendingUp,     description: "Occupancy over 14 days" },
-  { id: "bar",   label: "Sessions",      Icon: BarChart2,      description: "Count per session round" },
-  { id: "line",  label: "Capacity line", Icon: LineChartIcon,  description: "Count vs capacity over rounds" },
-  { id: "radar", label: "Metrics radar", Icon: Activity,       description: "Multi-metric breakdown" },
-  { id: "pie",   label: "Usage split",   Icon: PieChartIcon,   description: "Occupancy category share" },
-] as const;
-
-type ChartId = typeof CHART_TYPES[number]["id"];
-
-// ── Custom tooltip ────────────────────────────────────────────────────────────
+// ── Custom tooltip style ──────────────────────────────────────────────────────
 const tooltipStyle = {
   contentStyle: {
     borderRadius: "12px",
@@ -138,32 +123,31 @@ const tooltipStyle = {
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function RoomHistoryPage() {
-  const params   = useParams();
-  const router   = useRouter();
-  const projectId = params.id as string;
-  const floorId   = params.floorId as string;
+  const params    = useParams();
+  const router    = useRouter();
+  const projectId  = params.id as string;
+  const floorId    = params.floorId as string;
 
   const { floors } = useCanvasStore();
-  const floor = floors.find(f => f.id === floorId) || floors[0];
-  const rooms = floor?.rooms || [];
+  const floor  = floors.find(f => f.id === floorId) || floors[0];
+  const rooms  = floor?.rooms || [];
 
   const [selectedRoomId, setSelectedRoomId] = useState<string>(rooms[0]?.id || "");
   const selectedRoom = rooms.find(r => r.id === selectedRoomId) || rooms[0];
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [activeChart, setActiveChart] = useState<ChartId>("area");
 
-  const historyData    = useMemo(() => selectedRoom ? generateRoomHistory(selectedRoom.name)    : [], [selectedRoom]);
-  const trend14Data    = useMemo(() => selectedRoom ? generate14DayTrend(selectedRoom.name)     : [], [selectedRoom]);
-  const sessionData    = useMemo(() => selectedRoom ? generateSessionData(selectedRoom.name)    : [], [selectedRoom]);
-  const radarData      = useMemo(() => selectedRoom ? generateRadarData(selectedRoom.name)      : [], [selectedRoom]);
-  const pieData        = useMemo(() => selectedRoom ? generatePieData(selectedRoom.name)        : [], [selectedRoom]);
+  const historyData  = useMemo(() => selectedRoom ? generateRoomHistory(selectedRoom.name)  : [], [selectedRoom]);
+  const trend14Data  = useMemo(() => selectedRoom ? generate14DayTrend(selectedRoom.name)   : [], [selectedRoom]);
+  const sessionData  = useMemo(() => selectedRoom ? generateSessionData(selectedRoom.name)  : [], [selectedRoom]);
+  const radarData    = useMemo(() => selectedRoom ? generateRadarData(selectedRoom.name)    : [], [selectedRoom]);
+  const pieData      = useMemo(() => selectedRoom ? generatePieData(selectedRoom.name)      : [], [selectedRoom]);
 
   return (
     <div className="h-screen bg-bg flex flex-col font-body overflow-hidden">
 
       {/* ── Header ── */}
       <header className="bg-white border-b border-[#E2E8F0] px-6 py-4 shrink-0">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
@@ -175,7 +159,7 @@ export default function RoomHistoryPage() {
             <div className="flex flex-col">
               <span className="text-[10px] text-text-muted font-bold tracking-wider uppercase mb-0.5">Analytics</span>
               <h1 className="text-xl text-text leading-none" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                Room history
+                Counting history
               </h1>
             </div>
           </div>
@@ -213,152 +197,128 @@ export default function RoomHistoryPage() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-6 space-y-6">
-        <div className="max-w-[1600px] mx-auto space-y-6">
+      <main className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-[1400px] mx-auto space-y-6">
 
-          {/* ── Chart type tabs ── */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {CHART_TYPES.map(({ id, label, Icon }) => (
-              <button
-                key={id}
-                onClick={() => setActiveChart(id)}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all border",
-                  activeChart === id
-                    ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
-                    : "bg-white text-text-muted border-[#E2E8F0] hover:border-primary hover:text-primary"
-                )}
+          {/* ── Charts grid — all 5 visible simultaneously ── */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+            {/* 1 – Area: 14-day occupancy trend */}
+            <ChartCard
+              title="Area trend"
+              description="Occupancy over 14 days"
+              bg={BG.area}
+              legend={[{ color: C.primary, label: "Occupancy" }]}
+            >
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={trend14Data}>
+                  <defs>
+                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%"  stopColor={C.primary} stopOpacity={0.18} />
+                      <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
+                  <Tooltip {...tooltipStyle} />
+                  <Area type="monotone" dataKey="count" name="Occupancy" stroke={C.primary} strokeWidth={2.5} fillOpacity={1} fill="url(#areaGrad)" animationDuration={1200} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            {/* 2 – Bar: count per session round */}
+            <ChartCard
+              title="Sessions"
+              description="Count per session round"
+              bg={BG.bar}
+              legend={[{ color: C.primary, label: "Occupancy" }, { color: C.amber, label: "Average" }]}
+            >
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={sessionData} barCategoryGap="30%">
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="round" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
+                  <Tooltip {...tooltipStyle} />
+                  <Bar dataKey="occupancy" name="Occupancy" fill={C.primary} radius={[6, 6, 0, 0]} animationDuration={1000} />
+                  <Bar dataKey="avg"       name="Average"   fill={C.amber}   radius={[6, 6, 0, 0]} animationDuration={1200} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            {/* 3 – Line: count vs capacity */}
+            <ChartCard
+              title="Capacity line"
+              description="Count vs capacity over rounds"
+              bg={BG.line}
+              legend={[{ color: C.primary, label: "Count" }, { color: C.purple, label: "Capacity" }]}
+            >
+              <ResponsiveContainer width="100%" height={220}>
+                <LineChart data={historyData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="round" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
+                  <Tooltip {...tooltipStyle} />
+                  <Line type="monotone" dataKey="count" name="Count" stroke={C.primary} strokeWidth={2.5} dot={{ r: 4, fill: C.primary, strokeWidth: 2, stroke: "#fff" }} activeDot={{ r: 6 }} animationDuration={1200} />
+                  <Line type="monotone" dataKey={() => 12} name="Capacity" stroke={C.purple} strokeWidth={2} strokeDasharray="5 4" dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            {/* 4 – Radar: multi-metric breakdown */}
+            <ChartCard
+              title="Metrics radar"
+              description="Multi-metric breakdown"
+              bg={BG.radar}
+              legend={[{ color: C.accent, label: "Score (0–100)" }]}
+            >
+              <ResponsiveContainer width="100%" height={220}>
+                <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
+                  <PolarGrid stroke="#E2E8F0" />
+                  <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fontWeight: 600, fill: "#5A7184" }} />
+                  <Tooltip {...tooltipStyle} />
+                  <Radar name="Score" dataKey="value" stroke={C.accent} strokeWidth={2} fill={C.accent} fillOpacity={0.2} animationDuration={1200} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            {/* 5 – Pie: usage split — full-width */}
+            <div className="xl:col-span-2">
+              <ChartCard
+                title="Usage split"
+                description="Occupancy category share"
+                bg={BG.pie}
               >
-                <Icon size={13} />
-                {label}
-              </button>
-            ))}
+                <ResponsiveContainer width="100%" height={240}>
+                  <PieChart>
+                    <Tooltip {...tooltipStyle} />
+                    <Legend
+                      iconType="circle"
+                      iconSize={8}
+                      formatter={(value) => <span style={{ fontSize: 11, fontWeight: 600, color: "#5A7184" }}>{value}</span>}
+                    />
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={105}
+                      paddingAngle={3}
+                      dataKey="value"
+                      animationDuration={1200}
+                      label={({ percent }: { percent?: number }) => percent != null ? `${Math.round(percent * 100)}%` : ""}
+                      labelLine={false}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartCard>
+            </div>
+
           </div>
-
-          {/* ── Chart panel ── */}
-          <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col" style={{ minHeight: 340 }}>
-            <div className="px-6 py-5 border-b border-[#F1F5F9] flex items-center justify-between bg-bg/50">
-              <div>
-                <h3 className="text-lg font-bold text-text leading-none mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
-                  {CHART_TYPES.find(c => c.id === activeChart)?.label}
-                </h3>
-                <p className="text-xs text-text-muted">
-                  {CHART_TYPES.find(c => c.id === activeChart)?.description}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 flex-wrap justify-end">
-                {activeChart === "area" && (
-                  <ChartLegend color={C.primary} label="Occupancy" />
-                )}
-                {activeChart === "bar" && (
-                  <>
-                    <ChartLegend color={C.primary} label="Occupancy" />
-                    <ChartLegend color={C.amber} label="Average" />
-                  </>
-                )}
-                {activeChart === "line" && (
-                  <>
-                    <ChartLegend color={C.primary} label="Count" />
-                    <ChartLegend color={C.purple} label="Capacity" />
-                  </>
-                )}
-                {activeChart === "radar" && <ChartLegend color={C.accent} label="Score (0–100)" />}
-              </div>
-            </div>
-
-            <div className="flex-1 p-6" style={{ minHeight: 260 }}>
-              {/* 1 – Area chart: 14-day trend */}
-              {activeChart === "area" && (
-                <ResponsiveContainer width="100%" height={260}>
-                  <AreaChart data={trend14Data}>
-                    <defs>
-                      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%"  stopColor={C.primary} stopOpacity={0.15} />
-                        <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
-                    <Tooltip {...tooltipStyle} />
-                    <Area type="monotone" dataKey="count" name="Occupancy" stroke={C.primary} strokeWidth={2.5} fillOpacity={1} fill="url(#areaGrad)" animationDuration={1200} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              )}
-
-              {/* 2 – Bar chart: sessions */}
-              {activeChart === "bar" && (
-                <ResponsiveContainer width="100%" height={260}>
-                  <BarChart data={sessionData} barCategoryGap="30%">
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                    <XAxis dataKey="round" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
-                    <Tooltip {...tooltipStyle} />
-                    <Bar dataKey="occupancy" name="Occupancy" fill={C.primary} radius={[6, 6, 0, 0]} animationDuration={1000} />
-                    <Bar dataKey="avg"       name="Average"   fill={C.amber}   radius={[6, 6, 0, 0]} animationDuration={1200} />
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
-
-              {/* 3 – Line chart: count vs capacity */}
-              {activeChart === "line" && (
-                <ResponsiveContainer width="100%" height={260}>
-                  <LineChart data={historyData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                    <XAxis dataKey="round" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
-                    <Tooltip {...tooltipStyle} />
-                    <Line type="monotone" dataKey="count" name="Count"    stroke={C.primary} strokeWidth={2.5} dot={{ r: 4, fill: C.primary, strokeWidth: 2, stroke: "#fff" }} activeDot={{ r: 6 }} animationDuration={1200} />
-                    <Line type="monotone" dataKey={() => 12} name="Capacity" stroke={C.purple}  strokeWidth={2} strokeDasharray="5 4" dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-
-              {/* 4 – Radar chart */}
-              {activeChart === "radar" && (
-                <ResponsiveContainer width="100%" height={260}>
-                  <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="75%">
-                    <PolarGrid stroke="#E2E8F0" />
-                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fontWeight: 600, fill: "#5A7184" }} />
-                    <Tooltip {...tooltipStyle} />
-                    <Radar name="Score" dataKey="value" stroke={C.accent} strokeWidth={2} fill={C.accent} fillOpacity={0.18} animationDuration={1200} />
-                  </RadarChart>
-                </ResponsiveContainer>
-              )}
-
-              {/* 5 – Pie chart: usage split */}
-              {activeChart === "pie" && (
-                <div className="flex items-center justify-center gap-12 h-[260px]">
-                  <ResponsiveContainer width="100%" height={260}>
-                    <PieChart>
-                      <Tooltip {...tooltipStyle} />
-                      <Legend
-                        iconType="circle"
-                        iconSize={8}
-                        formatter={(value) => <span style={{ fontSize: 11, fontWeight: 600, color: "#5A7184" }}>{value}</span>}
-                      />
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={65}
-                        outerRadius={100}
-                        paddingAngle={3}
-                        dataKey="value"
-                        animationDuration={1200}
-                        label={({ percent }: { percent?: number }) => percent != null ? `${Math.round(percent * 100)}%` : ""}
-                        labelLine={false}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={index} fill={entry.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </div>
-          </section>
 
           {/* ── Session records table ── */}
           <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col">
@@ -430,11 +390,12 @@ export default function RoomHistoryPage() {
               </div>
             )}
           </section>
+
         </div>
       </main>
 
       <footer className="bg-white border-t border-[#E2E8F0] px-6 py-4 shrink-0">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between text-[11px] text-[#8CA3B0] font-bold tracking-wider uppercase">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between text-[11px] text-[#8CA3B0] font-bold tracking-wider uppercase">
           <span>Areasim analytics engine</span>
           <span>Export CSV • Export PDF</span>
         </div>
@@ -443,12 +404,44 @@ export default function RoomHistoryPage() {
   );
 }
 
-// ── Small helper ──────────────────────────────────────────────────────────────
-function ChartLegend({ color, label }: { color: string; label: string }) {
+// ── Chart card wrapper ────────────────────────────────────────────────────────
+function ChartCard({
+  title,
+  description,
+  bg,
+  legend,
+  children,
+}: {
+  title: string;
+  description: string;
+  bg: string;
+  legend?: { color: string; label: string }[];
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center gap-1.5">
-      <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
-      <span className="text-[11px] font-bold text-text-muted">{label}</span>
-    </div>
+    <section
+      className="rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col"
+      style={{ background: bg }}
+    >
+      <div className="px-5 py-4 border-b border-[#E2E8F0]/60 flex items-center justify-between bg-white/70">
+        <div>
+          <h3 className="text-sm font-bold text-text leading-none mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
+            {title}
+          </h3>
+          <p className="text-[11px] text-text-muted">{description}</p>
+        </div>
+        {legend && legend.length > 0 && (
+          <div className="flex items-center gap-3 flex-wrap justify-end">
+            {legend.map(({ color, label }) => (
+              <div key={label} className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
+                <span className="text-[11px] font-bold text-text-muted">{label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="flex-1 p-5">{children}</div>
+    </section>
   );
 }
