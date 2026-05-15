@@ -276,24 +276,24 @@ const STEPS: StepDef[] = [
     Illustration: AnimatedGroupZonesIllustration,
   },
   {
-    title: "Group via Room List",
-    description: "Alternatively, you can identify zones by selecting multiple rooms from this list and grouping them together.",
+    title: "Create zones",
+    description: "Click the Create zone button to start grouping rooms into zones. Select the rooms you want to include and give the zone a name.",
     position: "inside-panel-group",
-    arrowLeftPx: 180,
+    arrowLeftPx: 60,
     Illustration: GroupButtonIllustration,
   },
   {
     title: "Count Room Capacity",
-    description: "You can get the capacity of each room at different times of day using the Start room counting option.",
-    position: "inside-panel-count",
-    arrowLeftPx: 195,
+    description: "You can get the capacity of each room at different times of day using the Start room counting button in the top navbar.",
+    position: "below-header",
+    arrowRightPx: 60,
     Illustration: CountingIllustration,
   },
   {
     title: "Conduct a Survey",
     description: "Send out a survey to gather your employees' opinions on their workspace experience.",
     position: "below-header",
-    arrowRightPx: 16,
+    arrowRightPx: 130,
     Illustration: SurveyIllustration,
   },
   {
@@ -512,33 +512,27 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
     );
   }
 
-  // Step 4 — inside panel, up arrow pointing to Group button in first room row
+  // Step 4 — inside panel, up arrow pointing to Create zone button
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "22px", top: "308px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ right: "22px", top: "200px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
     );
   }
 
-  // Step 5 — inside panel, up arrow pointing to Start room counting button
-  if (position === "inside-panel-count") {
-    return (
-      <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "8px", top: "212px" }}>
-          <AnimatePresence mode="wait">{card}</AnimatePresence>
-        </div>
-      </>
-    );
-  }
-
-  // Step 6 — below header, up arrow pointing to Conduct Survey button
+  // Steps 5 & 6 — below header, up arrow pointing to navbar buttons
+  // Step 5: Start room counting (rightmost), Step 6: Conduct survey (leftmost of the three)
   if (isBelowHeader) {
+    // arrowRightPx doubles as card position hint:
+    // step 5 (Start room counting): card at right ~100px
+    // step 6 (Conduct survey): card at right ~260px
+    const cardRight = step === 4 ? "88px" : "242px";
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: "182px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: cardRight }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

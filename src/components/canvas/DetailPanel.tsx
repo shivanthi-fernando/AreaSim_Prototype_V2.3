@@ -178,7 +178,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                 {!groupMode && (
                   <div className="mb-3">
                     <Button
-                      variant="secondary"
+                      variant="primary"
                       size="sm"
                       icon={<FolderPlus size={13} />}
                       onClick={() => { setGroupMode(true); setSelectedForGroup([]); setGroupZoneName(""); }}
@@ -347,7 +347,7 @@ function RoomRow({
   const isGroupSelected = selectedForGroup.includes(room.id);
 
   return (
-    <div className={cn("border-b border-[#F0F4F8] last:border-0 transition-colors", forceHighlight ? "bg-[#F5F2EA]" : "bg-transparent hover:bg-[#F5F2EA]")}>
+    <div className={cn("border-b border-[#F0F4F8] last:border-0 transition-colors", forceHighlight ? "bg-[#FBF6EE]" : "bg-transparent hover:bg-[#FBF6EE]")}>
       <div className="flex items-center justify-between px-3 py-2.5 group">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           {groupMode ? (

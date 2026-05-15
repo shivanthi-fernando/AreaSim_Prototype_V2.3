@@ -356,11 +356,7 @@ export default function FloorCountPage() {
     const currentIndex = rooms.findIndex((r) => r.id === selectedRoomId);
 
     if (currentIndex < rooms.length - 1) {
-      // Not last room — auto-save comment if any, clear for next room
-      if (roomComment.trim()) {
-        setRoomComments((prev) => ({ ...prev, [selectedRoomId]: roomComment.trim() }));
-      }
-      setRoomComment("");
+      // Not last room — floor-level comment persists, just proceed
       proceedAfterRecord(selectedRoomId);
     } else {
       // Last room (Done) — if unsaved comment, ask user first
@@ -1258,17 +1254,30 @@ export default function FloorCountPage() {
                       </button>
                     </div>
                   </div>
-                  {/* Room comments card */}
+                  {/* Action button — above comments */}
+                  <div className="flex justify-center">
+                    <Button
+                      size="lg"
+                      className="w-auto px-10 h-12 text-base font-bold shadow-xl shadow-primary/20 gap-2"
+                      onClick={handleRecordCount}
+                      icon={!isLastRoom ? <ArrowRight size={18} /> : undefined}
+                      iconPosition="right"
+                    >
+                      {isLastRoom ? "Done" : "Save count & continue"}
+                    </Button>
+                  </div>
+
+                  {/* Floor comments card */}
                   <div className="rounded-2xl border border-[#E2E8F0] bg-[#FAFBFC] p-4 text-left">
                     <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
-                      Room comments
+                      Floor comments
                     </p>
                     <textarea
-                      value={selectedRoomId ? (roomComment) : ""}
+                      value={roomComment}
                       onChange={(e) => setRoomComment(e.target.value)}
-                      placeholder="Add any observations, issues, or notes about this room…"
+                      placeholder="Add any observations, issues, or notes about this floor…"
                       rows={3}
-                      className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none"
+                      className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
                     />
                     <div className="flex justify-end gap-2 mt-2">
                       <Button
@@ -1282,28 +1291,17 @@ export default function FloorCountPage() {
                         size="sm"
                         disabled={!roomComment.trim()}
                         onClick={() => {
-                          if (selectedRoomId && roomComment.trim()) {
-                            setRoomComments((prev) => ({ ...prev, [selectedRoomId]: roomComment.trim() }));
-                            setRoomComment("");
+                          if (roomComment.trim()) {
+                            setRoomComments((prev) => ({
+                              ...prev,
+                              [selectedRoomId ?? "floor"]: roomComment.trim(),
+                            }));
                           }
                         }}
                       >
                         Save
                       </Button>
                     </div>
-                  </div>
-
-                  {/* Action button */}
-                  <div className="flex justify-center">
-                    <Button
-                      size="lg"
-                      className="w-auto px-10 h-12 text-base font-bold shadow-xl shadow-primary/20 gap-2"
-                      onClick={handleRecordCount}
-                      icon={!isLastRoom ? <ArrowRight size={18} /> : undefined}
-                      iconPosition="right"
-                    >
-                      {isLastRoom ? "Done" : "Save count & continue"}
-                    </Button>
                   </div>
                 </div>
 

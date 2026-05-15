@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { SlidersHorizontal, Gem, User, Play } from "lucide-react";
+import { SlidersHorizontal, Gem, User, Play, ClipboardCheck } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
@@ -10,6 +10,7 @@ import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
+import { ScoreWidget } from "@/components/canvas/ScoreWidget";
 import { SurveyModal } from "@/components/canvas/SurveyModal";
 import { CompletionModal } from "@/components/canvas/CompletionModal";
 import { GuideOverlay, GUIDE_TOTAL } from "@/components/canvas/GuideOverlay";
@@ -30,7 +31,7 @@ export default function FloorPage() {
   const {
     floors, setActiveFloor,
     setDetailPanel, detailPanelOpen,
-    setCompletionModal,
+    setCompletionModal, setSurveyModal,
   } = useCanvasStore();
 
   const [_floorDropdownOpen, _setFloorDropdownOpen] = useState(false);
@@ -40,8 +41,8 @@ export default function FloorPage() {
   const [guideStep, setGuideStep] = useState(0);
 
   // Open/close detail panel based on guide step
-  const panelSteps = new Set([0, 3, 4]);
-  const noPanelSteps = new Set([5, 6]);
+  const panelSteps = new Set([0, 3]);
+  const noPanelSteps = new Set([4, 5, 6]);
   useEffect(() => {
     if (!showGuide) return;
     if (panelSteps.has(guideStep)) setDetailPanel(true);
@@ -60,8 +61,8 @@ export default function FloorPage() {
   const activeFloorRooms = activeFloor?.rooms ?? [];
   const allCounted = activeFloorRooms.length > 0 && activeFloorRooms.every((r) => r.status === "counted");
 
-  // Highlight first room when on panel steps 1 or 4 (0-indexed 0 or 3)
-  const guideHighlightFirstRoom = showGuide && (guideStep === 0 || guideStep === 3 || guideStep === 4);
+  // Highlight first room when on panel steps 0 or 3 (Identify rooms, Create zones)
+  const guideHighlightFirstRoom = showGuide && (guideStep === 0 || guideStep === 3);
 
   return (
     <div className="h-screen flex flex-col bg-bg overflow-hidden relative">
@@ -101,15 +102,15 @@ export default function FloorPage() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Start room counting — primary */}
+          {/* Conduct survey — secondary */}
           <Button
-            variant="primary"
+            variant="secondary"
             size="sm"
-            icon={<Play size={13} />}
-            onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
+            icon={<ClipboardCheck size={14} />}
+            onClick={() => setSurveyModal(true)}
             className="h-9 py-2 px-4"
           >
-            <span className="hidden sm:inline">Start room counting</span>
+            <span className="hidden sm:inline">Conduct survey</span>
           </Button>
 
           {/* Rooms list — secondary */}
@@ -121,6 +122,17 @@ export default function FloorPage() {
             className="h-9 py-2 px-4"
           >
             <span className="hidden sm:inline">Rooms list</span>
+          </Button>
+
+          {/* Start room counting — primary */}
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Play size={13} />}
+            onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
+            className="h-9 py-2 px-4"
+          >
+            <span className="hidden sm:inline">Start room counting</span>
           </Button>
 
 
@@ -166,6 +178,10 @@ export default function FloorPage() {
             guideStep={guideStep}
             onOpenGuide={handleOpenGuide}
           />
+          {/* Score widget — top-left of canvas */}
+          <div className="absolute top-3 left-3 z-30">
+            <ScoreWidget />
+          </div>
         </div>
 
         {/* Detail panel — absolute overlay, right-aligned, 1/3 screen width */}
