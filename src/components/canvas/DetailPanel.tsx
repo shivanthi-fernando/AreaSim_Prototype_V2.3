@@ -178,7 +178,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                 {!groupMode && (
                   <div className="mb-3">
                     <Button
-                      variant="primary"
+                      variant="secondary"
                       size="sm"
                       icon={<FolderPlus size={13} />}
                       onClick={() => { setGroupMode(true); setSelectedForGroup([]); setGroupZoneName(""); }}
