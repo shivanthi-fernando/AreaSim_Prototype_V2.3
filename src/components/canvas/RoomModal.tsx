@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { useCanvasStore } from "@/store/canvas";
 import { Room } from "@/lib/mockData";
 
@@ -57,7 +58,7 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
       </div>
 
       {/* Room / Zone toggle */}
-      <div className="flex items-center gap-1 bg-surface-2 rounded-xl p-1 mb-5">
+      <div className="flex items-center gap-1 rounded-xl p-1 mb-5" style={{ background: "#E0F2F2" }}>
         {(["room", "zone"] as const).map((t) => (
           <button
             key={t}
@@ -73,46 +74,39 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
         ))}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* Name */}
-        <div>
-          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1 block">
-            {type === "room" ? "Room Name" : "Zone Name"}
-          </label>
-          <input
-            value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm font-medium text-text focus:outline-none focus:border-primary transition-all"
+        <Input
+          label={type === "room" ? "Room Name" : "Zone Name"}
+          fieldSize="sm"
+          value={formData.name}
+          onChange={(e) => handleChange("name", e.target.value)}
+        />
+
+        <div className="grid grid-cols-2 gap-3">
+          <Input
+            label="Square Meters"
+            fieldSize="sm"
+            type="number"
+            value={String(formData.sqm)}
+            onChange={(e) => handleChange("sqm", parseInt(e.target.value) || 0)}
+          />
+          <Input
+            label="No. of Seats"
+            fieldSize="sm"
+            type="number"
+            value={String(formData.seats)}
+            onChange={(e) => handleChange("seats", parseInt(e.target.value) || 0)}
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1 block">Square Meters</label>
-            <input
-              type="number"
-              value={formData.sqm}
-              onChange={(e) => handleChange("sqm", parseInt(e.target.value) || 0)}
-              className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm font-medium text-text focus:outline-none focus:border-primary transition-all"
-            />
-          </div>
-          <div>
-            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1 block">No. of Seats</label>
-            <input
-              type="number"
-              value={formData.seats}
-              onChange={(e) => handleChange("seats", parseInt(e.target.value) || 0)}
-              className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm font-medium text-text focus:outline-none focus:border-primary transition-all"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1 block">Category</label>
+        {/* Category */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-[#222B27] font-body">Category</label>
           <select
             value={formData.category}
             onChange={(e) => handleChange("category", e.target.value)}
-            className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm font-medium text-text focus:outline-none focus:border-primary transition-all appearance-none"
+            className="w-full h-9 rounded-xl border border-[#D1D1D1] bg-white px-4 text-xs text-[#222B27] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all appearance-none"
           >
             <option>Meeting Room</option>
             <option>Open Office</option>

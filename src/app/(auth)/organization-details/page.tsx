@@ -43,10 +43,10 @@ export default function OrganizationDetailsPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Organization name" placeholder="Larsen & Partners AS"
-            icon={<Building2 size={16} />} value={values.organization} onChange={handleChange("organization")} />
           <Input label="Organization number" placeholder="e.g. 123 456 789"
             icon={<Hash size={16} />} value={values.organizationNumber} onChange={handleChange("organizationNumber")} />
+          <Input label="Organization name" placeholder="Larsen & Partners AS"
+            icon={<Building2 size={16} />} value={values.organization} onChange={handleChange("organization")} />
 
           <div className="flex justify-center">
             <Button type="submit" size="lg" loading={loading} icon={<ArrowRight size={16} />} iconPosition="right" className="w-full">

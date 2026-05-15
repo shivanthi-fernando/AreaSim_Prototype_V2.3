@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Plus, CheckCircle2, Loader2, Circle,
+  X, Plus, CheckCircle2,
   Sparkles, Trash2, ChevronDown, Check,
-  Layers, Pencil,
+  Layers, Pencil, FolderPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { useCanvasStore } from "@/store/canvas";
 import { IllustrationDrawRoom } from "@/components/canvas/IllustrationDrawRoom";
 import { Logo } from "@/components/ui/Logo";
@@ -20,11 +21,6 @@ interface DetailPanelProps {
   guideHighlightFirstRoom?: boolean;
 }
 
-const STATUS_ICON: Record<string, React.ReactNode> = {
-  counted: <CheckCircle2 size={13} className="text-accent shrink-0" />,
-  counting: <Loader2 size={13} className="text-amber-500 shrink-0 animate-spin" />,
-  unvisited: <Circle size={13} className="text-[#C8D8E4] shrink-0" />,
-};
 
 export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom = false }: DetailPanelProps) {
 
@@ -126,15 +122,6 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
             </span>
           </button>
         ))}
-        <div className="ml-auto pb-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => { setPanelTab("rooms"); setGroupMode(true); setSelectedForGroup([]); setGroupZoneName(""); }}
-          >
-            Name zones
-          </Button>
-        </div>
       </div>
 
       {/* Scrollable body */}
@@ -153,20 +140,21 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                   exit={{ opacity: 0, height: 0 }}
                   className="mb-3 overflow-hidden"
                 >
-                  <div className="rounded-xl bg-primary/5 border border-primary/20 p-3 space-y-2">
+                  <div className="rounded-2xl border border-border bg-white shadow-sm p-4 space-y-3">
                     <p className="text-xs font-semibold text-primary">
                       Select rooms to group ({selectedForGroup.length} selected)
                     </p>
-                    <input
+                    <Input
+                      fieldSize="sm"
+                      label="Zone name"
                       value={groupZoneName}
                       onChange={(e) => setGroupZoneName(e.target.value)}
                       placeholder="Zone name…"
-                      className="w-full rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-body text-text focus:outline-none focus:border-primary transition-all"
                     />
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => { setGroupMode(false); setSelectedForGroup([]); setGroupZoneName(""); }}
-                        className="text-xs font-semibold text-text-muted hover:text-text transition-colors"
+                        className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1"
                       >
                         Cancel
                       </button>
@@ -186,9 +174,22 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
 
             {(zones.length > 0 || rooms.length > 0) && (
               <>
-                <p className="text-[11px] text-text-muted font-body mb-3 leading-relaxed">
-                  You can group multiple rooms and mark it as one zone.
-                </p>
+                {/* Create zone — shown only when not in group mode */}
+                {!groupMode && (
+                  <div className="mb-3">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<FolderPlus size={13} />}
+                      onClick={() => { setGroupMode(true); setSelectedForGroup([]); setGroupZoneName(""); }}
+                    >
+                      Create zone
+                    </Button>
+                    <p className="text-[11px] text-text-muted font-body mt-2 mb-0 leading-relaxed">
+                      Select one or multiple rooms from the below list to create zones.
+                    </p>
+                  </div>
+                )}
 
                 <div className="rounded-xl border border-[#E5EAF0] overflow-hidden">
                   {rooms.map((room, idx) => (
@@ -228,9 +229,9 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                     };
                     addRoom(floor.id, newRoom);
                   }}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#D0DDE6] py-2.5 text-xs text-[#8CA3B0] hover:border-primary hover:text-primary hover:bg-[#F0F6FB] transition-all font-body"
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-[#FDFBF7] py-3 text-sm text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/[0.02] transition-all font-body group"
                 >
-                  <Plus size={14} /> Add room
+                  <Plus size={15} className="group-hover:scale-110 transition-transform" /> Add room
                 </button>
               </>
             )}
@@ -361,9 +362,7 @@ function RoomRow({
             >
               {isGroupSelected && <Check size={10} className="text-white" strokeWidth={3} />}
             </button>
-          ) : (
-            <span className="shrink-0">{STATUS_ICON[room.status]}</span>
-          )}
+          ) : null}
 
           {isEditing ? (
             <input

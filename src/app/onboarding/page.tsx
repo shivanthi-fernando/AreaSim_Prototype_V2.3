@@ -8,7 +8,6 @@ import { X, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCa
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
-import { PotentialScoreWidget } from "@/components/ui/PotentialScoreWidget";
 import { Step1Project } from "@/components/onboarding/Step1Project";
 import { Step3Lease } from "@/components/onboarding/Step3Lease";
 import { Step3FloorPlans } from "@/components/onboarding/Step3FloorPlans";
@@ -1052,13 +1051,12 @@ export default function OnboardingPage() {
       <header className="flex items-center justify-between px-6 py-4 bg-surface" style={{ borderBottom: "1px solid #EAE5DC" }}>
         <Logo size="md" />
         <div className="flex items-center gap-4">
-          <PotentialScoreWidget />
           <LanguageSelector />
         </div>
       </header>
 
-      {/* ── Workplace Journey Bar ── */}
-      <WorkplaceJourneyBar activeStep="1-2" />
+      {/* ── Workplace Journey Bar — hidden on Step 1 ── */}
+      {!isCreateStep && <WorkplaceJourneyBar activeStep="1-2" />}
 
       {/* ── Centered fixed stepper ─────────────────────────────────────────── */}
       {!isLastStep && (

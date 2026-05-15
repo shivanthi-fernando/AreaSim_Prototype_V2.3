@@ -27,6 +27,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { useCanvasStore } from "@/store/canvas";
 import { mockProject, mockCountHistory } from "@/lib/mockData";
@@ -172,7 +173,8 @@ export default function FloorCountPage() {
     }
     return "setup";
   });
-  const [startModalDismissed, setStartModalDismissed] = useState(false);
+  const [startModalDismissed, setStartModalDismissed] = useState(true);
+  const [editRoomSettings, setEditRoomSettings] = useState(false);
   // Per-room category selected during setup
   const [roomCategories, setRoomCategories] = useState<Record<string, string>>({});
   const [verifiedRooms, setVerifiedRooms] = useState<Set<string>>(new Set());
@@ -183,7 +185,6 @@ export default function FloorCountPage() {
 
   // Multi-room selection state
   const [selectedRoomIds, setSelectedRoomIds] = useState<Set<string>>(new Set());
-  const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkCategory, setBulkCategory] = useState<string>("");
 
   // Editable seat inputs — raw string while typing
@@ -223,6 +224,12 @@ export default function FloorCountPage() {
   const [showStopModal, setShowStopModal] = useState(false);
   const [_isSessionSaved, setIsSessionSaved] = useState(false);
   const [pendingNav, setPendingNav] = useState<string | null>(null);
+
+  // Comment state
+  const [roomComment, setRoomComment] = useState("");
+  const [roomComments, setRoomComments] = useState<Record<string, string>>({});
+  const [showSaveCommentsModal, setShowSaveCommentsModal] = useState(false);
+  const [commentPendingAction, setCommentPendingAction] = useState<"done" | "exit" | null>(null);
 
   const [selectedProject] = useState(mockProject.name);
   const [selectedFloorName, setSelectedFloorName] = useState(floor?.name || "Ground Floor");
@@ -311,6 +318,24 @@ export default function FloorCountPage() {
     }));
   };
 
+  const proceedAfterRecord = (currentRoomId: string) => {
+    const currentIndex = rooms.findIndex((r) => r.id === currentRoomId);
+    if (currentIndex < rooms.length - 1) {
+      const nextRoomId = rooms[currentIndex + 1].id;
+      setSelectedRoomId(nextRoomId);
+      setRoomMeta((prev) => ({
+        ...prev,
+        [nextRoomId]: { status: "ongoing", lockedBy: "You" },
+      }));
+      if (sessionCounts[nextRoomId] === undefined) {
+        setSessionCounts((prev) => ({ ...prev, [nextRoomId]: 0 }));
+      }
+    } else {
+      setActiveSection("left");
+      setShowNextFloorModal(true);
+    }
+  };
+
   const handleRecordCount = () => {
     if (!selectedRoomId || !floor) return;
     const count = sessionCounts[selectedRoomId] || 0;
@@ -329,31 +354,58 @@ export default function FloorCountPage() {
     }));
 
     const currentIndex = rooms.findIndex((r) => r.id === selectedRoomId);
+
     if (currentIndex < rooms.length - 1) {
-      const nextRoomId = rooms[currentIndex + 1].id;
-      setSelectedRoomId(nextRoomId);
-      // Lock next room for current user
-      setRoomMeta((prev) => ({
-        ...prev,
-        [nextRoomId]: { status: "ongoing", lockedBy: "You" },
-      }));
-      if (sessionCounts[nextRoomId] === undefined) {
-        setSessionCounts((prev) => ({ ...prev, [nextRoomId]: 0 }));
+      // Not last room — auto-save comment if any, clear for next room
+      if (roomComment.trim()) {
+        setRoomComments((prev) => ({ ...prev, [selectedRoomId]: roomComment.trim() }));
       }
+      setRoomComment("");
+      proceedAfterRecord(selectedRoomId);
     } else {
-      setActiveSection("left");
-      setShowNextFloorModal(true);
+      // Last room (Done) — if unsaved comment, ask user first
+      if (roomComment.trim()) {
+        setCommentPendingAction("done");
+        setShowSaveCommentsModal(true);
+      } else {
+        proceedAfterRecord(selectedRoomId);
+      }
     }
   };
 
   const isLastRoom = rooms.findIndex((r) => r.id === selectedRoomId) === rooms.length - 1;
 
   const handleBackToCanvas = () => {
+    if (roomComment.trim()) {
+      setCommentPendingAction("exit");
+      setShowSaveCommentsModal(true);
+      return;
+    }
     if (isRecording) {
       setPendingNav(`/project/${projectId}/floor/${floorId}`);
       setShowStopModal(true);
     } else {
       router.push(`/project/${projectId}/floor/${floorId}`);
+    }
+  };
+
+  const handleSaveComments = (save: boolean) => {
+    if (save && selectedRoomId && roomComment.trim()) {
+      setRoomComments((prev) => ({ ...prev, [selectedRoomId]: roomComment.trim() }));
+    }
+    setRoomComment("");
+    setShowSaveCommentsModal(false);
+    const action = commentPendingAction;
+    setCommentPendingAction(null);
+    if (action === "done") {
+      if (selectedRoomId) proceedAfterRecord(selectedRoomId);
+    } else if (action === "exit") {
+      if (isRecording) {
+        setPendingNav(`/project/${projectId}/floor/${floorId}`);
+        setShowStopModal(true);
+      } else {
+        router.push(`/project/${projectId}/floor/${floorId}`);
+      }
     }
   };
 
@@ -409,15 +461,9 @@ export default function FloorCountPage() {
     });
     setSelectedRoomIds(new Set());
     setBulkCategory("");
-    setShowBulkModal(false);
   };
 
-  // Auto-open bulk category modal whenever at least one room is selected
-  useEffect(() => {
-    if (selectedRoomIds.size > 0) {
-      setShowBulkModal(true);
-    }
-  }, [selectedRoomIds]);
+  // (bulk category is now shown as an inline card above the table, not a modal)
 
   // ── Seat input helpers ─────────────────────────────────────────────────────────
   const getSeatInputValue = (roomId: string) =>
@@ -492,13 +538,93 @@ export default function FloorCountPage() {
                   <Layers size={20} className="text-primary" />
                 </div>
                 <h2 className="text-xl font-bold text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                  Before you start counting
+                  {editRoomSettings ? "Edit room settings" : "Before you start counting"}
                 </h2>
               </div>
               <p className="text-sm text-text-muted pl-[52px]">
                 Set the category and verify the number of seats for each room. This is a one-time setup.
               </p>
             </div>
+
+            {/* ── Inline bulk category card — shown when rooms are selected ── */}
+            <AnimatePresence>
+              {selectedRoomIds.size > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-4"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                        Set category
+                      </h3>
+                      <p className="text-xs text-text-muted">
+                        Apply to {selectedRoomIds.size} selected room{selectedRoomIds.size > 1 ? "s" : ""}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
+                      className="text-text-muted hover:text-text transition-colors"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  {/* Category chips */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {[
+                      ...FLOOR_CATEGORIES,
+                      ...customCategories.map((cc) => ({
+                        id: cc,
+                        label: cc,
+                        desc: "Custom category",
+                        color: "border-gray-200 bg-gray-50",
+                        badge: "bg-gray-100 text-gray-600",
+                        text: "text-gray-600",
+                      })),
+                    ].map((fc) => (
+                      <button
+                        key={fc.id}
+                        onClick={() => setBulkCategory(fc.id)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                          bulkCategory === fc.id
+                            ? `${fc.color} border-opacity-100`
+                            : "border-[#E2E8F0] bg-white hover:border-[#C0D0DC] text-text"
+                        }`}
+                      >
+                        {bulkCategory === fc.id && <Check size={10} strokeWidth={3} />}
+                        {fc.label}
+                      </button>
+                    ))}
+                    {/* Add new category */}
+                    <button
+                      onClick={() => { setAddCategoryRoomId(null); setNewCategoryInput(""); setShowAddCategoryModal(true); }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-dashed border-[#C0D0DC] text-xs font-semibold text-text-muted hover:border-primary hover:text-primary transition-all"
+                    >
+                      <Plus size={10} /> Add new category
+                    </button>
+                  </div>
+                  {/* Action buttons */}
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      disabled={!bulkCategory}
+                      onClick={applyBulkCategory}
+                    >
+                      Apply to {selectedRoomIds.size} room{selectedRoomIds.size > 1 ? "s" : ""}
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Per-room setup table */}
             <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden">
@@ -516,7 +642,7 @@ export default function FloorCountPage() {
               </div>
 
               {/* Column headers */}
-              <div className="grid gap-4 px-6 py-3 border-b border-[#F1F5F9] bg-[#FAFBFC]" style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr 64px" }}>
+              <div className="grid gap-4 px-6 py-3 border-b border-[#F1F5F9] bg-[#FAFBFC]" style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr" }}>
                 {/* Select-all checkbox */}
                 <div className="flex items-center">
                   <button
@@ -536,7 +662,6 @@ export default function FloorCountPage() {
                 <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Category</span>
                 <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Seats</span>
                 <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Status</span>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Edit</span>
               </div>
 
               <div className="divide-y divide-[#F1F5F9]">
@@ -549,7 +674,7 @@ export default function FloorCountPage() {
                     <div
                       key={room.id}
                       className={`grid gap-4 px-6 py-4 items-center transition-colors ${isChecked ? "bg-primary/5" : "hover:bg-[#FAFBFC]"}`}
-                      style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr 64px" }}
+                      style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr" }}
                     >
                       {/* Checkbox */}
                       <button
@@ -649,15 +774,6 @@ export default function FloorCountPage() {
                         )}
                       </div>
 
-                      {/* Edit */}
-                      <div className="flex justify-center">
-                        <button
-                          className="w-8 h-8 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
-                          title="Edit room"
-                        >
-                          <Pencil size={13} />
-                        </button>
-                      </div>
                     </div>
                   );
                 })}
@@ -688,15 +804,12 @@ export default function FloorCountPage() {
                 </div>
                 <div className="p-5 space-y-4">
                   <div>
-                    <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider block mb-2">
-                      Category name
-                    </label>
-                    <input
-                      type="text"
+                    <Input
+                      label="Category name"
+                      fieldSize="sm"
                       value={newCategoryInput}
                       onChange={(e) => setNewCategoryInput(e.target.value)}
                       placeholder="e.g. Storage, Reception..."
-                      className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors"
                       autoFocus
                       onKeyDown={(e) => { if (e.key === "Enter" && newCategoryInput.trim()) handleAddCategory(); }}
                     />
@@ -715,66 +828,6 @@ export default function FloorCountPage() {
           )}
         </AnimatePresence>
 
-        {/* ── Bulk Category Modal ─────────────────────────────────────────────────── */}
-        <AnimatePresence>
-          {showBulkModal && (
-            <div
-              className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
-              onClick={(e) => { if (e.target === e.currentTarget) { setSelectedRoomIds(new Set()); setShowBulkModal(false); } }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-sm"
-              >
-                <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2E8F0]">
-                  <div>
-                    <h3 className="font-bold text-text text-sm" style={{ fontFamily: "var(--font-manrope)" }}>
-                      Select category
-                    </h3>
-                    <p className="text-[11px] text-text-muted mt-0.5">
-                      Apply to {selectedRoomIds.size} selected room{selectedRoomIds.size > 1 ? "s" : ""}
-                    </p>
-                  </div>
-                  <button onClick={() => { setSelectedRoomIds(new Set()); setShowBulkModal(false); }} className="text-text-muted hover:text-text transition-colors">
-                    <X size={16} />
-                  </button>
-                </div>
-                <div className="p-4 space-y-2">
-                  {[...FLOOR_CATEGORIES, ...customCategories.map((cc) => ({ id: cc, label: cc, desc: "Custom category", color: "border-gray-200 bg-gray-50", badge: "bg-gray-100 text-gray-600", text: "text-gray-600" }))].map((fc) => (
-                    <button
-                      key={fc.id}
-                      onClick={() => setBulkCategory(fc.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${bulkCategory === fc.id
-                          ? `${fc.color} border-opacity-100 shadow-sm`
-                          : "border-[#E2E8F0] bg-white hover:border-[#C0D0DC]"
-                        }`}
-                    >
-                      <div className="flex-1">
-                        <p className={`text-sm font-bold ${bulkCategory === fc.id ? fc.text : "text-text"}`}>{fc.label}</p>
-                        <p className="text-xs text-text-muted">{fc.desc}</p>
-                      </div>
-                      {bulkCategory === fc.id && (
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${fc.badge}`}>
-                          <Check size={11} strokeWidth={3} />
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                <div className="px-4 pb-4 pt-1 flex gap-3">
-                  <Button variant="secondary" size="sm" className="flex-1" onClick={() => { setSelectedRoomIds(new Set()); setShowBulkModal(false); }}>
-                    Cancel
-                  </Button>
-                  <Button size="sm" className="flex-1" disabled={!bulkCategory} onClick={applyBulkCategory}>
-                    Apply to {selectedRoomIds.size} room{selectedRoomIds.size > 1 ? "s" : ""}
-                  </Button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
       </div>
     );
   }
@@ -805,6 +858,16 @@ export default function FloorCountPage() {
             <Button
               variant="secondary"
               size="sm"
+              icon={<Pencil size={13} />}
+              className="h-9 px-5 gap-2"
+              onClick={() => { setEditRoomSettings(true); setCountingPhase("setup"); }}
+            >
+              Edit room settings
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="sm"
               className="h-9 px-5 gap-2"
               onClick={() => setShowQuestionsModal(true)}
               icon={<HelpCircle size={14} />}
@@ -817,6 +880,7 @@ export default function FloorCountPage() {
               size="sm"
               disabled={activeSection === "right"}
               className="h-9 px-5"
+              icon={<Clock size={14} />}
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/history`)}
             >
               View history
@@ -838,24 +902,15 @@ export default function FloorCountPage() {
                   </span>
                   <button
                     onClick={() => setShowStopModal(true)}
-                    className="w-8 h-8 rounded-full bg-[#EF4444] flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg shadow-red-200"
+                    className="w-6 h-6 rounded-full bg-[#EF4444] flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-md shadow-red-200"
                   >
-                    <div className="w-3 h-3 rounded-sm bg-white" />
+                    <div className="w-2.5 h-2.5 rounded-sm bg-white" />
                   </button>
                 </motion.div>
-              ) : countingPhase === "session" ? (
-                <Button
-                  size="sm"
-                  onClick={handleStartSession}
-                  className="gap-2 h-9 px-5"
-                  icon={<Play size={14} fill="currentColor" />}
-                >
-                  Start session
-                </Button>
               ) : (
                 <Button
                   size="sm"
-                  onClick={() => setCountingPhase("ready")}
+                  onClick={handleStartSession}
                   className="gap-2 h-9 px-5"
                   icon={<Play size={14} fill="currentColor" />}
                 >
@@ -1007,8 +1062,7 @@ export default function FloorCountPage() {
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">No of seats</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Status</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Counted by</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Counting</th>
-                        <th className="px-4 py-3 text-center">Edit room details</th>
+                        <th className="px-4 py-3">Counting</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#F1F5F9]">
@@ -1129,15 +1183,6 @@ export default function FloorCountPage() {
                               )}
                             </td>
 
-                            {/* Edit room details */}
-                            <td className="px-4 py-4 text-center">
-                              <button
-                                className="w-8 h-8 rounded-lg border border-[#E2E8F0] inline-flex items-center justify-center text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
-                                title="Edit room details"
-                              >
-                                <Pencil size={13} />
-                              </button>
-                            </td>
                           </tr>
                         );
                       })}
@@ -1213,10 +1258,46 @@ export default function FloorCountPage() {
                       </button>
                     </div>
                   </div>
+                  {/* Room comments card */}
+                  <div className="rounded-2xl border border-[#E2E8F0] bg-[#FAFBFC] p-4 text-left">
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
+                      Room comments
+                    </p>
+                    <textarea
+                      value={selectedRoomId ? (roomComment) : ""}
+                      onChange={(e) => setRoomComment(e.target.value)}
+                      placeholder="Add any observations, issues, or notes about this room…"
+                      rows={3}
+                      className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none"
+                    />
+                    <div className="flex justify-end gap-2 mt-2">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setRoomComment("")}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
+                        disabled={!roomComment.trim()}
+                        onClick={() => {
+                          if (selectedRoomId && roomComment.trim()) {
+                            setRoomComments((prev) => ({ ...prev, [selectedRoomId]: roomComment.trim() }));
+                            setRoomComment("");
+                          }
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Action button */}
                   <div className="flex justify-center">
                     <Button
                       size="lg"
-                      className="w-auto px-10 h-12 rounded-2xl text-base font-bold shadow-xl shadow-primary/20 gap-2"
+                      className="w-auto px-10 h-12 text-base font-bold shadow-xl shadow-primary/20 gap-2"
                       onClick={handleRecordCount}
                       icon={!isLastRoom ? <ArrowRight size={18} /> : undefined}
                       iconPosition="right"
@@ -1323,6 +1404,49 @@ export default function FloorCountPage() {
         <div className="text-[10px] text-text-muted font-mono">Areasim workspace intelligence</div>
       </footer>
 
+      {/* ── Save comments modal ─────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {showSaveCommentsModal && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-[#0A1929]/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full"
+            >
+              <div className="p-8 text-center space-y-5">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center mx-auto">
+                  <MessageSquare size={22} className="text-amber-600" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-xl font-800 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                    Save your comments?
+                  </h4>
+                  <p className="text-sm text-text-muted leading-relaxed">
+                    You have unsaved comments for this room. Would you like to save them before continuing?
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <Button
+                    variant="secondary"
+                    className="flex-1 h-12"
+                    onClick={() => handleSaveComments(false)}
+                  >
+                    No, discard
+                  </Button>
+                  <Button
+                    className="flex-1 h-12"
+                    onClick={() => handleSaveComments(true)}
+                  >
+                    Yes, save
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* ── Start session modal (shown when phase="ready") ─────────────────────── */}
       <AnimatePresence>
         {countingPhase === "ready" && !startModalDismissed && (
@@ -1420,13 +1544,13 @@ export default function FloorCountPage() {
                   <div className="flex gap-3 pt-2">
                     <Button
                       variant="secondary"
-                      className="flex-1 h-12 rounded-xl border-[#E2E8F0]"
+                      className="flex-1 h-12"
                       onClick={() => { setShowStopModal(false); setPendingNav(null); }}
                     >
                       Not now
                     </Button>
                     <Button
-                      className="flex-1 h-12 rounded-xl shadow-lg shadow-primary/20"
+                      className="flex-1 h-12 shadow-lg shadow-primary/20"
                       onClick={confirmStopSession}
                     >
                       Yes, stop session
@@ -1592,7 +1716,7 @@ export default function FloorCountPage() {
                 </div>
                 <div className="flex flex-col gap-3">
                   <Button
-                    className="w-full h-12 rounded-xl shadow-lg shadow-primary/20 gap-2"
+                    className="w-full h-12 shadow-lg shadow-primary/20 gap-2"
                     onClick={() => {
                       // Find the floor by name and switch to it in-place
                       const nextFloor = floors.find((f) => f.name === nextFloorSelection) || floors.find((f) => f.id !== floorId) || floors[0];
@@ -1616,7 +1740,7 @@ export default function FloorCountPage() {
                   </Button>
                   <Button
                     variant="secondary"
-                    className="w-full h-12 rounded-xl border-[#E2E8F0] text-text-muted"
+                    className="w-full h-12"
                     onClick={() => {
                       setShowNextFloorModal(false);
                       setIsRecording(false);

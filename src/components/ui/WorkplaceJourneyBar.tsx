@@ -107,72 +107,66 @@ const STEPS = [
     label: "STEP 1 and 2",
     name: "Count + Collect",
     Icon: IconCountCollect,
-    color: "#6D5FAD",
-    bg: "rgba(109,95,173,0.09)",
-    border: "rgba(164, 150, 224, 0.3)",
-    activeBorder: "#6D5FAD",
-    activeGradient: "linear-gradient(135deg, rgba(109,95,173,0.18) 0%, rgba(80,65,160,0.12) 100%)",
-    shadow: "rgba(109,95,173,0.28)",
+    color: "#6351AC",          // active text — #6351AC per spec
+    textColor: "#6351AC",      // same for step number
+    bg: "#F0EEFF",             // light purple tint (inactive)
+    activeBg: "linear-gradient(159deg, #E8E2F5 0%, #C4B8E8 100%)",
+    borderColor: "#9887DB",    // 1.5px solid border per spec
   },
   {
     id: "3",
     label: "STEP 3",
     name: "Analysis + Advice",
     Icon: IconAnalysis,
-    color: "#C47A2C",
-    bg: "rgba(196,122,44,0.09)",
-    border: "rgba(196,122,44,0.3)",
-    activeBorder: "#C47A2C",
-    activeGradient: "linear-gradient(135deg, rgba(196,122,44,0.18) 0%, rgba(160,90,15,0.12) 100%)",
-    shadow: "rgba(196,122,44,0.28)",
+    color: "#7A4A10",          // darker amber
+    textColor: "#7A4A10",
+    bg: "rgba(196,122,44,0.15)",
+    activeBg: "linear-gradient(135deg, rgba(196,122,44,0.22) 0%, rgba(160,90,15,0.16) 100%)",
+    borderColor: "rgba(196,122,44,0.35)",
   },
   {
     id: "4",
     label: "STEP 4",
     name: "Workplace Concept",
     Icon: IconWorkplaceConcept,
-    color: "#139485",
-    bg: "rgba(19,148,133,0.09)",
-    border: "rgba(19,148,133,0.3)",
-    activeBorder: "#139485",
-    activeGradient: "linear-gradient(135deg, rgba(19,148,133,0.18) 0%, rgba(10,110,97,0.12) 100%)",
-    shadow: "rgba(19,148,133,0.28)",
+    color: "#0A6359",          // darker teal
+    textColor: "#0A6359",
+    bg: "rgba(19,148,133,0.15)",
+    activeBg: "linear-gradient(135deg, rgba(19,148,133,0.22) 0%, rgba(10,110,97,0.16) 100%)",
+    borderColor: "rgba(19,148,133,0.35)",
   },
   {
     id: "5",
     label: "STEP 5",
     name: "Room Program",
     Icon: IconRoomProgram,
-    color: "#3B82F6",
-    bg: "rgba(59,130,246,0.09)",
-    border: "rgba(59,130,246,0.3)",
-    activeBorder: "#3B82F6",
-    activeGradient: "linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(30,90,200,0.12) 100%)",
-    shadow: "rgba(59,130,246,0.28)",
+    color: "#1D4ED8",          // darker blue
+    textColor: "#1D4ED8",
+    bg: "rgba(59,130,246,0.15)",
+    activeBg: "linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(30,90,200,0.16) 100%)",
+    borderColor: "rgba(59,130,246,0.35)",
   },
   {
     id: "6",
     label: "STEP 6",
     name: "Design Phase",
     Icon: IconDesignPhase,
-    color: "#E05D8B",
-    bg: "rgba(224,93,139,0.09)",
-    border: "rgba(224,93,139,0.3)",
-    activeBorder: "#E05D8B",
-    activeGradient: "linear-gradient(135deg, rgba(224,93,139,0.18) 0%, rgba(180,50,100,0.12) 100%)",
-    shadow: "rgba(224,93,139,0.28)",
+    color: "#9D174D",          // darker rose
+    textColor: "#9D174D",
+    bg: "rgba(224,93,139,0.15)",
+    activeBg: "linear-gradient(135deg, rgba(224,93,139,0.22) 0%, rgba(180,50,100,0.16) 100%)",
+    borderColor: "rgba(224,93,139,0.35)",
   },
   {
     id: "7",
     label: "STEP 7",
     name: "Optimisation",
     Icon: IconOptimization,
-    color: "#10B981",
-    bg: "rgba(16,185,129,0.09)",
-    border: "rgba(16,185,129,0.3)",
-    activeBorder: "#10B981",
-    activeGradient: "linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(8,130,90,0.12) 100%)",
-    shadow: "rgba(16,185,129,0.28)",
+    color: "#065F46",          // darker green
+    textColor: "#065F46",
+    bg: "rgba(16,185,129,0.15)",
+    activeBg: "linear-gradient(135deg, rgba(16,185,129,0.22) 0%, rgba(8,130,90,0.16) 100%)",
+    borderColor: "rgba(16,185,129,0.35)",
   },
 ] as const;
 
@@ -210,61 +204,61 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
           const isLast = i === STEPS.length - 1;
           const { Icon } = step;
 
-          // Special light shade for Step 1
-          const bgFill = isFirstStep ? "#F5F3FF" : (isActive ? step.activeGradient : step.bg);
-          const borderColor = isActive ? step.activeBorder : step.border;
+          const bgFill = isActive ? step.activeBg : step.bg;
+          const clipShape = isLast
+            ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 12px 50%)"
+            : "polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%, 12px 50%)";
+
+          // Step 1 gets a visible border via drop-shadow on an outer wrapper
+          // (filter on outer, clip-path on inner — the only way to make drop-shadow follow clip-path)
+          const outerFilter = isFirstStep
+            ? "drop-shadow(1.5px 0 0 #9887DB) drop-shadow(-1.5px 0 0 #9887DB) drop-shadow(0 1.5px 0 #9887DB) drop-shadow(0 -1.5px 0 #9887DB)"
+            : undefined;
 
           return (
+            // Outer wrapper — carries the drop-shadow filter for step 1 border
             <div
               key={step.id}
-              className={cn(
-                "flex-1 flex items-center gap-2 py-1.5 pl-7 pr-3 transition-all duration-300 relative",
-                !isActive && !isPast && "opacity-80"
-              )}
-              style={{
-                background: bgFill,
-                // Notch/Point logic
-                clipPath: isLast
-                  ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 12px 50%)"
-                  : "polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%, 12px 50%)",
-                zIndex: STEPS.length - i,
-                // Refined crisp border for Step 1
-                filter: isFirstStep
-                  ? `drop-shadow(0.5px 0 0 ${borderColor}) drop-shadow(-0.5px 0 0 ${borderColor}) drop-shadow(0 0.5px 0 ${borderColor}) drop-shadow(0 -0.5px 0 ${borderColor})`
-                  : undefined,
-              }}
+              className={cn("flex-1 transition-all duration-300", !isActive && !isPast && "opacity-90")}
+              style={{ zIndex: STEPS.length - i, filter: outerFilter }}
             >
-              {/* Icon box — Smaller Solid white 3D effect */}
+              {/* Inner — clip-path shape + background */}
               <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white"
-                style={{
-                  border: `1.2px solid ${borderColor}`,
-                  boxShadow: `0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)`,
-                }}
+                className="flex items-center gap-2 py-1.5 pl-7 pr-3 h-full"
+                style={{ background: bgFill, clipPath: clipShape }}
               >
-                {/* Scale down the SVG icon slightly to fit smaller box */}
-                <div className="scale-75 flex items-center justify-center">
-                  <Icon />
-                </div>
-              </div>
-
-              {/* Text */}
-              <div className="min-w-0 flex-1">
-                <p
-                  className="text-[8px] font-extrabold uppercase tracking-[0.05em] leading-none truncate"
-                  style={{ color: step.color, opacity: isActive ? 1 : 0.65 }}
-                >
-                  {step.label}
-                </p>
-                <p
-                  className="text-[11px] font-bold leading-tight mt-[3px] whitespace-nowrap truncate"
+                {/* Icon box */}
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white"
                   style={{
-                    color: isActive ? step.color : "#4A5568",
-                    fontFamily: "var(--font-manrope)",
+                    border: `1.2px solid ${step.borderColor}`,
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
                   }}
                 >
-                  {step.name}
-                </p>
+                  <div className="scale-75 flex items-center justify-center">
+                    <Icon />
+                  </div>
+                </div>
+
+                {/* Text */}
+                <div className="min-w-0 flex-1">
+                  <p
+                    className="text-[8px] font-extrabold uppercase tracking-[0.05em] leading-none truncate"
+                    style={{ color: step.textColor, opacity: isActive ? 1 : 0.75 }}
+                  >
+                    {step.label}
+                  </p>
+                  <p
+                    className="text-[11px] font-bold leading-tight mt-[3px] whitespace-nowrap truncate"
+                    style={{
+                      color: step.textColor,
+                      opacity: isActive ? 1 : 0.75,
+                      fontFamily: "var(--font-manrope)",
+                    }}
+                  >
+                    {step.name}
+                  </p>
+                </div>
               </div>
             </div>
           );

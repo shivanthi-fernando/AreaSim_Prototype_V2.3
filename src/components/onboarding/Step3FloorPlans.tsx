@@ -147,11 +147,11 @@ function SortableFloorCard({
                   alt={floor.name}
                   className="w-full h-full object-contain p-2"
                 />
-                <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none">
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="hover:!bg-white transition-none"
+                    className="!bg-white pointer-events-auto"
                     onClick={onVerify}
                   >
                     View
@@ -159,7 +159,7 @@ function SortableFloorCard({
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="hover:!bg-white transition-none"
+                    className="!bg-white pointer-events-auto"
                     onClick={() => document.getElementById(`change-file-${floor.id}`)?.click()}
                   >
                     Change
@@ -361,7 +361,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-auto bg-surface-2 p-8">
+              <div className="flex-1 overflow-auto p-8" style={{ background: "#F2E7DB" }}>
                 <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-border p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={verifyingFloor.file?.preview} alt={verifyingFloor.name} className="w-full h-auto" />

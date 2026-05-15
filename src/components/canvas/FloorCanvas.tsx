@@ -295,8 +295,8 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
                 y={eff.y}
                 width={eff.w}
                 height={eff.h}
-                draggable
-                onClick={(e) => { e.cancelBubble = true; setBgImgSelected(true); }}
+                draggable={activeTool === "select"}
+                onClick={(e) => { e.cancelBubble = true; if (activeTool === "select") setBgImgSelected(true); }}
                 onDragEnd={(e) => {
                   setCustomImgBounds({ x: e.target.x(), y: e.target.y(), w: eff.w, h: eff.h });
                 }}

@@ -9,7 +9,6 @@ import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Button } from "@/components/ui/Button";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
-import { PotentialScoreWidget } from "@/components/ui/PotentialScoreWidget";
 import { DetailPanel } from "@/components/canvas/DetailPanel";
 import { SurveyModal } from "@/components/canvas/SurveyModal";
 import { CompletionModal } from "@/components/canvas/CompletionModal";
@@ -139,7 +138,6 @@ export default function FloorPage() {
             </Button>
           )}
 
-          <PotentialScoreWidget />
           <LanguageSelector />
 
           {/* User avatar */}
