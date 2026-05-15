@@ -227,7 +227,7 @@ export default function FloorCountPage() {
 
   // Comment state
   const [roomComment, setRoomComment] = useState("");
-  const [roomComments, setRoomComments] = useState<Record<string, string>>({});
+  const [_roomComments, setRoomComments] = useState<Record<string, string>>({});
   const [showSaveCommentsModal, setShowSaveCommentsModal] = useState(false);
   const [commentPendingAction, setCommentPendingAction] = useState<"done" | "exit" | null>(null);
 
