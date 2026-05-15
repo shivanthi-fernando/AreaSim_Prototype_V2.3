@@ -117,7 +117,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-md rounded-3xl bg-surface border border-border shadow-2xl overflow-hidden"
       >
         {/* Gradient top banner */}
-        <div className="relative px-6 pt-6 pb-10" style={{ background: "linear-gradient(135deg, #139485 0%, #4A7AAE 55%, #C8953A 100%)" }}>
+        <div className="relative px-6 pt-6 pb-10" style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
           {/* decorative grid */}
           <div className="absolute inset-0 opacity-10"
             style={{
@@ -126,7 +126,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
             }}
           />
           <button onClick={onClose}
-            className="absolute top-4 right-4 p-1.5 text-white/80 hover:text-white transition-colors">
+            className="absolute top-4 right-4 p-1.5 text-[#0D1B2A]/60 hover:text-[#0D1B2A] transition-colors">
             <X size={14} />
           </button>
           {/* Illustration: avatar cluster */}
@@ -137,7 +137,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
                 initial={{ scale: 0, y: 12 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.08, type: "spring", stiffness: 300 }}
-                className="w-10 h-10 rounded-full bg-white/25 border-2 border-white/40 flex items-center justify-center text-white text-xs font-bold"
+                className="w-10 h-10 rounded-full bg-white/60 border-2 border-white/80 flex items-center justify-center text-[#0D1B2A] text-xs font-bold"
                 style={{ marginLeft: i > 0 ? "-6px" : 0 }}
               >
                 {init}
@@ -147,17 +147,17 @@ function InviteModal({ onClose }: { onClose: () => void }) {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.32, type: "spring" }}
-              className="w-10 h-10 rounded-full bg-white/10 border-2 border-dashed border-white/40 flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-white/30 border-2 border-dashed border-white/60 flex items-center justify-center"
               style={{ marginLeft: "-6px" }}
             >
-              <Plus size={14} className="text-white/70" />
+              <Plus size={14} className="text-[#0D1B2A]/60" />
             </motion.div>
           </div>
           <div className="relative z-10">
-            <h2 className="text-lg font-extrabold text-white" style={{ fontFamily: "var(--font-manrope)" }}>
+            <h2 className="text-lg font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>
               Invite your team
             </h2>
-            <p className="text-white/70 text-xs font-body mt-0.5">
+            <p className="text-[#4A6650]/80 text-xs font-body mt-0.5">
               Collaborate on projects, count rooms, and run surveys together.
             </p>
           </div>
@@ -271,7 +271,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="relative rounded-3xl overflow-hidden p-8"
-          style={{ background: "linear-gradient(135deg, #139485 0%, #4A7AAE 55%, #C8953A 100%)" }}
+          style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
         >
           <div className="absolute inset-0 opacity-10"
             style={{
@@ -281,18 +281,18 @@ export default function DashboardPage() {
           />
           <div className="relative z-10 flex items-center justify-between">
             <div>
-              <p className="text-white/70 text-sm font-body mb-1">Welcome back,</p>
-              <h1 className="text-3xl font-extrabold text-white" style={{ fontFamily: "var(--font-manrope)" }}>
+              <p className="text-[#4A6650]/80 text-sm font-body mb-1">Welcome back,</p>
+              <h1 className="text-3xl font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>
                 {firstName} 👋
               </h1>
-              <p className="text-white/70 text-sm font-body mt-2 max-w-sm">
+              <p className="text-[#4A6650]/80 text-sm font-body mt-2 max-w-sm">
                 You have {mockProjects.filter((p) => p.status === "active").length} active projects. Your workspace intelligence is up to date.
               </p>
             </div>
             <div className="hidden md:flex gap-3">
               <button
                 onClick={() => router.push("/project")}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/35 text-white text-sm font-semibold transition-colors backdrop-blur-sm border border-white/20"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/50 hover:bg-white/70 text-[#0D1B2A] text-sm font-semibold transition-colors backdrop-blur-sm border border-white/40"
               >
                 View projects <ArrowRight size={14} />
               </button>

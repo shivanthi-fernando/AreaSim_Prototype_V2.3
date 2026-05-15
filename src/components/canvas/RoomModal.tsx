@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, CheckCircle2 } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useCanvasStore } from "@/store/canvas";
@@ -126,8 +126,8 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
           </div>
         </div>
 
-        {/* Footer: Cancel (text) left, Verify (primary) right */}
-        <div className="flex items-center justify-between px-5 pb-5 pt-1">
+        {/* Footer: Cancel + Verify both right-aligned */}
+        <div className="flex items-center justify-end gap-3 px-5 pb-5 pt-1">
           <button
             onClick={onClose}
             className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1.5"
@@ -137,7 +137,6 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
           <Button
             size="md"
             onClick={handleVerify}
-            icon={<CheckCircle2 size={15} />}
           >
             Verify
           </Button>

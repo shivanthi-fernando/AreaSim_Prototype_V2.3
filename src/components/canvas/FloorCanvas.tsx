@@ -9,12 +9,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ZoomIn, ZoomOut, Undo2, Redo2,
   MousePointer2, PenLine, Group as GroupIcon, Eraser,
-  HelpCircle, Upload,
+  HelpCircle, Upload, X,
 } from "lucide-react";
 import { useCanvasStore } from "@/store/canvas";
 import { Room, ZONE_COLORS } from "@/lib/mockData";
 import { RoomModal } from "./RoomModal";
 import { guideStepAboveToolbar } from "./GuideOverlay";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import useImage from "use-image";
 import { cn } from "@/lib/utils";
 
@@ -458,35 +460,62 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
           </motion.div>
         )}
 
-        {/* Group zone bar */}
+        {/* Group zone modal */}
         <AnimatePresence>
           {showGroupBar && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              className="absolute top-4 left-1/2 -translate-x-1/2 z-20"
-            >
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-surface shadow-xl px-3 py-2">
-                <span className="text-xs text-text-muted font-body">{selectedRoomIds.length} rooms selected</span>
-                <input
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                  placeholder="Zone name…"
-                  className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-xs font-body text-text focus:outline-none focus:border-primary w-32"
-                />
-                <button
-                  onClick={handleGroupZone}
-                  disabled={!groupName.trim()}
-                  className="rounded-lg bg-primary text-white text-xs font-body px-3 py-1 hover:bg-primary-light transition-colors disabled:opacity-40"
-                >
-                  Group as Zone
-                </button>
-                <button onClick={clearSelection} className="text-text-muted hover:text-text transition-colors text-xs font-body">
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#0A1929]/50 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 8 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="relative w-full max-w-sm rounded-2xl border border-border bg-white shadow-2xl overflow-hidden"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
+                  <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                    Create zone
+                  </h3>
+                  <button
+                    onClick={clearSelection}
+                    className="p-1 text-text-muted hover:text-text transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-4">
+                  <p className="text-xs text-text-muted font-body">
+                    {selectedRoomIds.length} room{selectedRoomIds.length !== 1 ? "s" : ""} selected. Give this zone a name to group them together.
+                  </p>
+                  <Input
+                    label="Zone Name"
+                    fieldSize="sm"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    placeholder="e.g. Marketing wing"
+                  />
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-end gap-3 px-5 pb-5 pt-1">
+                  <button
+                    onClick={clearSelection}
+                    className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1.5"
+                  >
+                    Cancel
+                  </button>
+                  <Button
+                    size="md"
+                    onClick={handleGroupZone}
+                    disabled={!groupName.trim()}
+                  >
+                    Group as Zone
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
 
