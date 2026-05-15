@@ -303,9 +303,17 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                   To verify this room on the floor plan, pick the{" "}
                   <span className="font-bold text-primary">Draw</span> tool from the toolbar and trace the room boundaries.
                 </p>
-                <Button className="w-full h-11 rounded-xl" onClick={() => setShowVerifyModal(false)}>
-                  Got it, I&apos;ll draw it
-                </Button>
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => setShowVerifyModal(false)}
+                    className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1.5"
+                  >
+                    Cancel
+                  </button>
+                  <Button size="md" onClick={() => setShowVerifyModal(false)}>
+                    Got it, I&apos;ll draw it
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>

@@ -114,7 +114,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [pendingRoom, setPendingRoom] = useState<Room | null>(null);
-  const [pendingRoomPos, setPendingRoomPos] = useState({ x: 0, y: 0 });
+  const [_pendingRoomPos, setPendingRoomPos] = useState({ x: 0, y: 0 });
   const [historyIdx, setHistoryIdx] = useState(0);
   const [groupName, setGroupName] = useState("");
   const [showGroupBar, setShowGroupBar] = useState(false);
@@ -434,24 +434,14 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
           </Layer>
         </Stage>
 
-        {/* Room modal overlay */}
+        {/* Room modal — centered overlay */}
         <AnimatePresence>
           {pendingRoom && (
-            <div
-              className="absolute z-20 pointer-events-none"
-              style={{
-                left: Math.min(pendingRoomPos.x + 20, width - 300),
-                top: Math.max(pendingRoomPos.y - 80, 8),
-              }}
-            >
-              <div className="pointer-events-auto">
-                <RoomModal
-                  room={pendingRoom}
-                  floorId={floorId}
-                  onClose={() => setPendingRoom(null)}
-                />
-              </div>
-            </div>
+            <RoomModal
+              room={pendingRoom}
+              floorId={floorId}
+              onClose={() => setPendingRoom(null)}
+            />
           )}
         </AnimatePresence>
 

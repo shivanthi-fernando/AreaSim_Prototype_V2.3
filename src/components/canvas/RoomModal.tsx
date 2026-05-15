@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useCanvasStore } from "@/store/canvas";
@@ -15,7 +15,7 @@ interface RoomModalProps {
   onViewDetails?: () => void;
 }
 
-/** Floating modal that appears after drawing a room rectangle. */
+/** Centered modal that appears after drawing a room rectangle. */
 export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
   const { updateRoom, deleteRoom } = useCanvasStore();
   const [type, setType] = useState<"room" | "zone">("room");
@@ -43,85 +43,106 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
   void deleteRoom;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -16, scale: 0.97 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: -8, scale: 0.97 }}
-      transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-      className="w-80 rounded-2xl border border-border bg-white shadow-2xl p-5"
-    >
-      {/* Close */}
-      <div className="flex items-center justify-end mb-3">
-        <button onClick={onClose} className="text-text-muted hover:text-text transition-colors">
-          <X size={16} />
-        </button>
-      </div>
-
-      {/* Room / Zone toggle */}
-      <div className="flex items-center gap-1 rounded-xl p-1 mb-5" style={{ background: "#E0F2F2" }}>
-        {(["room", "zone"] as const).map((t) => (
+    /* Backdrop */
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#0A1929]/50 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 8 }}
+        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        className="relative w-full max-w-sm rounded-2xl border border-border bg-white shadow-2xl overflow-hidden"
+      >
+        {/* Header with close */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
+          <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+            {type === "room" ? "New room" : "New zone"}
+          </h3>
           <button
-            key={t}
-            onClick={() => setType(t)}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              type === t
-                ? "bg-white shadow-sm text-primary border border-border"
-                : "text-text-muted hover:text-text"
-            }`}
+            onClick={onClose}
+            className="w-6 h-6 flex items-center justify-center rounded-full text-text-muted hover:bg-[#F1F5F9] hover:text-text transition-colors"
           >
-            {t === "room" ? "This is a room" : "This is a zone"}
+            <X size={14} />
           </button>
-        ))}
-      </div>
-
-      <div className="space-y-3">
-        {/* Name */}
-        <Input
-          label={type === "room" ? "Room Name" : "Zone Name"}
-          fieldSize="sm"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-        />
-
-        <div className="grid grid-cols-2 gap-3">
-          <Input
-            label="Square Meters"
-            fieldSize="sm"
-            type="number"
-            value={String(formData.sqm)}
-            onChange={(e) => handleChange("sqm", parseInt(e.target.value) || 0)}
-          />
-          <Input
-            label="No. of Seats"
-            fieldSize="sm"
-            type="number"
-            value={String(formData.seats)}
-            onChange={(e) => handleChange("seats", parseInt(e.target.value) || 0)}
-          />
         </div>
 
-        {/* Category */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-[#222B27] font-body">Category</label>
-          <select
-            value={formData.category}
-            onChange={(e) => handleChange("category", e.target.value)}
-            className="w-full h-9 rounded-xl border border-[#D1D1D1] bg-white px-4 text-xs text-[#222B27] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all appearance-none"
+        <div className="p-5 space-y-4">
+          {/* Room / Zone toggle */}
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: "#E0F2F2" }}>
+            {(["room", "zone"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setType(t)}
+                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  type === t
+                    ? "bg-white shadow-sm text-primary border border-border"
+                    : "text-text-muted hover:text-text"
+                }`}
+              >
+                {t === "room" ? "This is a room" : "This is a zone"}
+              </button>
+            ))}
+          </div>
+
+          {/* Name */}
+          <Input
+            label={type === "room" ? "Room Name" : "Zone Name"}
+            fieldSize="sm"
+            value={formData.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+
+          {/* Sqm + Seats */}
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Square Meters"
+              fieldSize="sm"
+              type="number"
+              value={String(formData.sqm)}
+              onChange={(e) => handleChange("sqm", parseInt(e.target.value) || 0)}
+            />
+            <Input
+              label="No. of Seats"
+              fieldSize="sm"
+              type="number"
+              value={String(formData.seats)}
+              onChange={(e) => handleChange("seats", parseInt(e.target.value) || 0)}
+            />
+          </div>
+
+          {/* Category */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-[#222B27] font-body">Category</label>
+            <select
+              value={formData.category}
+              onChange={(e) => handleChange("category", e.target.value)}
+              className="w-full h-9 rounded-xl border border-[#D1D1D1] bg-white px-4 text-xs text-[#222B27] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all appearance-none"
+            >
+              <option>Meeting Room</option>
+              <option>Open Office</option>
+              <option>Break Room</option>
+              <option>Reception</option>
+              <option>Focus Pod</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Footer: Cancel (text) left, Verify (primary) right */}
+        <div className="flex items-center justify-between px-5 pb-5 pt-1">
+          <button
+            onClick={onClose}
+            className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-2 py-1.5"
           >
-            <option>Meeting Room</option>
-            <option>Open Office</option>
-            <option>Break Room</option>
-            <option>Reception</option>
-            <option>Focus Pod</option>
-          </select>
+            Cancel
+          </button>
+          <Button
+            size="md"
+            onClick={handleVerify}
+            icon={<CheckCircle2 size={15} />}
+          >
+            Verify
+          </Button>
         </div>
-      </div>
-
-      <div className="mt-6">
-        <Button onClick={handleVerify} className="w-full h-11">
-          Verify
-        </Button>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

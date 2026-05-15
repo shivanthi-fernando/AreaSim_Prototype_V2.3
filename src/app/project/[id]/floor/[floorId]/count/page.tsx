@@ -30,6 +30,8 @@ import {
   Target,
   Coffee,
   Box,
+  CheckCircle2,
+  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -522,6 +524,7 @@ export default function FloorCountPage() {
               <Button
                 size="sm"
                 className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
+                icon={<CheckCircle2 size={14} />}
                 onClick={() => {
                   setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
                   handleSetupConfirm();
@@ -901,10 +904,10 @@ export default function FloorCountPage() {
               size="sm"
               disabled={activeSection === "right"}
               className="h-9 px-5"
-              icon={<Clock size={14} />}
+              icon={<LayoutDashboard size={14} />}
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/history`)}
             >
-              View history
+              Dashboard
             </Button>
 
             <AnimatePresence mode="wait">
@@ -1360,10 +1363,10 @@ export default function FloorCountPage() {
                     </Button>
                   </div>
 
-                  {/* Floor comments card */}
+                  {/* Comments card */}
                   <div className="rounded-2xl border border-[#E2E8F0] bg-[#FAFBFC] p-4 text-left">
                     <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
-                      Floor comments
+                      Comments
                     </p>
                     <textarea
                       value={roomComment}
@@ -1456,7 +1459,7 @@ export default function FloorCountPage() {
                               <td className="px-3 py-3 text-text-muted">
                                 {roomSeats[selectedRoomId!] || 0}
                               </td>
-                              <td className="px-3 py-3 font-bold text-lg tabular-nums">
+                              <td className="px-3 py-3 font-bold text-lg tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
                                 {formatNumber(entry.count)}
                               </td>
                               <td className="px-3 py-3 text-right">
@@ -1807,7 +1810,7 @@ export default function FloorCountPage() {
                 </div>
                 <div className="flex flex-col gap-3">
                   <Button
-                    className="w-full h-12 shadow-lg shadow-primary/20 gap-2"
+                    className="w-full h-12 shadow-lg shadow-primary/20"
                     onClick={() => {
                       // Find the floor by name and switch to it in-place
                       const nextFloor = floors.find((f) => f.name === nextFloorSelection) || floors.find((f) => f.id !== floorId) || floors[0];
@@ -1824,8 +1827,6 @@ export default function FloorCountPage() {
                       }
                       setShowNextFloorModal(false);
                     }}
-                    icon={<ArrowRight size={16} />}
-                    iconPosition="right"
                   >
                     Continue counting
                   </Button>
