@@ -40,7 +40,7 @@ export default function VerifyEmailPage() {
     next[index] = char;
     setOtp(next);
     if (char && index < OTP_LENGTH - 1) refs.current[index + 1]?.focus();
-    if (next.every((d) => d)) handleVerify();
+    if (next.every((d) => d !== "")) handleVerify();
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
@@ -56,11 +56,10 @@ export default function VerifyEmailPage() {
     }
   };
 
-  const handleVerify = async () => {
+  const handleVerify = () => {
+    if (verifying) return;
     setVerifying(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setVerifying(false);
-    router.push("/create-password");
+    setTimeout(() => router.push("/create-password"), 400);
   };
 
   return (

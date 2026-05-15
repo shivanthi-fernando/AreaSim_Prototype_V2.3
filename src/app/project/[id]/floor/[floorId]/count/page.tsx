@@ -271,6 +271,16 @@ export default function FloorCountPage() {
   const activeRound = getActiveRound();
   const roundLabel = activeRound ? `${activeRound.label} of 5 today` : "No active round";
 
+  // Navigate to session-details phase when arriving from history page
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#session-details") {
+      setCountingPhase("ready");
+      setStartModalDismissed(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Timer
   useEffect(() => {
     if (isRecording) {
@@ -501,18 +511,20 @@ export default function FloorCountPage() {
               {mockProject.name}
             </span>
             <div className="w-px h-6 bg-[#E2E8F0]" />
-            {/* Floor selector */}
-            <div className="relative">
+            {/* Floor selector — matches canvas navbar style */}
+            <div className="relative min-w-[148px]">
               <select
                 value={activeFloorId}
                 onChange={(e) => setActiveFloorId(e.target.value)}
-                className="appearance-none rounded-lg border border-[#E2E8F0] bg-white/60 pl-3 pr-8 py-1.5 text-sm font-medium text-text font-body focus:outline-none focus:border-primary transition-all"
+                className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-9 py-1.5 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
               >
                 {floors.map((f) => (
                   <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
               </select>
-              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+              <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
             <div className="ml-auto">
               <Button
@@ -808,26 +820,21 @@ export default function FloorCountPage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
-                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-4xl"
+                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-5xl"
               >
                 {/* Modal header */}
                 <div className="flex items-start justify-between px-7 pt-7 pb-5">
-                  <div className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                      <ClipboardList size={20} className="text-primary" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                        How to use the counting tool
-                      </h2>
-                      <p className="text-sm text-text-muted mt-1 leading-relaxed max-w-lg">
-                        Follow these steps to get accurate, consistent room data.
-                      </p>
-                    </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                      How to use the counting tool
+                    </h2>
+                    <p className="text-sm text-text-muted mt-1 leading-relaxed">
+                      Follow these steps to get accurate, consistent room data.
+                    </p>
                   </div>
                   <button
                     onClick={() => setShowInstructionsModal(false)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-text-muted hover:text-text transition-colors shrink-0"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-text-muted hover:text-text transition-colors shrink-0 ml-4"
                   >
                     <X size={16} />
                   </button>
@@ -885,7 +892,7 @@ export default function FloorCountPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.07 }}
                           className="rounded-2xl border border-[#E2E8F0] bg-white p-5 flex flex-col gap-3 shadow-sm"
-                          style={{ width: "168px", minWidth: "168px" }}
+                          style={{ width: "168px", minWidth: "168px", height: "188px" }}
                         >
                           <div
                             className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -926,7 +933,6 @@ export default function FloorCountPage() {
                   <Button
                     size="lg"
                     className="px-10 rounded-full shadow-md shadow-primary/20 font-bold"
-                    icon={<Play size={15} />}
                     onClick={() => setShowInstructionsModal(false)}
                   >
                     Got it! Start room counting
@@ -940,45 +946,47 @@ export default function FloorCountPage() {
         {/* ── Verify Confirm Modal ────────────────────────────────────────────────── */}
         <AnimatePresence>
           {showVerifyConfirmModal && (
-            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-[#0A1929]/60 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ duration: 0.22 }}
-                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-md"
+                className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-md relative"
               >
-                <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
-                  <button
-                    onClick={() => setShowVerifyConfirmModal(false)}
-                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-text-muted hover:text-text transition-colors shrink-0"
-                  >
-                    <X size={15} />
-                  </button>
-                  <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                    Verify and continue
-                  </h3>
-                </div>
-                <div className="px-6 py-5">
-                  <p className="text-sm text-text-muted leading-relaxed">
-                    This will verify all the rooms in this sectioned floor. Are you sure you want to verify and continue?
-                  </p>
-                </div>
-                <div className="flex items-center justify-end gap-3 px-6 pb-5">
-                  <Button variant="secondary" size="sm" onClick={() => setShowVerifyConfirmModal(false)}>
-                    Cancel
-                  </Button>
-                  <Button
-                    size="sm"
-                    icon={<CheckCircle2 size={14} />}
-                    onClick={() => {
-                      setShowVerifyConfirmModal(false);
-                      setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
-                      handleSetupConfirm();
-                    }}
-                  >
-                    Verify and continue
-                  </Button>
+                <button
+                  onClick={() => setShowVerifyConfirmModal(false)}
+                  className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors z-10"
+                >
+                  <X size={16} />
+                </button>
+                <div className="p-8 text-center space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                    <CheckCircle2 size={22} className="text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-xl font-800 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                      Verify and continue?
+                    </h4>
+                    <p className="text-sm text-text-muted leading-relaxed">
+                      This will verify all the rooms in this sectioned floor. Are you sure you want to verify and continue?
+                    </p>
+                  </div>
+                  <div className="flex gap-3 pt-1">
+                    <Button variant="secondary" className="flex-1 h-12" onClick={() => setShowVerifyConfirmModal(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      className="flex-1 h-12"
+                      onClick={() => {
+                        setShowVerifyConfirmModal(false);
+                        setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
+                        handleSetupConfirm();
+                      }}
+                    >
+                      Verify and continue
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -1188,30 +1196,26 @@ export default function FloorCountPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-8">
                 {/* Date range + round indicator */}
-                <div className="flex items-center gap-8 py-2">
-                  <div className="flex items-center gap-4">
-                    <label className="text-[10px] font-bold text-text-muted tracking-wider uppercase whitespace-nowrap">
-                      Start date
-                    </label>
-                    <input
+                <div className="flex items-end gap-6 py-2">
+                  <div style={{ width: "160px" }}>
+                    <Input
+                      label="Start date"
                       type="date"
+                      fieldSize="sm"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="block w-40 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all"
                     />
                   </div>
-                  <div className="flex items-center gap-4">
-                    <label className="text-[10px] font-bold text-text-muted tracking-wider uppercase whitespace-nowrap">
-                      End date
-                    </label>
-                    <input
+                  <div style={{ width: "160px" }}>
+                    <Input
+                      label="End date"
                       type="date"
+                      fieldSize="sm"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="block w-40 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all"
                     />
                   </div>
-                  <div className="ml-auto text-right">
+                  <div className="ml-auto pb-0.5">
                     <p className="text-sm font-bold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
                       {roundLabel} · Day 1 of 14
                     </p>
@@ -1509,9 +1513,9 @@ export default function FloorCountPage() {
                 </div>
               </div>
 
-              {/* Room name label */}
+              {/* Room name section heading */}
               <div className="px-6 py-3 border-b border-[#F1F5F9] shrink-0">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Room name</p>
+                <h4 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Room name</h4>
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-8">
@@ -1679,8 +1683,14 @@ export default function FloorCountPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full"
+              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full relative"
             >
+              <button
+                onClick={() => setShowSaveCommentsModal(false)}
+                className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors z-10"
+              >
+                <X size={16} />
+              </button>
               <div className="p-8 text-center space-y-5">
                 <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center mx-auto">
                   <MessageSquare size={22} className="text-amber-600" />
@@ -1964,7 +1974,7 @@ export default function FloorCountPage() {
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider block">Select floor</label>
+                  <label className="text-sm font-semibold text-text-muted font-body block mb-1">Select floor</label>
                   <div className="relative">
                     <select
                       value={nextFloorSelection}
@@ -1981,9 +1991,20 @@ export default function FloorCountPage() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex gap-3">
                   <Button
-                    className="w-full h-12 shadow-lg shadow-primary/20"
+                    variant="secondary"
+                    className="flex-1 h-12"
+                    onClick={() => {
+                      setShowNextFloorModal(false);
+                      setIsRecording(false);
+                      setActiveSection("left");
+                    }}
+                  >
+                    Stop counting
+                  </Button>
+                  <Button
+                    className="flex-1 h-12 shadow-lg shadow-primary/20"
                     onClick={() => {
                       // Find the floor by name and switch to it in-place
                       const nextFloor = floors.find((f) => f.name === nextFloorSelection) || floors.find((f) => f.id !== floorId) || floors[0];
@@ -2002,17 +2023,6 @@ export default function FloorCountPage() {
                     }}
                   >
                     Continue counting
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="w-full h-12"
-                    onClick={() => {
-                      setShowNextFloorModal(false);
-                      setIsRecording(false);
-                      setActiveSection("left");
-                    }}
-                  >
-                    Stop counting
                   </Button>
                 </div>
               </div>

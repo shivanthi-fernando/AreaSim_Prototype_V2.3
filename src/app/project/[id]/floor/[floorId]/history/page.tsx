@@ -150,7 +150,7 @@ export default function RoomHistoryPage() {
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
-              onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
+              onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count#session-details`)}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
             >
               <ArrowLeft size={14} /> Back to counting
