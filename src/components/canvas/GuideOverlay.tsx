@@ -377,7 +377,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
         {step > 0 ? (
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] px-3 py-1.5 rounded-lg border border-[#D1D0D0] bg-white hover:border-[#917963] transition-all"
+            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] hover:opacity-70 transition-opacity"
           >
             <ArrowLeft size={13} /> Back
           </button>

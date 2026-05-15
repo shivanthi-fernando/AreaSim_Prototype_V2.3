@@ -747,18 +747,6 @@ function CityIllustrationPanel() {
             </g>
           </g>
 
-          {/* "You are here" badge */}
-          <motion.g
-            initial={false}
-            animate={reduceMotion ? { y: 0, opacity: 1, scale: 1 } : { y: [0, -2.5, 0], opacity: [0.88, 1, 0.88], scale: [1, 1.02, 1] }}
-            transition={reduceMotion ? undefined : { duration: 1.9, ease: "easeInOut", repeat: Infinity }}
-          >
-            <rect x="7" y="42" width="94" height="16" fill="#139485" rx="4" filter="url(#as-ci-diagram-node-shadow)" />
-            <text x="54" y="53" textAnchor="middle" fontSize="7" fontWeight="600" fill="white" fontFamily={fontFamily} letterSpacing="0.06em">
-              {t("onboarding.projectDetails.hero.illustration.youAreHere")}
-            </text>
-          </motion.g>
-          <line x1="54" y1="58" x2="54" y2={DIAGRAM_NODE_CY - DIAGRAM_NODE_R} stroke="rgba(19,148,133,.65)" strokeWidth="1.3" strokeLinecap="round" />
         </g>
 
         <ellipse cx="190" cy="365" rx="8" ry="3" fill="rgba(19,148,133,.08)" />
