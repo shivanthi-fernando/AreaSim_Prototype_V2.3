@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Hash, ArrowRight } from "lucide-react";
+import { Building2, Hash } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -49,8 +49,8 @@ export default function OrganizationDetailsPage() {
             icon={<Building2 size={16} />} value={values.organization} onChange={handleChange("organization")} />
 
           <div className="flex justify-center">
-            <Button type="submit" size="lg" loading={loading} icon={<ArrowRight size={16} />} iconPosition="right" className="w-full">
-              Continue
+            <Button type="submit" size="lg" loading={loading} className="w-full">
+              Get started
             </Button>
           </div>
         </form>

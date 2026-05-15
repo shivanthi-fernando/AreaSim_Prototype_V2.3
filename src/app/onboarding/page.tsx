@@ -60,17 +60,17 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
             <X size={14} />
           </button>
           <h2 className="text-xl font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-            Need a floor plan?
+            Don&apos;t have a floor plan?
           </h2>
           <p className="text-sm text-text-muted font-body mt-1">
-            Here are your options to get started with floor plans.
+            Here are the ways you can get one.
           </p>
         </div>
 
         <div className="px-6 py-5 space-y-5 max-h-[75vh] overflow-y-auto">
           {/* Action points */}
           <div className="space-y-3">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-mono">Your options</p>
+            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">Your options</p>
             <div className="flex items-start gap-4 p-4 rounded-2xl border border-border bg-surface-2/50">
               <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <Building2 size={16} className="text-primary" />
@@ -89,36 +89,23 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
               <div>
                 <p className="text-sm font-bold text-text font-body">Buy a floor plan</p>
                 <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                  Our team can procure a professional, scan-ready floor plan for your building. Contact our consultants below to get started.
+                  Our team can procure a professional, scan-ready floor plan for your building. Contact us via email to get started.
                 </p>
+                <a href="mailto:service@areasim.ai" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-primary hover:underline"><Mail size={12} />service@areasim.ai</a>
               </div>
             </div>
           </div>
 
-          {/* Consultant contacts — single card, stacked vertically */}
+          {/* Consultant contacts — 2 separate cards */}
           <div className="space-y-3">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-mono">Contact our experts</p>
-            <div className="rounded-2xl border border-border bg-surface overflow-hidden">
-              {/* Two consultants stacked vertically */}
-              <div className="divide-y divide-border">
-                {CONSULTANTS.map((c) => (
-                  <div key={c.name} className="p-4">
-                    <p className="text-sm font-bold text-text font-body" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
-                    <p className="text-xs text-accent font-semibold font-body mb-1.5">{c.title}</p>
-                    <p className="text-xs text-text-muted font-body leading-relaxed">{c.bio}</p>
-                  </div>
-                ))}
+            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">About our experts</p>
+            {CONSULTANTS.map((c) => (
+              <div key={c.name} className="p-4 rounded-2xl border border-border bg-surface-2/50">
+                <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
+                <p className="text-xs font-semibold text-accent mb-1.5">{c.title}</p>
+                <p className="text-xs text-text-muted font-body leading-relaxed">{c.bio}</p>
               </div>
-              {/* Shared business contact — centered, auto-width, pill rounded */}
-              <div className="px-4 py-3 border-t border-border flex justify-center">
-                <a
-                  href="mailto:service@areasim.ai"
-                  className="inline-flex items-center gap-2 font-body font-medium select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-full text-sm px-5 py-2.5 transition-all"
-                >
-                  <Mail size={14} /> service@areasim.ai
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Dashboard redirect */}

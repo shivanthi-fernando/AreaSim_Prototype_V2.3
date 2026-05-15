@@ -283,7 +283,7 @@ const STEPS: StepDef[] = [
     Illustration: GroupButtonIllustration,
   },
   {
-    title: "Count Room Capacity",
+    title: "Start room counting",
     description: "You can get the capacity of each room at different times of day using the Start room counting button in the top navbar.",
     position: "below-header",
     arrowRightPx: 60,
@@ -300,7 +300,7 @@ const STEPS: StepDef[] = [
     title: "Track Your Progress",
     description: "Here you can see the count of identified rooms, identified zones and number of surveys conducted.",
     position: "score-widget",
-    arrowLeftPx: 80,
+    arrowLeftPx: 60,
     Illustration: ScoreWidgetIllustration,
   },
 ];
@@ -516,7 +516,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (position === "inside-panel-group") {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ right: "22px", top: "200px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ left: "calc(66.667% + 8px)", top: "170px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>
@@ -527,9 +527,9 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   // Step 5: Start room counting (rightmost), Step 6: Conduct survey (leftmost of the three)
   if (isBelowHeader) {
     // arrowRightPx doubles as card position hint:
-    // step 5 (Start room counting): card at right ~100px
-    // step 6 (Conduct survey): card at right ~260px
-    const cardRight = step === 4 ? "88px" : "242px";
+    // step 5 = Count Room Capacity (Start room counting button, rightmost)
+    // step 6 = Conduct a Survey (Conduct survey button)
+    const cardRight = step === 4 ? "110px" : "280px";
     return (
       <>
         <div className="fixed z-50 pointer-events-auto" style={{ top: "62px", right: cardRight }}>
@@ -543,7 +543,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
   if (isScoreWidget) {
     return (
       <>
-        <div className="fixed z-50 pointer-events-auto" style={{ top: "132px", left: "16px" }}>
+        <div className="fixed z-50 pointer-events-auto" style={{ top: "160px", left: "8px" }}>
           <AnimatePresence mode="wait">{card}</AnimatePresence>
         </div>
       </>

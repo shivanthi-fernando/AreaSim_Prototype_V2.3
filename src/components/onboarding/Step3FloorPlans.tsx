@@ -205,17 +205,10 @@ function ConsultantCards() {
       {CONSULTANTS.map((c) => (
         <div key={c.name} className="p-4 rounded-2xl border border-border bg-surface hover:border-primary/20 transition-all">
           <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
-          <p className="text-xs font-semibold mb-1" style={{ color: "#0A4F6E" }}>{c.title}</p>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: "#0A4F6E" }}>{c.title}</p>
           <p className="text-xs text-text-muted font-body leading-relaxed">{c.bio}</p>
         </div>
       ))}
-      {/* Shared business contact */}
-      <a
-        href="mailto:service@areasim.ai"
-        className="inline-flex items-center justify-center gap-2 w-full font-body font-medium focus-ring select-none cursor-pointer bg-surface-2 text-text hover:bg-border btn-3d-secondary border border-border rounded-2xl text-sm px-5 py-3 transition-all"
-      >
-        <Mail size={14} /> service@areasim.ai
-      </a>
     </div>
   );
 }
@@ -403,7 +396,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                   </div>
                   <div>
                     <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                      Need a floor plan?
+                      Don&apos;t have a floor plan?
                     </h2>
                     <p className="text-xs text-text-muted font-body mt-0.5">
                       Here are the ways you can get one.
@@ -443,8 +436,9 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-text font-body">Buy a professional floor plan</p>
                     <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                      Our team can procure a scan-ready version for your building.
+                      Our team can procure a professional, scan-ready floor plan for your building. Contact us via email to get started.
                     </p>
+                    <a href="mailto:service@areasim.ai" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-[#0A4F6E] hover:underline"><Mail size={12} />service@areasim.ai</a>
                   </div>
                   <motion.div
                     animate={{ rotate: noFloorShowContacts ? 90 : 0 }}
@@ -466,8 +460,8 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                       className="overflow-hidden"
                     >
                       <div className="pt-1 pb-1">
-                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-mono mb-3 px-1">
-                          Contact our experts
+                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">
+                          About our experts
                         </p>
                         <ConsultantCards />
                       </div>

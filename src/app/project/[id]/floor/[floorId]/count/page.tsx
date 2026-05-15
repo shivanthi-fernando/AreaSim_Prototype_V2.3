@@ -25,6 +25,11 @@ import {
   User,
   Layers,
   Pencil,
+  Save,
+  Users,
+  Target,
+  Coffee,
+  Box,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -186,6 +191,10 @@ export default function FloorCountPage() {
   // Multi-room selection state
   const [selectedRoomIds, setSelectedRoomIds] = useState<Set<string>>(new Set());
   const [bulkCategory, setBulkCategory] = useState<string>("");
+
+  // Session table edit state
+  const [editingRowId, setEditingRowId] = useState<string | null>(null);
+  const [editRowData, setEditRowData] = useState<{ name: string; sqm: string; seats: string; category: string }>({ name: "", sqm: "", seats: "", category: "" });
 
   // Editable seat inputs — raw string while typing
   const [roomSeatInputs, setRoomSeatInputs] = useState<Record<string, string>>({});
@@ -477,7 +486,7 @@ export default function FloorCountPage() {
     setCountingPhase("ready");
   };
 
-  const allRoomsSetup = rooms.every((r) => roomCategories[r.id] && verifiedRooms.has(r.id));
+  const _allRoomsSetup = rooms.every((r) => roomCategories[r.id] && verifiedRooms.has(r.id));
 
   if (countingPhase === "setup") {
     return (
@@ -513,10 +522,12 @@ export default function FloorCountPage() {
               <Button
                 size="sm"
                 className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
-                disabled={!allRoomsSetup}
-                onClick={handleSetupConfirm}
+                onClick={() => {
+                  setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
+                  handleSetupConfirm();
+                }}
               >
-                Confirm &amp; continue
+                Verify and continue
               </Button>
             </div>
           </div>
@@ -567,8 +578,8 @@ export default function FloorCountPage() {
                       <X size={16} />
                     </button>
                   </div>
-                  {/* Category chips */}
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  {/* Category icon cards */}
+                  <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
                     {[
                       ...FLOOR_CATEGORIES,
                       ...customCategories.map((cc) => ({
@@ -579,37 +590,51 @@ export default function FloorCountPage() {
                         badge: "bg-gray-100 text-gray-600",
                         text: "text-gray-600",
                       })),
-                    ].map((fc) => (
-                      <button
-                        key={fc.id}
-                        onClick={() => setBulkCategory(fc.id)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
-                          bulkCategory === fc.id
-                            ? `${fc.color} border-opacity-100`
-                            : "border-[#E2E8F0] bg-white hover:border-[#C0D0DC] text-text"
-                        }`}
-                      >
-                        {bulkCategory === fc.id && <Check size={10} strokeWidth={3} />}
-                        {fc.label}
-                      </button>
-                    ))}
-                    {/* Add new category */}
+                    ].map((fc) => {
+                      const iconMap: Record<string, React.ReactNode> = {
+                        meeting: <Users size={16} />,
+                        focus: <Target size={16} />,
+                        social: <Coffee size={16} />,
+                        empty: <Box size={16} />,
+                      };
+                      const icon = iconMap[fc.id] ?? <Layers size={16} />;
+                      const isSelected = bulkCategory === fc.id;
+                      return (
+                        <button
+                          key={fc.id}
+                          onClick={() => setBulkCategory(fc.id)}
+                          className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border transition-all min-w-[120px] text-left shrink-0 ${
+                            isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC]"
+                          }`}
+                        >
+                          <div className={`${isSelected ? "text-primary" : "text-text-muted"}`}>{icon}</div>
+                          <div>
+                            <p className={`text-xs font-bold leading-none mb-0.5 ${isSelected ? "text-primary" : "text-text"}`}>{fc.label}</p>
+                            <p className="text-[10px] text-text-muted leading-tight">{fc.desc}</p>
+                          </div>
+                          {isSelected && <Check size={10} className="text-primary ml-auto mt-auto" strokeWidth={3} />}
+                        </button>
+                      );
+                    })}
+                    {/* Add new category — dashed upload style */}
                     <button
                       onClick={() => { setAddCategoryRoomId(null); setNewCategoryInput(""); setShowAddCategoryModal(true); }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-dashed border-[#C0D0DC] text-xs font-semibold text-text-muted hover:border-primary hover:text-primary transition-all"
+                      className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl border-2 border-dashed border-[#C4BAED] bg-[#F0EEFF] hover:border-[#9B8FD0] hover:bg-[#EAE5FF] transition-all min-w-[90px] shrink-0"
                     >
-                      <Plus size={10} /> Add new category
+                      <div className="w-7 h-7 rounded-full bg-white border border-[#DDD8F7] flex items-center justify-center">
+                        <Plus size={14} style={{ color: "#6D5FAD" }} />
+                      </div>
+                      <p className="text-[10px] font-semibold text-[#6D5FAD]">Add new</p>
                     </button>
                   </div>
                   {/* Action buttons */}
                   <div className="flex justify-end gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
+                    <button
                       onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
+                      className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-3 py-1.5"
                     >
                       Cancel
-                    </Button>
+                    </button>
                     <Button
                       size="sm"
                       disabled={!bulkCategory}
@@ -892,7 +917,7 @@ export default function FloorCountPage() {
                 >
                   <span
                     className="text-lg font-bold text-primary tabular-nums"
-                    style={{ fontFamily: "var(--font-jetbrains-mono)" }}
+                    style={{ fontFamily: "var(--font-manrope)" }}
                   >
                     {formatTime(timer)}
                   </span>
@@ -1058,7 +1083,8 @@ export default function FloorCountPage() {
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">No of seats</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Status</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Counted by</th>
-                        <th className="px-4 py-3">Counting</th>
+                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Counting</th>
+                        <th className="px-4 py-3">Edit</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#F1F5F9]">
@@ -1082,31 +1108,61 @@ export default function FloorCountPage() {
                           >
                             {/* Room name */}
                             <td className="px-4 py-4 border-r border-[#F1F5F9]">
-                              <div className="flex items-center gap-2">
-                                {isLockedByOther && (
-                                  <Lock size={12} className="text-amber-500 shrink-0" />
-                                )}
-                                <span className="text-sm font-bold text-text">{room.name}</span>
-                              </div>
+                              {editingRowId === room.id ? (
+                                <input
+                                  value={editRowData.name}
+                                  onChange={(e) => setEditRowData((p) => ({ ...p, name: e.target.value }))}
+                                  className="w-full rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                                />
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  {isLockedByOther && <Lock size={12} className="text-amber-500 shrink-0" />}
+                                  <span className="text-sm font-bold text-text">{room.name}</span>
+                                </div>
+                              )}
                             </td>
 
                             {/* Category */}
                             <td className="px-4 py-4 text-sm text-text-muted border-r border-[#F1F5F9]">
-                              <span className="px-2 py-1 rounded-md bg-[#F1F5F9] text-[10px] font-bold">
-                                Meeting
-                              </span>
+                              {editingRowId === room.id ? (
+                                <select
+                                  value={editRowData.category}
+                                  onChange={(e) => setEditRowData((p) => ({ ...p, category: e.target.value }))}
+                                  className="rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-xs font-semibold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all appearance-none"
+                                >
+                                  {FLOOR_CATEGORIES.map((fc) => <option key={fc.id} value={fc.id}>{fc.label}</option>)}
+                                </select>
+                              ) : (
+                                <span className="px-2 py-1 rounded-md bg-[#F1F5F9] text-[10px] font-bold">
+                                  {roomCategories[room.id] || "Meeting"}
+                                </span>
+                              )}
                             </td>
 
                             {/* Sqm */}
                             <td className="px-4 py-4 text-sm text-text-muted border-r border-[#F1F5F9]">
-                              <span className="font-mono font-bold text-primary">
-                                {formatNumber(room.sqm || 25)} m²
-                              </span>
+                              {editingRowId === room.id ? (
+                                <input
+                                  value={editRowData.sqm}
+                                  onChange={(e) => setEditRowData((p) => ({ ...p, sqm: e.target.value.replace(/\D/g, "") }))}
+                                  className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-primary focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                                />
+                              ) : (
+                                <span className="font-bold text-primary">{formatNumber(room.sqm || 25)} m²</span>
+                              )}
                             </td>
 
                             {/* Seats */}
                             <td className="px-4 py-4 text-sm border-r border-[#F1F5F9]">
-                              <span className="font-bold text-primary tabular-nums">{roomSeats[room.id] || 0}</span>
+                              {editingRowId === room.id ? (
+                                <input
+                                  value={editRowData.seats}
+                                  onChange={(e) => setEditRowData((p) => ({ ...p, seats: e.target.value.replace(/\D/g, "") }))}
+                                  className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-primary focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                                />
+                              ) : (
+                                <span className="font-bold text-primary tabular-nums">{roomSeats[room.id] || 0}</span>
+                              )}
                             </td>
 
                             {/* Status */}
@@ -1175,6 +1231,43 @@ export default function FloorCountPage() {
                                   className="w-auto px-4"
                                 >
                                   Start counting
+                                </Button>
+                              )}
+                            </td>
+
+                            {/* Edit column */}
+                            <td className="px-4 py-4">
+                              {editingRowId === room.id ? (
+                                <Button
+                                  size="sm"
+                                  className="gap-1.5 px-3"
+                                  icon={<Save size={13} />}
+                                  onClick={() => {
+                                    const seats = parseInt(editRowData.seats) || 1;
+                                    setRoomSeats((prev) => ({ ...prev, [room.id]: seats }));
+                                    if (editRowData.category) setRoomCategories((prev) => ({ ...prev, [room.id]: editRowData.category }));
+                                    setEditingRowId(null);
+                                  }}
+                                >
+                                  Save
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  className="gap-1.5 px-3"
+                                  icon={<Pencil size={13} />}
+                                  onClick={() => {
+                                    setEditingRowId(room.id);
+                                    setEditRowData({
+                                      name: room.name,
+                                      sqm: String(room.sqm || 25),
+                                      seats: String(roomSeats[room.id] || 0),
+                                      category: roomCategories[room.id] || "meeting",
+                                    });
+                                  }}
+                                >
+                                  Edit
                                 </Button>
                               )}
                             </td>
@@ -1399,7 +1492,7 @@ export default function FloorCountPage() {
             {roundLabel} · Day 1 of 14
           </div>
         </div>
-        <div className="text-[10px] text-text-muted font-mono">Areasim workspace intelligence</div>
+        <div className="text-[10px] text-text-muted font-body">Areasim workspace intelligence</div>
       </footer>
 
       {/* ── Save comments modal ─────────────────────────────────────────────────── */}
