@@ -58,7 +58,6 @@ export default function CreatePasswordPage() {
           <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
             Create your password
           </h1>
-          <p className="text-sm text-text-muted font-body">Choose a strong password to secure your account.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">

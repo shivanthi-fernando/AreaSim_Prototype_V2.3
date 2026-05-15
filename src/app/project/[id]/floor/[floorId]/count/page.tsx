@@ -174,15 +174,7 @@ export default function FloorCountPage() {
   const floor = floors.find((f) => f.id === activeFloorId) || floors[0];
   const rooms = floor?.rooms || [];
 
-  const [countingPhase, setCountingPhase] = useState<CountingPhase>(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("counting-setup-done") === "true") {
-      return "ready";
-    }
-    if (typeof window !== "undefined" && localStorage.getItem("counting-instructions-done") === "true") {
-      return "setup";
-    }
-    return "instructions";
-  });
+  const [countingPhase, setCountingPhase] = useState<CountingPhase>("instructions");
   const [startModalDismissed, setStartModalDismissed] = useState(true);
   const [editRoomSettings, setEditRoomSettings] = useState(false);
   // Per-room category selected during setup
@@ -487,7 +479,6 @@ export default function FloorCountPage() {
 
   // ── Setup screen confirm ──────────────────────────────────────────────────────
   const handleSetupConfirm = () => {
-    localStorage.setItem("counting-setup-done", "true");
     setCountingPhase("ready");
   };
 
@@ -497,47 +488,52 @@ export default function FloorCountPage() {
   if (countingPhase === "instructions") {
     const instructionSteps = [
       {
-        number: "01",
+        icon: <Users size={26} className="text-primary" />,
+        iconBg: "#F0FAFA",
+        iconBorder: "rgba(19,148,133,0.3)",
         title: "Plan your route",
         description: "Walk the floor in a logical order — room by room. Make sure you have the floor plan open on the counting page before you start.",
         color: "#139485",
-        bg: "#F0FAFA",
       },
       {
-        number: "02",
+        icon: <Clock size={26} className="text-[#0A4F6E]" />,
+        iconBg: "#EEF4FF",
+        iconBorder: "rgba(10,79,110,0.3)",
         title: "Count at the right time",
         description: "Each round lasts 2 hours. There are 5 rounds per day (08:00–18:00). Start a round only when it's active — the system will tell you.",
         color: "#0A4F6E",
-        bg: "#EEF4FF",
       },
       {
-        number: "03",
+        icon: <Target size={26} className="text-amber-600" />,
+        iconBg: "#FFFBF0",
+        iconBorder: "rgba(245,158,11,0.35)",
         title: "Enter the occupied seats",
         description: "For each room, count how many seats are occupied right now. Enter the number and tap Save count & continue to move to the next room.",
         color: "#F59E0B",
-        bg: "#FFFBF0",
       },
       {
-        number: "04",
+        icon: <MessageSquare size={26} style={{ color: "#7C3AED" }} />,
+        iconBg: "#F5F3FF",
+        iconBorder: "rgba(124,58,237,0.3)",
         title: "Add notes if needed",
         description: "Use the Comments field to flag anything unusual — a room that's set up differently, or spaces that are blocked off.",
         color: "#7C3AED",
-        bg: "#F5F3FF",
       },
       {
-        number: "05",
+        icon: <CheckCircle2 size={26} style={{ color: "#00C9A7" }} />,
+        iconBg: "#F0FEFB",
+        iconBorder: "rgba(0,201,167,0.35)",
         title: "Finish the session",
         description: "Once all rooms are counted, tap Verify and continue to lock in the session data. You can view full history from the Dashboard.",
         color: "#00C9A7",
-        bg: "#F0FEFB",
       },
     ];
 
     return (
       <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
-        {/* Header */}
+        {/* Header — same design as setup page */}
         <header className="px-6 py-3 shrink-0 bg-white border-b border-[#E2E8F0]">
-          <div className="max-w-[860px] mx-auto flex items-center gap-4">
+          <div className="max-w-[1200px] mx-auto flex items-center gap-4">
             <button
               onClick={handleBackToCanvas}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
@@ -548,14 +544,24 @@ export default function FloorCountPage() {
             <span className="text-sm font-semibold text-text font-body truncate max-w-[180px]">
               {mockProject.name}
             </span>
+            <div className="ml-auto">
+              <Button
+                size="sm"
+                className="h-9 px-6 rounded-full shadow-md shadow-primary/20 font-bold"
+                icon={<ClipboardList size={14} />}
+                onClick={() => setCountingPhase("setup")}
+              >
+                Got it, set up rooms
+              </Button>
+            </div>
           </div>
         </header>
 
         <WorkplaceJourneyBar activeStep="1-2" />
 
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[860px] mx-auto space-y-8">
-            {/* Hero */}
+          <div className="max-w-[1200px] mx-auto space-y-8">
+            {/* Hero — left-aligned */}
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
                 <ClipboardList size={22} className="text-primary" />
@@ -570,88 +576,39 @@ export default function FloorCountPage() {
               </div>
             </div>
 
-            {/* Steps grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {instructionSteps.map((step) => (
+            {/* Steps — 5 cards centered */}
+            <div className="flex flex-wrap justify-center gap-4">
+              {instructionSteps.map((step, i) => (
                 <motion.div
-                  key={step.number}
+                  key={step.title}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: parseInt(step.number) * 0.07 }}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-5 flex flex-col gap-3 shadow-sm"
+                  transition={{ delay: i * 0.07 }}
+                  className="rounded-2xl border border-[#E2E8F0] bg-white p-6 flex flex-col gap-4 shadow-sm"
+                  style={{ width: "200px", minWidth: "180px", flex: "0 0 200px" }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ background: step.bg }}
-                    >
-                      <span className="text-xs font-bold" style={{ color: step.color, fontFamily: "var(--font-manrope)" }}>
-                        {step.number}
-                      </span>
-                    </div>
-                    <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                  {/* Icon */}
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{
+                      background: step.iconBg,
+                      border: `1.5px solid ${step.iconBorder}`,
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
+                    }}
+                  >
+                    {step.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-text mb-1.5" style={{ fontFamily: "var(--font-manrope)" }}>
                       {step.title}
                     </h3>
+                    <p className="text-xs text-text-muted leading-relaxed">{step.description}</p>
                   </div>
-                  <p className="text-xs text-text-muted leading-relaxed">{step.description}</p>
                 </motion.div>
               ))}
             </div>
-
-            {/* Tips card */}
-            <div className="rounded-2xl border border-amber-100 bg-amber-50 p-5 flex gap-4">
-              <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                <HelpCircle size={16} className="text-amber-600" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-amber-900 mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Quick tips</h4>
-                <ul className="text-xs text-amber-800 leading-relaxed space-y-1">
-                  <li>• Count the whole floor at once — do not split across different times.</li>
-                  <li>• Include all areas: common zones, social spaces, and the canteen.</li>
-                  <li>• The same person should ideally count across all 5 rounds for consistency.</li>
-                  <li>• If you make a mistake, you can re-enter a count before saving.</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Round schedule */}
-            <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
-              <h4 className="text-sm font-bold text-text mb-3" style={{ fontFamily: "var(--font-manrope)" }}>Today&apos;s counting schedule</h4>
-              <div className="grid grid-cols-5 gap-2">
-                {ROUNDS.map((r) => (
-                  <div
-                    key={r.round}
-                    className="rounded-xl border border-[#E2E8F0] bg-bg p-3 text-center"
-                  >
-                    <p className="text-[10px] font-bold text-primary mb-1">{r.label}</p>
-                    <p className="text-[10px] text-text-muted">{r.start}</p>
-                    <p className="text-[10px] text-text-muted">– {r.end}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </main>
-
-        {/* Footer CTA */}
-        <div className="shrink-0 bg-white border-t border-[#E2E8F0] px-8 py-4">
-          <div className="max-w-[860px] mx-auto flex items-center justify-between">
-            <p className="text-xs text-text-muted font-body">
-              Read through the steps above before continuing.
-            </p>
-            <Button
-              size="md"
-              icon={<ArrowRight size={14} />}
-              iconPosition="right"
-              onClick={() => {
-                localStorage.setItem("counting-instructions-done", "true");
-                setCountingPhase("setup");
-              }}
-            >
-              Got it, set up rooms
-            </Button>
-          </div>
-        </div>
       </div>
     );
   }
@@ -714,7 +671,7 @@ export default function FloorCountPage() {
                   <Layers size={20} className="text-primary" />
                 </div>
                 <h2 className="text-xl font-bold text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                  {editRoomSettings ? "Edit room settings" : "Before you start counting"}
+                  {editRoomSettings ? "Edit room settings" : "Set room category and capacity"}
                 </h2>
               </div>
               <p className="text-sm text-text-muted pl-[52px]">

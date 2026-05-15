@@ -140,7 +140,7 @@ function SortableFloorCard({
           <div className="flex-1">
             <p className="text-sm font-medium text-text mb-2">Floor plan</p>
             {floor.file ? (
-              <div className="relative aspect-[4/3] rounded-xl border border-border overflow-hidden group/image">
+              <div className="relative aspect-[4/3] rounded-xl border border-border overflow-hidden group/image bg-white">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={floor.file.preview}
@@ -218,7 +218,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
   const { floors, addFloor, removeFloor, updateFloor, setFloors } = useOnboardingStore();
   const [verifyingFloor, setVerifyingFloor] = useState<Floor | null>(null);
   const [showNoFloorPlanModal, setShowNoFloorPlanModal] = useState(false);
-  const [noFloorShowContacts, setNoFloorShowContacts] = useState(false);
+  const [_noFloorShowContacts, _setNoFloorShowContacts] = useState(false);
   const [verifiedFloorIds, setVerifiedFloorIds] = useState<string[]>([]);
 
   const sensors = useSensors(
@@ -386,7 +386,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
               <div className="relative px-6 pt-6 pb-5 border-b border-border">
                 <button
                   className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors"
-                  onClick={() => { setShowNoFloorPlanModal(false); setNoFloorShowContacts(false); }}
+                  onClick={() => { setShowNoFloorPlanModal(false); }}
                 >
                   <X size={14} />
                 </button>
@@ -405,69 +405,72 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                 </div>
               </div>
 
-              <div className="px-6 py-5 space-y-3 max-h-[70vh] overflow-y-auto">
-                {/* Get from landlord */}
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-surface hover:border-primary/30 hover:bg-primary/[0.02] transition-all group cursor-default">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <Building2 size={18} className="text-primary" />
+              <div className="px-6 py-5 space-y-5 max-h-[70vh] overflow-y-auto">
+
+                {/* ── Your options ── */}
+                <div className="space-y-3">
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">Your options</p>
+
+                  {/* Get from landlord */}
+                  <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-surface hover:border-primary/30 hover:bg-primary/[0.02] transition-all cursor-default">
+                    <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <Building2 size={18} className="text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-text font-body">Get it from your landlord</p>
+                      <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
+                        Ask your building manager or landlord — most are required to hold official floor plans.
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-text font-body">Get it from your landlord</p>
-                    <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                      Ask your building manager or landlord — most are required to hold official floor plans.
-                    </p>
+
+                  {/* Buy professional */}
+                  <div className="flex items-start gap-4 p-4 rounded-2xl border border-border bg-surface hover:border-accent/30 hover:bg-accent/[0.02] transition-all">
+                    <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <ShoppingCart size={18} className="text-accent" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-text font-body">Buy a professional floor plan</p>
+                      <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
+                        Our team can procure a professional, scan-ready floor plan for your building.
+                      </p>
+                      <div className="mt-3">
+                        <Button size="sm" variant="primary">Buy floor plan</Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Buy professional */}
-                <button
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left group ${
-                    noFloorShowContacts
-                      ? "border-accent/40 bg-accent/5"
-                      : "border-border bg-surface hover:border-accent/40 hover:bg-accent/[0.02]"
-                  }`}
-                  onClick={() => setNoFloorShowContacts((v) => !v)}
-                >
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
-                    noFloorShowContacts ? "bg-accent/15" : "bg-accent/10 group-hover:bg-accent/15"
-                  }`}>
-                    <ShoppingCart size={18} className="text-accent" />
+                {/* ── Contact us ── */}
+                <div className="space-y-3">
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">Contact us</p>
+                  <div className="flex items-start gap-4 p-4 rounded-2xl border border-border bg-surface">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0A4F6E]/10 flex items-center justify-center shrink-0">
+                      <Mail size={18} className="text-[#0A4F6E]" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-text font-body">Get in touch</p>
+                      <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
+                        If you have any queries, contact us via email
+                      </p>
+                      <a
+                        href="mailto:service@areasim.ai"
+                        className="inline-flex items-center gap-1.5 mt-2 text-sm font-bold text-[#0A4F6E] hover:underline"
+                      >
+                        <Mail size={14} />
+                        service@areasim.ai
+                      </a>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-text font-body">Buy a professional floor plan</p>
-                    <p className="text-xs text-text-muted font-body mt-0.5 leading-relaxed">
-                      Our team can procure a professional, scan-ready floor plan for your building. Contact us via email to get started.
-                    </p>
-                    <a href="mailto:service@areasim.ai" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-[#0A4F6E] hover:underline"><Mail size={12} />service@areasim.ai</a>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: noFloorShowContacts ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="shrink-0"
-                  >
-                    <ArrowRight size={16} className="text-text-muted group-hover:text-accent transition-colors" />
-                  </motion.div>
-                </button>
+                </div>
 
-                {/* Expert contacts — revealed on demand */}
-                <AnimatePresence>
-                  {noFloorShowContacts && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-1 pb-1">
-                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">
-                          About our experts
-                        </p>
-                        <ConsultantCards />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* ── About our experts ── */}
+                <div className="space-y-3">
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">
+                    About our experts
+                  </p>
+                  <ConsultantCards />
+                </div>
               </div>
             </motion.div>
           </div>
