@@ -186,7 +186,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                       Create zone
                     </Button>
                     <p className="text-[11px] text-text-muted font-body mt-2 mb-0 leading-relaxed">
-                      Select one or multiple rooms from the below list to create zones.
+                      Select one or more rooms to create zones
                     </p>
                   </div>
                 )}
