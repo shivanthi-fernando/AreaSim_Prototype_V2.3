@@ -622,15 +622,13 @@ export default function FloorCountPage() {
                         </button>
                       );
                     })}
-                    {/* Add new category — dashed upload style */}
+                    {/* Add new category */}
                     <button
                       onClick={() => { setAddCategoryRoomId(null); setNewCategoryInput(""); setShowAddCategoryModal(true); }}
-                      className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl border-2 border-dashed border-[#C4BAED] bg-[#F0EEFF] hover:border-[#9B8FD0] hover:bg-[#EAE5FF] transition-all min-w-[90px] shrink-0"
+                      className="flex flex-col items-start gap-1.5 p-3 rounded-xl border border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC] transition-all min-w-[90px] shrink-0"
                     >
-                      <div className="w-7 h-7 rounded-full bg-white border border-[#DDD8F7] flex items-center justify-center">
-                        <Plus size={14} style={{ color: "#6D5FAD" }} />
-                      </div>
-                      <p className="text-[10px] font-semibold text-[#6D5FAD]">Add new</p>
+                      <Plus size={16} className="text-text-muted" />
+                      <p className="text-[10px] font-bold text-text-muted">Add new</p>
                     </button>
                   </div>
                   {/* Action buttons */}

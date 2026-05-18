@@ -202,7 +202,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               )}
             </div>
             {counter && maxLength && (
-              <p className="text-[11px] text-[#98A1B2] shrink-0 font-mono tabular-nums leading-none mt-0.5">
+              <p className="text-[11px] text-[#98A1B2] shrink-0 font-body tabular-nums leading-none mt-0.5">
                 {String(value ?? "").length} / {maxLength}
               </p>
             )}

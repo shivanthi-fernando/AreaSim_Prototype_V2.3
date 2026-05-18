@@ -441,16 +441,16 @@ function RoomRow({
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-[#8CA3B0] font-body">Seats</span>
-                    <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>{seats}</span>
+                    <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{seats}</span>
                   </div>
                   <div className="h-px bg-[#DAEAF5]" />
                   <div className="grid grid-cols-2 gap-2">
                     <div className="rounded-lg bg-white border border-[#E5EAF0] p-2 text-center">
-                      <p className="text-[13px] font-extrabold text-[#1A7FA8]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>{formatNumber(todayCount)}×</p>
+                      <p className="text-[13px] font-extrabold text-[#1A7FA8]" style={{ fontFamily: "var(--font-manrope)" }}>{formatNumber(todayCount)}×</p>
                       <p className="text-[9px] text-[#8CA3B0] font-body">Today</p>
                     </div>
                     <div className="rounded-lg bg-white border border-[#E5EAF0] p-2 text-center">
-                      <p className="text-[13px] font-extrabold text-[#0A4F6E]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>{formatNumber(totalCount)}×</p>
+                      <p className="text-[13px] font-extrabold text-[#0A4F6E]" style={{ fontFamily: "var(--font-manrope)" }}>{formatNumber(totalCount)}×</p>
                       <p className="text-[9px] text-[#8CA3B0] font-body">Overall</p>
                     </div>
                   </div>
@@ -465,7 +465,7 @@ function RoomRow({
                           transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>{formatNumber(avgCapacity)}</span>
+                      <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{formatNumber(avgCapacity)}</span>
                     </div>
                   </div>
                 </div>

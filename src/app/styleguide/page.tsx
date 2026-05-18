@@ -11,6 +11,7 @@ import {
   Logo,
   EmptyState,
 } from "@/components/ui";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 import {
   Search,
   Plus,
@@ -789,6 +790,17 @@ export default function StyleGuidePage() {
                         <User className="w-4 h-4 text-neutral-500" />
                       </div>
                     </div>
+                    {/* User Avatar component */}
+                    <div className="space-y-3">
+                      <p className="text-xs font-bold text-text-muted uppercase tracking-wider">User Avatar</p>
+                      <div className="flex items-center gap-4">
+                        <UserAvatar />
+                        <div>
+                          <p className="text-sm font-semibold text-text">UserAvatar</p>
+                          <p className="text-xs text-text-muted font-body">Purple gradient · <code className="font-mono text-primary">w-8 h-8</code> · Links to /settings</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="space-y-6">
                     <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Navigation Icons</p>
@@ -1029,7 +1041,7 @@ export default function StyleGuidePage() {
                         <td className="px-6 py-4">
                           <Badge variant={row.status as "active" | "pending" | "archived"}>{row.status}</Badge>
                         </td>
-                        <td className="px-6 py-4 text-sm text-text-muted font-mono">{row.occupancy}</td>
+                        <td className="px-6 py-4 text-sm text-text-muted font-body">{row.occupancy}</td>
                         <td className="px-6 py-4 text-right">
                           <Button variant="ghost" size="sm">Manage</Button>
                         </td>
@@ -1038,6 +1050,39 @@ export default function StyleGuidePage() {
                   </tbody>
                 </table>
               </Card>
+                {/* Table style guidelines */}
+                <div className="mt-8 space-y-4">
+                  <div>
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-1">Standard Table Guidelines</p>
+                    <p className="text-sm text-text-muted font-body">All read-only data tables follow these rules: consistent <code className="font-mono text-primary">text-sm text-text-muted font-body</code> for all body cells, no icons inside cells, <code className="font-mono text-primary">text-[11px] font-bold text-text-muted uppercase tracking-wider</code> for headers, <code className="font-mono text-primary">divide-y divide-[#F1F5F9]</code> row dividers.</p>
+                  </div>
+                  <Card className="p-0 overflow-hidden shadow-sm">
+                    <table className="w-full text-left">
+                      <thead className="bg-bg border-b border-[#E2E8F0]">
+                        <tr className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
+                          <th className="px-6 py-4">Date</th>
+                          <th className="px-6 py-4">Round</th>
+                          <th className="px-6 py-4">Count</th>
+                          <th className="px-6 py-4 text-right">Conducted by</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#F1F5F9]">
+                        {[
+                          { date: "Apr 22, 2024", round: "Round 1", count: "12", by: "John K." },
+                          { date: "Apr 22, 2024", round: "Round 2", count: "8",  by: "Sarah L." },
+                          { date: "Apr 23, 2024", round: "Round 1", count: "15", by: "John K." },
+                        ].map((row, i) => (
+                          <tr key={i} className="hover:bg-bg transition-colors">
+                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.date}</td>
+                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.round}</td>
+                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.count}</td>
+                            <td className="px-6 py-4 text-sm text-text-muted font-body text-right">{row.by}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </Card>
+                </div>
             </div>
           </div>
         </section>

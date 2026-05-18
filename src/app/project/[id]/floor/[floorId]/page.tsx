@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { SlidersHorizontal, Gem, User, Play, ClipboardCheck } from "lucide-react";
+import { SlidersHorizontal, Gem, Play, ClipboardCheck } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/ui/Logo";
@@ -16,6 +16,7 @@ import { CompletionModal } from "@/components/canvas/CompletionModal";
 import { GuideOverlay, GUIDE_TOTAL } from "@/components/canvas/GuideOverlay";
 import { useCanvasStore } from "@/store/canvas";
 import { mockProject } from "@/lib/mockData";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 
 const FloorCanvas = dynamic(
   () => import("@/components/canvas/FloorCanvas").then((m) => m.FloorCanvas),
@@ -162,14 +163,7 @@ export default function FloorPage() {
           <LanguageSelector />
 
           {/* User avatar */}
-          <button
-            onClick={() => router.push("/settings")}
-            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 hover:opacity-80 transition-opacity"
-            style={{ background: "linear-gradient(106deg, #E8E2F5 0%, #B8AFDF 100%)" }}
-            title="Settings"
-          >
-            <User size={14} color="#6C62AA" />
-          </button>
+          <UserAvatar onClick={() => router.push("/settings")} />
         </div>
       </header>
 

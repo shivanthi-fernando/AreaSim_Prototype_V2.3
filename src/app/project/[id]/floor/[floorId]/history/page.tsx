@@ -4,8 +4,6 @@ import { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Calendar,
-  Clock,
   ChevronDown,
   LayoutGrid,
 } from "lucide-react";
@@ -43,13 +41,13 @@ const C = {
   accent:   "#00C9A7",
 };
 
-// Light bg tints for each chart section
+// Light bg tints — UX Illustration Palette lightest shades
 const BG = {
-  area:  "rgba(19,148,133,0.05)",   // primary tint
-  bar:   "rgba(245,158,11,0.05)",   // amber tint
-  line:  "rgba(124,58,237,0.05)",   // purple tint
-  radar: "rgba(0,201,167,0.05)",    // accent tint
-  pie:   "rgba(10,79,110,0.05)",    // dark tint
+  area:  "#DCEFEA",   // Pale Mint Teal
+  bar:   "#EFE3C7",   // Linen Cream
+  line:  "#E8E2F5",   // Lavender Mist
+  radar: "#DCEFE3",   // Mist Sage
+  pie:   "#DCE7F5",   // Ice Blue
 };
 
 // ── Mock data generation ──────────────────────────────────────────────────────
@@ -203,29 +201,41 @@ export default function RoomHistoryPage() {
           {/* ── Charts grid — all 5 visible simultaneously ── */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-            {/* 1 – Area: 14-day occupancy trend */}
-            <ChartCard
-              title="Area trend"
-              description="Occupancy over 14 days"
-              bg={BG.area}
-              legend={[{ color: C.primary, label: "Occupancy" }]}
-            >
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={trend14Data}>
-                  <defs>
-                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor={C.primary} stopOpacity={0.18} />
-                      <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
-                  <Tooltip {...tooltipStyle} />
-                  <Area type="monotone" dataKey="count" name="Occupancy" stroke={C.primary} strokeWidth={2.5} fillOpacity={1} fill="url(#areaGrad)" animationDuration={1200} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartCard>
+            {/* 1 – Pie: usage split — full-width, shown first */}
+            <div className="xl:col-span-2">
+              <ChartCard
+                title="Usage split"
+                description="Occupancy category share"
+                bg={BG.pie}
+              >
+                <ResponsiveContainer width="100%" height={240}>
+                  <PieChart>
+                    <Tooltip {...tooltipStyle} />
+                    <Legend
+                      iconType="circle"
+                      iconSize={8}
+                      formatter={(value) => <span style={{ fontSize: 11, fontWeight: 600, color: "#5A7184" }}>{value}</span>}
+                    />
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={105}
+                      paddingAngle={3}
+                      dataKey="value"
+                      animationDuration={1200}
+                      label={({ percent }: { percent?: number }) => percent != null ? `${Math.round(percent * 100)}%` : ""}
+                      labelLine={false}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartCard>
+            </div>
 
             {/* 2 – Bar: count per session round */}
             <ChartCard
@@ -282,41 +292,29 @@ export default function RoomHistoryPage() {
               </ResponsiveContainer>
             </ChartCard>
 
-            {/* 5 – Pie: usage split — full-width */}
-            <div className="xl:col-span-2">
-              <ChartCard
-                title="Usage split"
-                description="Occupancy category share"
-                bg={BG.pie}
-              >
-                <ResponsiveContainer width="100%" height={240}>
-                  <PieChart>
-                    <Tooltip {...tooltipStyle} />
-                    <Legend
-                      iconType="circle"
-                      iconSize={8}
-                      formatter={(value) => <span style={{ fontSize: 11, fontWeight: 600, color: "#5A7184" }}>{value}</span>}
-                    />
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={70}
-                      outerRadius={105}
-                      paddingAngle={3}
-                      dataKey="value"
-                      animationDuration={1200}
-                      label={({ percent }: { percent?: number }) => percent != null ? `${Math.round(percent * 100)}%` : ""}
-                      labelLine={false}
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={index} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </ChartCard>
-            </div>
+            {/* 5 – Area: 14-day occupancy trend */}
+            <ChartCard
+              title="Area trend"
+              description="Occupancy over 14 days"
+              bg={BG.area}
+              legend={[{ color: C.primary, label: "Occupancy" }]}
+            >
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={trend14Data}>
+                  <defs>
+                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%"  stopColor={C.primary} stopOpacity={0.18} />
+                      <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} dy={8} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 600, fill: "#8CA3B0" }} />
+                  <Tooltip {...tooltipStyle} />
+                  <Area type="monotone" dataKey="count" name="Occupancy" stroke={C.primary} strokeWidth={2.5} fillOpacity={1} fill="url(#areaGrad)" animationDuration={1200} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartCard>
 
           </div>
 
@@ -347,37 +345,12 @@ export default function RoomHistoryPage() {
                       key={idx}
                       className="hover:bg-bg transition-colors"
                     >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm font-bold text-text">
-                          <Calendar size={14} className="text-text-muted" strokeWidth={2.5} />
-                          {row.date}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm text-text-muted font-medium">
-                          <Clock size={14} className="text-text-muted" strokeWidth={2.5} />
-                          {row.time}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-primary font-bold text-sm">{row.round}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-text-muted font-medium">12</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-xl text-text tabular-nums" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                          {formatNumber(row.count)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-3">
-                          <span className="text-sm text-text-muted font-medium">{row.by}</span>
-                          <div className="w-8 h-8 rounded-full bg-[#EDE8E0] flex items-center justify-center text-[10px] font-bold text-primary border border-white shrink-0">
-                            {row.by.split(" ").map(n => n[0]).join("")}
-                          </div>
-                        </div>
-                      </td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.date}</td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.time}</td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.round}</td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body">12</td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body">{formatNumber(row.count)}</td>
+                      <td className="px-6 py-4 text-sm text-text-muted font-body text-right">{row.by}</td>
                     </motion.tr>
                   ))}
                 </tbody>

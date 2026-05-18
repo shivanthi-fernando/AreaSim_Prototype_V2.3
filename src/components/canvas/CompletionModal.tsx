@@ -128,7 +128,7 @@ export function CompletionModal() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-text-muted font-body">From</p>
-                  <p className="text-lg font-700 text-text font-mono" style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 700 }}>
+                  <p className="text-lg font-700 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
                     NOK 2,499<span className="text-sm font-400 text-text-muted">/month</span>
                   </p>
                 </div>

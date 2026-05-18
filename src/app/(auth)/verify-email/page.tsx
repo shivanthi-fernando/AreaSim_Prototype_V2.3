@@ -116,7 +116,7 @@ export default function VerifyEmailPage() {
             </button>
           ) : (
             <p className="text-sm text-text-muted font-body">
-              Resend in <span className="font-mono text-text font-medium">
+              Resend in <span className="font-body text-text font-medium">
                 {String(Math.floor(countdown / 60)).padStart(2, "0")}:{String(countdown % 60).padStart(2, "0")}
               </span>
             </p>

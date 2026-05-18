@@ -6,13 +6,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, FolderOpen, ClipboardList, Users,
-  Bell, Search, Settings, CreditCard, HelpCircle, LogOut, ChevronDown,
+  Bell, Settings, CreditCard, HelpCircle, LogOut,
 } from "lucide-react";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Logo } from "@/components/ui/Logo";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { mockUser } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard",    href: "/dashboard" },
@@ -35,18 +36,15 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
   const unreadCount = MOCK_NOTIFICATIONS.filter((n) => n.unread).length;
-  const initials = mockUser.name.split(" ").map((n) => n[0]).join("");
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       {/* ── Top Navigation Bar ── */}
-      <header className="sticky top-0 z-40 flex items-center gap-2 px-4 py-0 border-b border-border bg-surface/95 backdrop-blur-sm shrink-0 h-14">
+      <header className="sticky top-0 z-40 flex items-center gap-2 px-4 py-0 border-b border-border bg-white shrink-0 h-14">
         {/* Logo */}
         <Link href="/dashboard" className="shrink-0 mr-2">
           <Logo size="md" showText />
@@ -80,41 +78,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Right side actions */}
         <div className="ml-auto flex items-center gap-1.5">
           <LanguageSelector />
-
-          {/* Global search */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              {searchOpen ? (
-                <motion.div
-                  key="search-open"
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 200, opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  className="flex items-center gap-2 rounded-lg border border-primary/40 bg-surface-2 px-3 py-1.5 overflow-hidden"
-                >
-                  <Search size={14} className="text-text-muted shrink-0" />
-                  <input
-                    autoFocus
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onBlur={() => { setSearchOpen(false); setSearchQuery(""); }}
-                    placeholder="Search…"
-                    className="text-sm text-text bg-transparent outline-none font-body w-full placeholder:text-text-muted/60"
-                  />
-                </motion.div>
-              ) : (
-                <motion.button
-                  key="search-closed"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onClick={() => setSearchOpen(true)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-colors"
-                >
-                  <Search size={16} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
 
           {/* Notifications */}
           <div className="relative">
@@ -161,15 +124,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Profile dropdown */}
           <div className="relative">
-            <button
-              onClick={() => { setProfileOpen(!profileOpen); setNotifOpen(false); }}
-              className="flex items-center gap-1.5 rounded-lg px-1.5 py-1 hover:bg-surface-2 transition-colors"
-            >
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                {initials}
-              </div>
-              <ChevronDown size={13} className={cn("text-text-muted transition-transform", profileOpen && "rotate-180")} />
-            </button>
+            <UserAvatar onClick={() => { setProfileOpen(!profileOpen); setNotifOpen(false); }} />
             <AnimatePresence>
               {profileOpen && (
                 <>

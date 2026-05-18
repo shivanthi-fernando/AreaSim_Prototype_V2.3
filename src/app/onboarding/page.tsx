@@ -1085,7 +1085,7 @@ export default function OnboardingPage() {
 
                 {/* Section 1: Header */}
                 <div className="px-8 py-6 border-b border-border">
-                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 2 of 3</p>
+                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)" }}>Step 2 of 3</p>
                   <h2 className="text-2xl mb-0.5" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Lease parameters</h2>
                   <p className="text-sm text-text-muted leading-relaxed">Type your figures — the preview updates live.</p>
                 </div>
@@ -1116,7 +1116,7 @@ export default function OnboardingPage() {
                             <div key={idx} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-surface-2/60 group">
                               <FileText size={14} className="text-primary shrink-0" />
                               <span className="flex-1 text-xs font-medium text-text truncate min-w-0">{file.name}</span>
-                              <span className="text-[10px] text-text-muted font-mono shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
+                              <span className="text-[10px] text-text-muted font-body shrink-0">{(file.size / 1024).toFixed(0)} KB</span>
                               <button type="button" onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))} className="text-text-muted hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 shrink-0"><X size={13} /></button>
                             </div>
                           ))}
@@ -1164,7 +1164,7 @@ export default function OnboardingPage() {
             <div className="flex flex-col overflow-y-auto" style={{ background: "var(--color-bg)" }}>
               <div className="flex flex-col w-full max-w-[540px] mx-auto px-8 py-10 gap-8 min-h-full">
                 <div className="rounded-[18px] border border-border bg-surface shadow-card flex-1" style={{ padding: "34px 36px" }}>
-                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1.5" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 1 of 3</p>
+                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1.5" style={{ color: "var(--color-primary)" }}>Step 1 of 3</p>
                   <h2 className="text-2xl mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Create your first project</h2>
                   <p className="text-sm text-text-muted mb-7 leading-relaxed">Tell us about your building and location.</p>
                   <Step1Project onNext={nextStep} />
@@ -1180,7 +1180,7 @@ export default function OnboardingPage() {
               <div className="rounded-[18px] border border-border bg-surface shadow-card" style={{ padding: "34px 36px" }}>
                 <div className="flex items-start justify-between gap-4 mb-1">
                   <div>
-                    <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)", fontFamily: "var(--font-mono)" }}>Step 3 of 3</p>
+                    <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)" }}>Step 3 of 3</p>
                     <h2 className="text-2xl" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Add floor plans</h2>
                   </div>
                   <button type="button" onClick={() => setShowConsultantModal(true)} className="shrink-0 text-sm font-medium text-text-muted hover:text-primary underline underline-offset-2 transition-colors font-body mt-1">
