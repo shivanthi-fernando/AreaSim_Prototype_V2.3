@@ -139,7 +139,7 @@ export default function FloorPage() {
             variant="primary"
             size="sm"
             icon={<Play size={13} />}
-            onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count`)}
+            onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count#show-instructions`)}
             className="h-9 py-2 px-4"
           >
             <span className="hidden sm:inline">Start room counting</span>

@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FolderOpen, Building2, BarChart3, ClipboardCheck,
-  ArrowRight, Clock, TrendingUp, Plus, X, Mail,
+  ArrowRight, Clock, TrendingUp, Plus, X,
   UserPlus, Send, Users,
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { mockUser, mockActivity, mockProjects, mockDashboardStats } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 
@@ -190,16 +192,14 @@ function InviteModal({ onClose }: { onClose: () => void }) {
                     exit={{ opacity: 0, height: 0 }}
                     className="flex items-center gap-2"
                   >
-                    <div className="flex-1 flex items-center gap-2 rounded-xl border border-border bg-surface-2 px-3 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15 transition-all">
-                      <Mail size={14} className="text-text-muted shrink-0" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => updateEmail(i, e.target.value)}
-                        placeholder={`colleague${i + 1}@company.no`}
-                        className="flex-1 text-sm text-text bg-transparent outline-none font-body placeholder:text-text-muted/50"
-                      />
-                    </div>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => updateEmail(i, e.target.value)}
+                      placeholder={`colleague${i + 1}@company.no`}
+                      fieldSize="sm"
+                      className="flex-1"
+                    />
                     {emails.length > 1 && (
                       <button onClick={() => removeEmail(i)}
                         className="w-7 h-7 rounded-lg bg-surface-2 flex items-center justify-center text-text-muted hover:text-accent-warm transition-colors shrink-0">
@@ -217,18 +217,12 @@ function InviteModal({ onClose }: { onClose: () => void }) {
                 </button>
 
                 <div className="flex gap-3 pt-2">
-                  <button
-                    onClick={onClose}
-                    className="flex-1 py-2.5 rounded-xl border border-[#E5DFD5] text-sm font-semibold text-text-muted hover:text-text hover:border-[#C8BFB0] hover:bg-[#F5F2EA] transition-all font-body"
-                  >
+                  <Button variant="secondary" size="md" className="flex-1" onClick={onClose}>
                     Maybe later
-                  </button>
-                  <button
-                    onClick={handleSend}
-                    className="btn-3d flex-1 py-2.5 rounded-xl text-white text-sm font-bold transition-all flex items-center justify-center gap-2 font-body"
-                  >
-                    <UserPlus size={14} /> Send invites
-                  </button>
+                  </Button>
+                  <Button size="md" className="flex-1" onClick={handleSend} icon={<UserPlus size={14} />}>
+                    Send invites
+                  </Button>
                 </div>
               </motion.div>
             )}

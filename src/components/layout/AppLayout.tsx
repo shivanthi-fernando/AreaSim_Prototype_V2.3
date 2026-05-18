@@ -31,9 +31,10 @@ const MOCK_NOTIFICATIONS = [
 interface AppLayoutProps {
   children: React.ReactNode;
   breadcrumbs?: { label: string; href?: string }[];
+  showJourneyBar?: boolean;
 }
 
-export function AppLayout({ children }: AppLayoutProps) {
+export function AppLayout({ children, showJourneyBar = false }: AppLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [notifOpen, setNotifOpen] = useState(false);
@@ -170,7 +171,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </header>
 
       {/* ── Workplace Journey Bar ── */}
-      <WorkplaceJourneyBar activeStep="1-2" />
+      {showJourneyBar && <WorkplaceJourneyBar activeStep="1-2" />}
 
       {/* ── Page Content ── */}
       <main className="flex-1 overflow-y-auto">

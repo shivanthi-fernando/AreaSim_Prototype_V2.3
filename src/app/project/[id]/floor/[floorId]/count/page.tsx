@@ -173,7 +173,7 @@ export default function FloorCountPage() {
   const rooms = floor?.rooms || [];
 
   const [countingPhase, setCountingPhase] = useState<CountingPhase>("setup");
-  const [showInstructionsModal, setShowInstructionsModal] = useState(true);
+  const [showInstructionsModal, setShowInstructionsModal] = useState(false);
   const [showVerifyConfirmModal, setShowVerifyConfirmModal] = useState(false);
   const [startModalDismissed, setStartModalDismissed] = useState(true);
   const [editRoomSettings, setEditRoomSettings] = useState(false);
@@ -276,6 +276,15 @@ export default function FloorCountPage() {
     if (typeof window !== "undefined" && window.location.hash === "#session-details") {
       setCountingPhase("ready");
       setStartModalDismissed(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Show instructions modal only when arriving via #show-instructions hash
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#show-instructions") {
+      setShowInstructionsModal(true);
       window.history.replaceState(null, "", window.location.pathname);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1020,11 +1029,12 @@ export default function FloorCountPage() {
                     </p>
                   </div>
                   <div className="flex gap-3 pt-1">
-                    <Button variant="secondary" className="flex-1 h-12" onClick={() => setShowVerifyConfirmModal(false)}>
+                    <Button variant="secondary" size="md" className="flex-1" onClick={() => setShowVerifyConfirmModal(false)}>
                       Cancel
                     </Button>
                     <Button
-                      className="flex-1 h-12"
+                      size="md"
+                      className="flex-1"
                       onClick={() => {
                         setShowVerifyConfirmModal(false);
                         setVerifiedRooms(new Set(rooms.filter((r) => roomCategories[r.id]).map((r) => r.id)));
@@ -1751,13 +1761,15 @@ export default function FloorCountPage() {
                 <div className="flex gap-3 pt-1">
                   <Button
                     variant="secondary"
-                    className="flex-1 h-12"
+                    size="md"
+                    className="flex-1"
                     onClick={() => handleSaveComments(false)}
                   >
                     No, discard
                   </Button>
                   <Button
-                    className="flex-1 h-12"
+                    size="md"
+                    className="flex-1"
                     onClick={() => handleSaveComments(true)}
                   >
                     Yes, save
@@ -1988,38 +2000,28 @@ export default function FloorCountPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full"
+              className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden max-w-md w-full relative"
             >
-              <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <Check size={18} className="text-emerald-600" strokeWidth={3} />
-                  </div>
-                  <h3 className="font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                    Floor completed
-                  </h3>
+              <button
+                onClick={() => setShowNextFloorModal(false)}
+                className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text transition-colors z-10"
+              >
+                <X size={16} />
+              </button>
+              <div className="p-8 text-center space-y-5 relative">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto">
+                  <Check size={22} className="text-emerald-600" strokeWidth={3} />
                 </div>
-                <button
-                  onClick={() => setShowNextFloorModal(false)}
-                  className="text-text-muted hover:text-text transition-colors"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="p-8 space-y-6">
-                <div className="space-y-2 text-center">
-                  <h4
-                    className="text-xl font-800 text-text"
-                    style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}
-                  >
+                <div className="space-y-2">
+                  <h4 className="text-xl text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                     Continue to the next floor?
                   </h4>
                   <p className="text-sm text-text-muted leading-relaxed">
                     All rooms on this floor have been counted. Would you like to continue counting on another floor?
                   </p>
                 </div>
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-text-muted font-body block mb-1">Select floor</label>
+                <div className="space-y-2 text-left">
+                  <label className="text-sm font-semibold text-text-muted font-body block">Select floor</label>
                   <div className="relative">
                     <select
                       value={nextFloorSelection}
@@ -2030,16 +2032,14 @@ export default function FloorCountPage() {
                       <option>2nd Floor</option>
                       <option>3rd Floor</option>
                     </select>
-                    <ChevronDown
-                      size={14}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
+                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <Button
                     variant="secondary"
-                    className="flex-1 h-12"
+                    size="md"
+                    className="flex-1"
                     onClick={() => {
                       setShowNextFloorModal(false);
                       setIsRecording(false);
@@ -2049,9 +2049,9 @@ export default function FloorCountPage() {
                     Stop counting
                   </Button>
                   <Button
-                    className="flex-1 h-12 shadow-lg shadow-primary/20"
+                    size="md"
+                    className="flex-1"
                     onClick={() => {
-                      // Find the floor by name and switch to it in-place
                       const nextFloor = floors.find((f) => f.name === nextFloorSelection) || floors.find((f) => f.id !== floorId) || floors[0];
                       if (nextFloor) {
                         setActiveFloorId(nextFloor.id);
