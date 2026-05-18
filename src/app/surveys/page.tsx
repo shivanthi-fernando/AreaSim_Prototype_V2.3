@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ClipboardList, Filter, Eye, Plus } from "lucide-react";
+import { Filter, Eye, Plus } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/Button";
 import { mockSurveyRecords } from "@/lib/mockData";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -51,9 +52,7 @@ export default function SurveysPage() {
               {mockSurveyRecords.length} surveys across {projects.length} projects
             </p>
           </div>
-          <button className="flex items-center gap-2 rounded-xl bg-primary hover:bg-primary-light text-white font-semibold px-4 py-2.5 text-sm font-body transition-all shadow-md shadow-primary/20 hover:-translate-y-0.5 active:scale-95">
-            <Plus size={16} /> Create new survey
-          </button>
+          <Button icon={<Plus size={16} />}>Create new survey</Button>
         </div>
 
         {/* Filter bar */}
@@ -123,14 +122,9 @@ export default function SurveysPage() {
                   className="grid grid-cols-[2fr_1.5fr_1fr_80px_120px_80px_auto] gap-4 px-5 py-4 border-b border-border last:border-0 items-center hover:bg-surface-2 transition-colors"
                 >
                   {/* Survey Name */}
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <ClipboardList size={14} className="text-primary" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-text font-body truncate">{survey.name}</p>
-                      <p className="text-xs text-text-muted font-body">{survey.createdAt}</p>
-                    </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-text font-body truncate">{survey.name}</p>
+                    <p className="text-xs text-text-muted font-body">{survey.createdAt}</p>
                   </div>
 
                   {/* Project / Floor */}
@@ -150,7 +144,7 @@ export default function SurveysPage() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 h-1.5 rounded-full bg-surface-2 overflow-hidden">
                         <div
-                          className={cn("h-full rounded-full transition-all", pct === 100 ? "bg-accent" : "bg-primary")}
+                          className="h-full rounded-full transition-all bg-[#bfa483]"
                           style={{ width: `${pct}%` }}
                         />
                       </div>

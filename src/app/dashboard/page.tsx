@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   FolderOpen, Building2, BarChart3, ClipboardCheck,
   ArrowRight, Clock, TrendingUp, Plus, X,
-  UserPlus, Send, Users,
+  UserPlus, Send,
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
@@ -33,8 +33,8 @@ function useCountUp(target: number, duration = 1200) {
 }
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
-function StatCard({ icon, label, value, suffix = "", gradient, delay }: {
-  icon: React.ReactNode; label: string; value: number; suffix?: string; gradient: string; delay: number;
+function StatCard({ icon, label, value, suffix = "", iconBg, delay }: {
+  icon: React.ReactNode; label: string; value: number; suffix?: string; iconBg: string; delay: number;
 }) {
   const count = useCountUp(value, 1200 + delay * 100);
   return (
@@ -42,17 +42,16 @@ function StatCard({ icon, label, value, suffix = "", gradient, delay }: {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay * 0.12, duration: 0.5 }}
-      className="relative rounded-2xl border border-border bg-surface p-5 overflow-hidden group hover:shadow-card-hover transition-shadow"
+      className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 hover:shadow-card-hover transition-shadow flex-1"
     >
-      <div className={cn("absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 blur-xl", gradient)} />
-      <div className="relative z-10">
-        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center mb-4", gradient, "opacity-90")}>
-          {icon}
-        </div>
-        <p className="text-xs text-text-muted font-body tracking-wider mb-1">{label}</p>
-        <p className="text-3xl font-extrabold text-text tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
+      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", iconBg)}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-2xl font-extrabold text-text tabular-nums leading-none" style={{ fontFamily: "var(--font-manrope)" }}>
           {count}{suffix}
         </p>
+        <p className="text-xs text-text-muted font-body mt-2">{label}</p>
       </div>
     </motion.div>
   );
@@ -60,24 +59,24 @@ function StatCard({ icon, label, value, suffix = "", gradient, delay }: {
 
 // ─── Activity helpers ─────────────────────────────────────────────────────────
 const ACTIVITY_COLORS: Record<string, string> = {
-  room:    "bg-[#139485]/10 text-[#139485]",
-  survey:  "bg-[#C47A2C]/10 text-[#C47A2C]",
-  floor:   "bg-[#C47A2C]/10 text-[#C47A2C]",
-  member:  "bg-[#7A6BAF]/10 text-[#7A6BAF]",
+  room: "bg-[#139485]/10 text-[#139485]",
+  survey: "bg-[#C47A2C]/10 text-[#C47A2C]",
+  floor: "bg-[#C47A2C]/10 text-[#C47A2C]",
+  member: "bg-[#7A6BAF]/10 text-[#7A6BAF]",
   project: "bg-[#4A7AAE]/10 text-[#4A7AAE]",
 };
 const ACTIVITY_ICONS: Record<string, React.ReactNode> = {
-  room:    <Building2 size={14} />,
-  survey:  <ClipboardCheck size={14} />,
-  floor:   <BarChart3 size={14} />,
-  member:  <FolderOpen size={14} />,
+  room: <Building2 size={14} />,
+  survey: <ClipboardCheck size={14} />,
+  floor: <BarChart3 size={14} />,
+  member: <FolderOpen size={14} />,
   project: <FolderOpen size={14} />,
 };
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    active:    "bg-[#139485]/10 text-[#139485]",
-    draft:     "bg-[#C47A2C]/10 text-[#C47A2C]",
+    active: "bg-[#139485]/10 text-[#139485]",
+    draft: "bg-[#C47A2C]/10 text-[#C47A2C]",
     completed: "bg-[#4A7AAE]/10 text-[#4A7AAE]",
   };
   return (
@@ -119,16 +118,16 @@ function InviteModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-md rounded-3xl bg-surface border border-border shadow-2xl overflow-hidden"
       >
         {/* Gradient top banner */}
-        <div className="relative px-6 pt-6 pb-10" style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
+        <div className="relative px-6 pt-6 pb-10 bg-brand-gradient">
           {/* decorative grid */}
-          <div className="absolute inset-0 opacity-10"
+          <div className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
               backgroundImage: "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)",
               backgroundSize: "24px 24px",
             }}
           />
           <button onClick={onClose}
-            className="absolute top-4 right-4 p-1.5 text-[#0D1B2A]/60 hover:text-[#0D1B2A] transition-colors">
+            className="absolute top-4 right-4 p-1.5 text-[#0D1B2A]/60 hover:text-[#0D1B2A] transition-colors z-10">
             <X size={14} />
           </button>
           {/* Illustration: avatar cluster */}
@@ -181,9 +180,9 @@ function InviteModal({ onClose }: { onClose: () => void }) {
               </motion.div>
             ) : (
               <motion.div className="space-y-3">
-                <p className="text-xs font-semibold text-text-muted tracking-wider font-body mb-3 flex items-center gap-1.5">
-                  <Users size={12} /> Email addresses
-                </p>
+                <label className="text-xs font-semibold text-[#222B27] font-body block mb-3">
+                  Email addresses
+                </label>
                 {emails.map((email, i) => (
                   <motion.div
                     key={i}
@@ -211,9 +210,9 @@ function InviteModal({ onClose }: { onClose: () => void }) {
 
                 <button
                   onClick={addEmail}
-                  className="flex items-center gap-1.5 text-xs text-primary font-semibold font-body hover:underline"
+                  className="text-xs text-primary font-semibold font-body underline"
                 >
-                  <Plus size={13} /> Add another
+                  Add another
                 </button>
 
                 <div className="flex gap-3 pt-2">
@@ -246,10 +245,10 @@ export default function DashboardPage() {
   }, []);
 
   const stats = [
-    { icon: <FolderOpen size={20} className="text-white" />, label: "Total projects",     value: mockDashboardStats.totalProjects,     suffix: "",  gradient: "bg-gradient-to-br from-[#139485] to-[#0E7A6D]",  delay: 0 },
-    { icon: <Building2 size={20} className="text-white" />,  label: "Rooms mapped",       value: mockDashboardStats.totalRooms,         suffix: "",  gradient: "bg-gradient-to-br from-[#4A7AAE] to-[#3A6B9E]",  delay: 1 },
-    { icon: <TrendingUp size={20} className="text-white" />, label: "Avg. utilisation",   value: mockDashboardStats.avgUtilisation,     suffix: "%", gradient: "bg-gradient-to-br from-[#C47A2C] to-[#B56826]",  delay: 2 },
-    { icon: <ClipboardCheck size={20} className="text-white" />, label: "Survey responses", value: mockDashboardStats.surveysCompleted, suffix: "",  gradient: "bg-gradient-to-br from-[#7A6BAF] to-[#6958A0]",  delay: 3 },
+    { icon: <FolderOpen size={20} className="text-[#7A6BAF]" />, label: "Total projects", value: mockDashboardStats.totalProjects, suffix: "", iconBg: "bg-[#7A6BAF]/10", delay: 0 },
+    { icon: <Building2 size={20} className="text-[#4A7AAE]" />, label: "Rooms mapped", value: mockDashboardStats.totalRooms, suffix: "", iconBg: "bg-[#4A7AAE]/10", delay: 1 },
+    { icon: <TrendingUp size={20} className="text-[#139485]" />, label: "Avg. utilisation", value: mockDashboardStats.avgUtilisation, suffix: "%", iconBg: "bg-[#139485]/10", delay: 2 },
+    { icon: <ClipboardCheck size={20} className="text-[#C47A2C]" />, label: "Survey responses", value: mockDashboardStats.surveysCompleted, suffix: "", iconBg: "bg-[#C47A2C]/10", delay: 3 },
   ];
 
   return (
@@ -264,33 +263,21 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative rounded-3xl overflow-hidden p-8"
-          style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
+          className="relative rounded-3xl overflow-hidden px-8 py-10 bg-brand-gradient"
         >
-          <div className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-          />
-          <div className="relative z-10 flex items-center justify-between">
+          <div className="relative z-10 flex items-center justify-between gap-6">
             <div>
-              <p className="text-[#4A6650]/80 text-sm font-body mb-1">Welcome back,</p>
-              <h1 className="text-3xl font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>
-                {firstName} 👋
+              <h1 className="text-2xl font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>
+                Welcome back, {firstName}
               </h1>
-              <p className="text-[#4A6650]/80 text-sm font-body mt-2 max-w-sm">
-                You have {mockProjects.filter((p) => p.status === "active").length} active projects. Your workspace intelligence is up to date.
+              <p className="text-[#4A6650]/80 text-sm font-body mt-2 max-w-md">
+                You have {mockProjects.filter((p) => p.status === "active").length} project(s) in setup — pick up where you left off.
               </p>
+              <Button onClick={() => router.push("/project")} className="mt-2">
+                View all projects
+              </Button>
             </div>
-            <div className="hidden md:flex gap-3">
-              <button
-                onClick={() => router.push("/project")}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/50 hover:bg-white/70 text-[#0D1B2A] text-sm font-semibold transition-colors backdrop-blur-sm border border-white/40"
-              >
-                View projects <ArrowRight size={14} />
-              </button>
-            </div>
+
           </div>
         </motion.div>
 
@@ -308,8 +295,8 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Recent Projects</h2>
               <button onClick={() => router.push("/project")}
-                className="text-xs text-primary font-semibold font-body hover:underline flex items-center gap-1">
-                View all <ArrowRight size={12} />
+                className="text-xs text-primary font-semibold font-body underline">
+                View all
               </button>
             </div>
             <div className="space-y-3">
@@ -350,19 +337,12 @@ export default function DashboardPage() {
                       <motion.div
                         initial={{ width: 0 }} animate={{ width: `${project.completionPct}%` }}
                         transition={{ delay: 0.3 + i * 0.1, duration: 0.8, ease: "easeOut" }}
-                        className="h-full rounded-full bg-gradient-to-r from-[#139485] to-[#4A7AAE]"
+                        className="h-full rounded-full bg-[#bfa483]"
                       />
                     </div>
                   </div>
                 </motion.div>
               ))}
-              <motion.button
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                onClick={() => router.push("/project")}
-                className="w-full rounded-2xl border-2 border-dashed border-border hover:border-primary/40 py-4 flex items-center justify-center gap-2 text-sm text-text-muted hover:text-primary transition-all font-body"
-              >
-                <Plus size={16} /> New project
-              </motion.button>
             </div>
           </div>
 
@@ -370,7 +350,6 @@ export default function DashboardPage() {
             <h2 className="text-base font-bold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>Recent Activity</h2>
             <div className="rounded-2xl border border-border bg-surface overflow-hidden">
               <div className="relative">
-                <div className="absolute left-8 top-4 bottom-4 w-px bg-border" />
                 <div className="divide-y divide-border">
                   {mockActivity.map((item, i) => (
                     <motion.div key={item.id}

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Building2, Clock, Plus, ArrowRight } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/Button";
 import { mockProjects } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 
@@ -28,9 +29,7 @@ export default function ProjectsPage() {
               {mockProjects.length} projects
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-light transition-colors shadow-md shadow-primary/20">
-            <Plus size={15} /> New Project
-          </button>
+          <Button icon={<Plus size={15} />}>New Project</Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -76,7 +75,7 @@ export default function ProjectsPage() {
                     initial={{ width: 0 }}
                     animate={{ width: `${project.completionPct}%` }}
                     transition={{ delay: 0.3 + i * 0.1, duration: 0.7 }}
-                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                    className="h-full rounded-full bg-[#bfa483]"
                   />
                 </div>
               </div>

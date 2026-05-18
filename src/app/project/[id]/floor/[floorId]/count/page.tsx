@@ -1878,13 +1878,15 @@ export default function FloorCountPage() {
                   <div className="flex gap-3 pt-2">
                     <Button
                       variant="secondary"
-                      className="flex-1 h-12"
+                      size="md"
+                      className="flex-1"
                       onClick={() => { setShowStopModal(false); setPendingNav(null); }}
                     >
                       Not now
                     </Button>
                     <Button
-                      className="flex-1 h-12 shadow-lg shadow-primary/20"
+                      size="md"
+                      className="flex-1 shadow-lg shadow-primary/20"
                       onClick={confirmStopSession}
                     >
                       Yes, stop session
@@ -2020,19 +2022,19 @@ export default function FloorCountPage() {
                     All rooms on this floor have been counted. Would you like to continue counting on another floor?
                   </p>
                 </div>
-                <div className="space-y-2 text-left">
-                  <label className="text-sm font-semibold text-text-muted font-body block">Select floor</label>
+                <div className="flex flex-col gap-1.5 text-left">
+                  <label className="text-xs font-semibold text-[#222B27] font-body">Select floor</label>
                   <div className="relative">
                     <select
                       value={nextFloorSelection}
                       onChange={(e) => setNextFloorSelection(e.target.value)}
-                      className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-10 py-3 text-sm font-bold text-text focus:outline-none focus:border-primary transition-all"
+                      className="appearance-none w-full h-9 rounded-xl border border-[#969696] bg-white text-[#222B27] pl-4 pr-9 text-xs font-medium focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition-all duration-200"
                     >
                       <option>1st Floor</option>
                       <option>2nd Floor</option>
                       <option>3rd Floor</option>
                     </select>
-                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                    <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#98A1B2] pointer-events-none" />
                   </div>
                 </div>
                 <div className="flex gap-3">

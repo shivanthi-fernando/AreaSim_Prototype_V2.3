@@ -38,8 +38,7 @@ export function Step6Done() {
         initial={{ scale: 0.5, rotate: -10 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
-        className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-accent/10"
-        style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}
+        className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-accent/10 bg-brand-gradient"
       >
         <CheckCircle2 size={36} color="#139485" />
       </motion.div>

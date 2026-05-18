@@ -22,6 +22,10 @@ import {
   User,
   LayoutDashboard,
   BarChart3,
+  FolderOpen,
+  Building2,
+  TrendingUp,
+  ClipboardCheck,
   ChevronRight,
   ChevronDown,
   Map,
@@ -480,6 +484,22 @@ export default function StyleGuidePage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Link Buttons */}
+                <div className="pt-12 border-t border-border">
+                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Link Buttons</p>
+                  <p className="text-xs text-text-muted font-body mb-8">Use for inline navigation links. Always underlined, no icon, no arrow. Applied via <code className="text-[11px] bg-surface-2 px-1 rounded font-mono">underline</code> className on a native button or anchor.</p>
+                  <div className="flex flex-wrap items-center gap-8">
+                    <div className="space-y-2 flex flex-col items-start">
+                      <button className="text-xs text-primary font-semibold font-body underline">View all</button>
+                      <p className="text-[10px] text-text-muted uppercase tracking-tighter">xs · Section link</p>
+                    </div>
+                    <div className="space-y-2 flex flex-col items-start">
+                      <button className="text-sm text-primary font-semibold font-body underline">Add another</button>
+                      <p className="text-[10px] text-text-muted uppercase tracking-tighter">sm · Form link</p>
+                    </div>
+                  </div>
+                </div>
               </Card>
             </div>
 
@@ -904,24 +924,52 @@ export default function StyleGuidePage() {
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Stat Cards
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="p-6 space-y-2">
-                  <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Active Projects</p>
-                  <h4 className="text-3xl font-bold text-text">12</h4>
-                  <p className="text-[10px] text-success font-bold">+2 from last month</p>
-                </Card>
-                <Card className="p-6 space-y-2">
-                  <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Team Members</p>
-                  <h4 className="text-3xl font-bold text-text">48</h4>
-                  <p className="text-[10px] text-text-muted">3 pending invites</p>
-                </Card>
-                <Card className="p-6 space-y-2 border-primary/20 bg-primary/5">
-                  <p className="text-xs font-bold text-primary uppercase tracking-wider">Storage Used</p>
-                  <h4 className="text-3xl font-bold text-text">84%</h4>
-                  <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
-                    <div className="w-[84%] h-full bg-primary"></div>
-                  </div>
-                </Card>
+              {/* Overview Stat Card — horizontal layout */}
+              <div>
+                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Overview Stat Card</p>
+                <p className="text-xs text-text-muted font-body mb-4">Horizontal layout: icon on left, number + label on right. Use pastel icon background matching activity section colors.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                  {[
+                    { icon: <FolderOpen size={20} className="text-[#7A6BAF]" />, iconBg: "bg-[#7A6BAF]/10", label: "Total projects",   value: "3"  },
+                    { icon: <Building2 size={20} className="text-[#4A7AAE]" />,  iconBg: "bg-[#4A7AAE]/10", label: "Rooms mapped",     value: "48" },
+                    { icon: <TrendingUp size={20} className="text-[#139485]" />, iconBg: "bg-[#139485]/10", label: "Avg. utilisation", value: "72%" },
+                    { icon: <ClipboardCheck size={20} className="text-[#C47A2C]" />, iconBg: "bg-[#C47A2C]/10", label: "Survey responses", value: "24" },
+                  ].map((s) => (
+                    <div key={s.label} className="flex items-center gap-6 rounded-2xl border border-border bg-surface p-6 hover:shadow-card-hover transition-shadow flex-1">
+                      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", s.iconBg)}>
+                        {s.icon}
+                      </div>
+                      <div>
+                        <p className="text-3xl font-extrabold text-text tabular-nums leading-none" style={{ fontFamily: "var(--font-manrope)" }}>{s.value}</p>
+                        <p className="text-xs text-text-muted font-body mt-1">{s.label}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Legacy vertical stat cards */}
+              <div>
+                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Legacy Vertical Cards</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card className="p-6 space-y-2">
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Active Projects</p>
+                    <h4 className="text-3xl font-bold text-text">12</h4>
+                    <p className="text-[10px] text-success font-bold">+2 from last month</p>
+                  </Card>
+                  <Card className="p-6 space-y-2">
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Team Members</p>
+                    <h4 className="text-3xl font-bold text-text">48</h4>
+                    <p className="text-[10px] text-text-muted">3 pending invites</p>
+                  </Card>
+                  <Card className="p-6 space-y-2 border-primary/20 bg-primary/5">
+                    <p className="text-xs font-bold text-primary uppercase tracking-wider">Storage Used</p>
+                    <h4 className="text-3xl font-bold text-text">84%</h4>
+                    <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                      <div className="w-[84%] h-full bg-primary"></div>
+                    </div>
+                  </Card>
+                </div>
               </div>
             </div>
 

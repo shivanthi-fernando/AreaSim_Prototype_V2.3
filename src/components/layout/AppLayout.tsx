@@ -84,14 +84,9 @@ export function AppLayout({ children, showJourneyBar = false }: AppLayoutProps) 
           <div className="relative">
             <button
               onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }}
-              className="relative w-8 h-8 rounded-lg flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-colors"
+              className="relative w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:text-text hover:bg-surface-2 transition-colors"
             >
               <Bell size={16} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center text-[9px] font-bold text-white">
-                  {unreadCount}
-                </span>
-              )}
             </button>
             <AnimatePresence>
               {notifOpen && (

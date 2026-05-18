@@ -7,6 +7,7 @@ import {
   MoreHorizontal, Shield, Eye, Pencil, Trash2, Users,
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/Button";
 import { mockTeamMembers } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,13 @@ const ROLE_CONFIG: Record<Role, { icon: React.ReactNode; color: string }> = {
   Analyst:  { icon: <Pencil size={11} />,  color: "bg-accent/10 text-accent" },
   Observer: { icon: <Eye size={11} />,     color: "bg-amber-500/10 text-amber-600" },
 };
+
+const PASTEL_AVATAR_COLORS = [
+  "bg-[#7A6BAF]/10 text-[#7A6BAF]",
+  "bg-[#4A7AAE]/10 text-[#4A7AAE]",
+  "bg-[#139485]/10 text-[#139485]",
+  "bg-[#C47A2C]/10 text-[#C47A2C]",
+];
 
 // ─── Add Member Modal ─────────────────────────────────────────────────────────
 function AddMemberModal({ onClose, onAdd }: { onClose: () => void; onAdd: (m: Member) => void }) {
@@ -157,7 +165,7 @@ function AddMemberModal({ onClose, onAdd }: { onClose: () => void; onAdd: (m: Me
 }
 
 // ─── Member row ───────────────────────────────────────────────────────────────
-function MemberRow({ member, onRemove }: { member: Member; onRemove: () => void }) {
+function MemberRow({ member, onRemove, index }: { member: Member; onRemove: () => void; index: number }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const cfg = ROLE_CONFIG[member.role];
   return (
@@ -166,7 +174,7 @@ function MemberRow({ member, onRemove }: { member: Member; onRemove: () => void 
       className="flex items-center gap-4 px-5 py-3.5 hover:bg-surface-2 transition-colors group"
     >
       {/* Avatar */}
-      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold shrink-0">
+      <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0", PASTEL_AVATAR_COLORS[index % 4])}>
         {member.avatar}
       </div>
       {/* Name + email */}
@@ -242,12 +250,9 @@ export default function TeamPage() {
               {members.length} member{members.length !== 1 ? "s" : ""} in your workspace
             </p>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 rounded-xl bg-primary hover:bg-primary-light text-white font-semibold px-4 py-2.5 text-sm font-body transition-all shadow-md shadow-primary/20 hover:-translate-y-0.5 active:scale-95"
-          >
-            <UserPlus size={16} /> Invite member
-          </button>
+          <Button icon={<UserPlus size={16} />} onClick={() => setShowModal(true)}>
+            Invite member
+          </Button>
         </div>
 
         {/* Filters + search */}
@@ -299,6 +304,7 @@ export default function TeamPage() {
                   <MemberRow
                     member={member}
                     onRemove={() => setMembers(prev => prev.filter(m => m.id !== member.id))}
+                    index={i}
                   />
                 </motion.div>
               ))}

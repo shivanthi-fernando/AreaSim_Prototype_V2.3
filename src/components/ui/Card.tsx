@@ -34,7 +34,7 @@ export function Card({
       className={cn(
         "rounded-2xl border border-border transition-all duration-300",
         glass
-          ? "glass-surface shadow-glass"
+          ? "bg-white/85 backdrop-blur-xl border-[rgba(208,221,230,0.5)] shadow-glass"
           : "bg-surface shadow-card",
         hoverable &&
           "cursor-pointer hover:-translate-y-1 hover:shadow-card-hover",

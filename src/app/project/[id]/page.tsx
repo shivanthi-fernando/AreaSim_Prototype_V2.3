@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Building2, Layers, ClipboardList, Users, ArrowRight,
+  Building2, Layers, ClipboardList, Users,
   CheckCircle2, UserPlus, BarChart2,
   MapPin, Gem,
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { Button } from "@/components/ui/Button";
 import { mockProject, mockTeamMembers } from "@/lib/mockData";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -22,18 +23,17 @@ const TABS = [
 type Tab = typeof TABS[number]["id"];
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
-function StatCard({ icon, label, value, sub, color }: {
-  icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string;
+function StatCard({ icon, label, value, color }: {
+  icon: React.ReactNode; label: string; value: string | number; color: string;
 }) {
   return (
-    <div className={cn("rounded-2xl border border-border bg-surface p-4 flex items-center gap-4")}>
-      <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", color)}>
+    <div className="rounded-2xl border border-border bg-surface p-4 flex items-center gap-4 flex-1">
+      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", color)}>
         {icon}
       </div>
       <div>
-        <p className="text-xs text-text-muted font-body tracking-wider">{label}</p>
-        <p className="text-2xl font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{value}</p>
-        {sub && <p className="text-xs text-text-muted font-body">{sub}</p>}
+        <p className="text-2xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>{value}</p>
+        <p className="text-xs text-text-muted font-body mt-1">{label}</p>
       </div>
     </div>
   );
@@ -48,10 +48,10 @@ function OverviewTab() {
     <div className="space-y-6">
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={<Layers size={20} className="text-primary" />}    label="Floors"    value={mockProject.floors.length}  color="bg-primary/10" />
-        <StatCard icon={<Building2 size={20} className="text-accent" />}  label="Rooms"     value={totalRooms}                 color="bg-accent/10" />
-        <StatCard icon={<MapPin size={20} className="text-amber-500" />}  label="Zones"     value={totalZones}                 color="bg-amber-500/10" />
-        <StatCard icon={<ClipboardList size={20} className="text-purple-500" />} label="Survey Responses" value={57} color="bg-purple-500/10" />
+        <StatCard icon={<Layers size={20} className="text-[#7A6BAF]" />}       label="Floors"            value={mockProject.floors.length} color="bg-[#7A6BAF]/10" />
+        <StatCard icon={<Building2 size={20} className="text-[#4A7AAE]" />}    label="Rooms"             value={totalRooms}                color="bg-[#4A7AAE]/10" />
+        <StatCard icon={<MapPin size={20} className="text-[#139485]" />}       label="Zones"             value={totalZones}                color="bg-[#139485]/10" />
+        <StatCard icon={<ClipboardList size={20} className="text-[#C47A2C]" />} label="Survey Responses" value={57}                        color="bg-[#C47A2C]/10" />
       </div>
 
       {/* Building summary */}
@@ -93,7 +93,7 @@ function OverviewTab() {
             { label: "Cost per sqm",   value: "Nok 46.4" },
             { label: "Lease type",     value: "Full service" },
           ].map((item) => (
-            <div key={item.label} className="bg-surface-2 rounded-xl p-3">
+            <div key={item.label} className="bg-[#F2E7DB] rounded-xl p-3">
               <p className="text-[11px] text-text-muted font-body mb-1">{item.label}</p>
               <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{item.value}</p>
             </div>
@@ -112,6 +112,14 @@ function FloorsTab() {
 
   return (
     <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-sm font-semibold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+          {mockProject.floors.length} floor{mockProject.floors.length !== 1 ? "s" : ""}
+        </p>
+        <Button size="sm" icon={<Layers size={14} />}>Add floor</Button>
+      </div>
+
       {mockProject.floors.map((floor, i) => {
         const totalRooms = floor.rooms.length + (floor.detectedRooms?.length ?? 0);
         const counted    = floor.rooms.filter((r) => r.status === "counted").length;
@@ -126,7 +134,7 @@ function FloorsTab() {
             className="rounded-2xl border border-border bg-surface p-4 hover:border-primary/20 hover:shadow-card transition-all"
           >
             <div className="flex items-center gap-4">
-              {/* Floor icon illustration */}
+              {/* Floor icon */}
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center shrink-0">
                 <Layers size={22} className="text-primary" />
               </div>
@@ -153,7 +161,7 @@ function FloorsTab() {
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
                       transition={{ delay: 0.3 + i * 0.1, duration: 0.7 }}
-                      className={cn("h-full rounded-full", pct === 100 ? "bg-accent" : "bg-gradient-to-r from-primary to-accent")}
+                      className="h-full rounded-full bg-[#bfa483]"
                     />
                   </div>
                   <span className="text-xs font-semibold text-text w-8 text-right">{pct}%</span>
@@ -161,26 +169,29 @@ function FloorsTab() {
               </div>
 
               {/* Open canvas button */}
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => router.push(`/project/${projectId}/floor/${floor.id}`)}
-                className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-white text-xs font-semibold font-body hover:bg-primary-light transition-colors"
               >
-                Open canvas <ArrowRight size={12} />
-              </button>
+                Open canvas
+              </Button>
             </div>
           </motion.div>
         );
       })}
-
-      {/* Add floor button */}
-      <button className="w-full flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-4 text-sm text-text-muted hover:text-primary hover:border-primary/40 transition-all font-body">
-        <Layers size={16} /> Add floor
-      </button>
     </div>
   );
 }
 
 // ─── Team tab ─────────────────────────────────────────────────────────────────
+const PASTEL_COLORS = [
+  "bg-[#7A6BAF]/10 text-[#7A6BAF]",
+  "bg-[#4A7AAE]/10 text-[#4A7AAE]",
+  "bg-[#139485]/10 text-[#139485]",
+  "bg-[#C47A2C]/10 text-[#C47A2C]",
+];
+
 function TeamTab() {
   const ROLE_COLORS: Record<string, string> = {
     Admin:    "bg-primary/10 text-primary",
@@ -201,6 +212,14 @@ function TeamTab() {
 
   return (
     <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-sm font-semibold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+          {mockTeamMembers.length} member{mockTeamMembers.length !== 1 ? "s" : ""}
+        </p>
+        <Button size="sm" icon={<UserPlus size={14} />}>Add member</Button>
+      </div>
+
       {mockTeamMembers.map((member, i) => (
         <motion.div
           key={member.id}
@@ -210,7 +229,7 @@ function TeamTab() {
           className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 hover:border-primary/20 hover:shadow-card transition-all"
         >
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shrink-0">
+          <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0", PASTEL_COLORS[i % 4])}>
             {member.name.split(" ").map((n) => n[0]).join("")}
           </div>
           <div className="flex-1 min-w-0">
@@ -225,11 +244,6 @@ function TeamTab() {
           </div>
         </motion.div>
       ))}
-
-      {/* Invite button */}
-      <button className="w-full flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-4 text-sm text-text-muted hover:text-primary hover:border-primary/40 transition-all font-body">
-        <UserPlus size={16} /> Add member
-      </button>
     </div>
   );
 }
@@ -244,8 +258,8 @@ export default function ProjectDetailPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0 shadow-lg shadow-primary/25">
-              <Building2 size={26} className="text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-[#139485]/10 flex items-center justify-center shrink-0">
+              <Building2 size={26} className="text-[#139485]" />
             </div>
             <div>
               <h1 className="text-xl font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>

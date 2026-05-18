@@ -69,8 +69,7 @@ export default function VerifyEmailPage() {
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }} className="flex justify-center">
           <motion.div animate={{ y: [-4, 4, -4] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-[#139485]/10"
-            style={{ background: "linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%)" }}>
+            className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl shadow-[#139485]/10 bg-brand-gradient">
             <Mail size={36} color="#139485" />
           </motion.div>
         </motion.div>

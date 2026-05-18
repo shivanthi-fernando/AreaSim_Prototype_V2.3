@@ -12,7 +12,7 @@
   --color-accent-warm: #C47A2C;
   --color-bg: #F9F6EF;
   --color-surface: #FFFFFF;
-  --color-surface-2: #E7E1D7;
+  --color-surface-2: #FFFCF7;
   --color-text: #1F2A24;
   --color-text-muted: #6B7C73;
   --color-border: #ececec;
@@ -121,46 +121,8 @@ p {
   color: var(--color-text-muted);
 }
 
-/* ─── Glass Morphism Utilities ──────────────────────────────── */
+/* ─── Utilities ─────────────────────────────────────────────── */
 @layer utilities {
-  .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-  }
-
-  .dark .glass {
-    background: rgba(13, 27, 42, 0.7);
-    border: 1px solid rgba(30, 52, 72, 0.6);
-  }
-
-  .glass-surface {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(208, 221, 230, 0.5);
-  }
-
-  .dark .glass-surface {
-    background: rgba(13, 27, 42, 0.85);
-    border: 1px solid rgba(30, 52, 72, 0.5);
-  }
-
-  .gradient-text {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .gradient-text-warm {
-    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-warm));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
   /* Primary button — soft shadow, subtle top highlight, no glow */
   .btn-primary {
     background: linear-gradient(180deg, #1ab09f 0%, #139485 100%);
@@ -183,24 +145,6 @@ p {
   .btn-primary:active {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) inset;
     transform: translateY(0);
-    filter: brightness(0.97);
-  }
-
-  /* Primary button small — minimal shadow for compact contexts (tooltips, chips) */
-  .btn-primary-sm {
-    background: linear-gradient(180deg, #1ab09f 0%, #139485 100%);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.14);
-    transition: all 0.15s ease;
-  }
-
-  .btn-primary-sm:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .btn-primary-sm:active {
-    box-shadow: none;
     filter: brightness(0.97);
   }
 
@@ -233,76 +177,9 @@ p {
     filter: brightness(0.97);
   }
 
-  /* Legacy 3D — kept for consultant contact anchor links in onboarding */
-  .btn-3d {
-    background: linear-gradient(180deg, #1ab09f 0%, #139485 100%);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.14);
-    transition: all 0.15s ease;
-  }
-
-  .btn-3d:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .btn-3d:active {
-    box-shadow: none;
-    filter: brightness(0.97);
-  }
-
-  /* Legacy secondary — kept for raw anchor elements */
-  .btn-3d-secondary {
-    background: #FFFFFF;
-    border: 1.5px solid #E6E6E6;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: all 0.15s ease;
-  }
-
-  .btn-3d-secondary:hover {
-    background: #F2F2F2;
-    border-color: #D4D4D4;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-  }
-
-  .btn-3d-secondary:active {
-    background: #EBEBEB;
-    box-shadow: none;
-  }
-}
-
-/* ─── Animated Gradient Background ─────────────────────────── */
-.gradient-mesh {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(10, 79, 110, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(0, 201, 167, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 60% 80%, rgba(26, 127, 168, 0.1) 0%, transparent 60%),
-    var(--color-bg);
-  background-size: 200% 200%;
-  animation: meshShift 12s ease-in-out infinite;
-}
-
-.dark .gradient-mesh {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(26, 127, 168, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(0, 201, 167, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 60% 80%, rgba(10, 79, 110, 0.15) 0%, transparent 60%),
-    var(--color-bg);
-}
-
-@keyframes meshShift {
-
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  33% {
-    background-position: 50% 0%;
-  }
-
-  66% {
-    background-position: 100% 50%;
+  /* Brand gradient — used for banners, headers, and icon accents */
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #F2FFF9 0%, #C7EAE2 14%, #A6DAD2 30%, #BBD7F4 57%, #D2DADA 77%, #F4DEB4 100%);
   }
 }
 

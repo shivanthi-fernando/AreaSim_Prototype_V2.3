@@ -18,9 +18,8 @@ export function PotentialScoreWidget({
   return (
     <div className={cn("shrink-0", className)}>
       <div
-        className="relative flex items-center gap-3 px-4 py-2 rounded-xl overflow-hidden"
+        className="relative flex items-center gap-3 px-4 py-2 rounded-xl overflow-hidden bg-brand-gradient"
         style={{
-          background: "linear-gradient(155deg, #F2FFF9 0%, #C7EAE2 13.92%, #A6DAD2 29.81%, #BBD7F4 56.73%, #D2DADA 77.4%, #F4DEB4 100%)",
           border: "1px solid #B2DFDE",
           boxShadow: "0 4px 14px rgba(31,167,160,0.35), 0 1px 3px rgba(0,0,0,0.15)",
         }}
