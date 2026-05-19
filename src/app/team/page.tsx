@@ -239,7 +239,7 @@ export default function TeamPage() {
 
   return (
     <AppLayout>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div className="px-6 py-8 max-w-7xl mx-auto space-y-6">
         {/* Page header */}
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -257,11 +257,11 @@ export default function TeamPage() {
 
         {/* Filters + search */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex gap-1 p-1 bg-surface rounded-xl border border-border">
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: "#E0F2F2" }}>
             {(["all", "active", "pending"] as const).map(t => (
               <button key={t} onClick={() => setActiveTab(t)}
-                className={cn("px-3 py-1.5 rounded-lg text-xs font-semibold font-body transition-all",
-                  activeTab === t ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text")}>
+                className={cn("px-4 py-1.5 rounded-lg text-xs font-semibold transition-all",
+                  activeTab === t ? "bg-white shadow-sm text-primary border border-border" : "text-text-muted hover:text-text")}>
                 {t.charAt(0).toUpperCase() + t.slice(1)}
                 <span className="ml-1.5 opacity-60 text-[10px]">
                   {t === "all" ? members.length : members.filter(m => m.status === t).length}
@@ -269,7 +269,7 @@ export default function TeamPage() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 flex-1 sm:max-w-64 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15 transition-all">
+          <div className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 flex-1 sm:max-w-64 transition-all">
             <Search size={14} className="text-text-muted shrink-0" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search members…"

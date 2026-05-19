@@ -72,11 +72,10 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
               <button
                 key={t}
                 onClick={() => setType(t)}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  type === t
-                    ? "bg-white shadow-sm text-primary border border-border"
-                    : "text-text-muted hover:text-text"
-                }`}
+                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${type === t
+                  ? "bg-white shadow-sm text-primary border border-border"
+                  : "text-text-muted hover:text-text"
+                  }`}
               >
                 {t === "room" ? "This is a room" : "This is a zone"}
               </button>
@@ -115,7 +114,7 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
             <select
               value={formData.category}
               onChange={(e) => handleChange("category", e.target.value)}
-              className="w-full h-9 rounded-xl border border-[#D1D1D1] bg-white px-4 text-xs text-[#222B27] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all appearance-none"
+              className="w-full h-9 rounded-xl border border-[#969696] bg-white px-4 text-xs text-[#222B27] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all appearance-none"
             >
               <option>Meeting Room</option>
               <option>Open Office</option>

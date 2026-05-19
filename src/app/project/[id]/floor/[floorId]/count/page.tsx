@@ -1253,24 +1253,28 @@ export default function FloorCountPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-8">
                 {/* Date range + round indicator */}
-                <div className="flex items-end gap-6 py-2">
-                  <div style={{ width: "160px" }}>
-                    <Input
-                      label="Start date"
-                      type="date"
-                      fieldSize="sm"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
+                <div className="flex items-center gap-6 py-2">
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-semibold text-[#222B27] whitespace-nowrap">Start date</label>
+                    <div style={{ width: "140px" }}>
+                      <Input
+                        type="date"
+                        fieldSize="sm"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div style={{ width: "160px" }}>
-                    <Input
-                      label="End date"
-                      type="date"
-                      fieldSize="sm"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                    />
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-semibold text-[#222B27] whitespace-nowrap">End date</label>
+                    <div style={{ width: "140px" }}>
+                      <Input
+                        type="date"
+                        fieldSize="sm"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <div className="ml-auto pb-0.5">
                     <p className="text-sm font-bold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
@@ -1317,7 +1321,7 @@ export default function FloorCountPage() {
                 <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
                   <table className="w-full text-left border-collapse">
                     <thead className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                      <tr className="text-[11px] font-bold text-text-muted">
+                      <tr className="text-[11px] font-bold text-text">
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Room</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Category</th>
                         <th className="px-4 py-3 border-r border-[#E2E8F0]">Square Meters</th>
@@ -1364,7 +1368,7 @@ export default function FloorCountPage() {
                             </td>
 
                             {/* Category */}
-                            <td className="px-4 py-4 text-sm text-text-muted border-r border-[#F1F5F9]">
+                            <td className="px-4 py-4 text-sm text-text border-r border-[#F1F5F9]">
                               {editingRowId === room.id ? (
                                 <select
                                   value={editRowData.category}
@@ -1386,10 +1390,10 @@ export default function FloorCountPage() {
                                 <input
                                   value={editRowData.sqm}
                                   onChange={(e) => setEditRowData((p) => ({ ...p, sqm: e.target.value.replace(/\D/g, "") }))}
-                                  className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-primary focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                                  className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
                                 />
                               ) : (
-                                <span className="font-bold text-primary">{formatNumber(room.sqm || 25)} m²</span>
+                                <span className="font-bold text-text">{formatNumber(room.sqm || 25)} m²</span>
                               )}
                             </td>
 
@@ -1399,10 +1403,10 @@ export default function FloorCountPage() {
                                 <input
                                   value={editRowData.seats}
                                   onChange={(e) => setEditRowData((p) => ({ ...p, seats: e.target.value.replace(/\D/g, "") }))}
-                                  className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-primary focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                                  className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
                                 />
                               ) : (
-                                <span className="font-bold text-primary tabular-nums">{roomSeats[room.id] || 0}</span>
+                                <span className="font-bold text-text tabular-nums">{roomSeats[room.id] || 0}</span>
                               )}
                             </td>
 
@@ -1425,10 +1429,10 @@ export default function FloorCountPage() {
                                   <div className="w-5 h-5 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
                                     <User size={9} className="text-amber-700" />
                                   </div>
-                                  <span className="text-xs text-text-muted">{meta.lockedBy}</span>
+                                  <span className="text-xs text-text">{meta.lockedBy}</span>
                                 </div>
                               ) : (
-                                <span className="text-xs text-text-muted">—</span>
+                                <span className="text-xs text-text">—</span>
                               )}
                             </td>
 
@@ -1441,7 +1445,7 @@ export default function FloorCountPage() {
                                 </div>
                               ) : meta.status === "counted" ? (
                                 <div className="flex items-center justify-between px-2">
-                                  <span className="text-lg font-900 text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
+                                  <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                                     {count ?? 0}
                                   </span>
                                   <button
@@ -1453,7 +1457,7 @@ export default function FloorCountPage() {
                                 </div>
                               ) : count !== undefined ? (
                                 <div className="flex items-center justify-between px-2">
-                                  <span className="text-lg font-900 text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
+                                  <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                                     {count}
                                   </span>
                                   <button

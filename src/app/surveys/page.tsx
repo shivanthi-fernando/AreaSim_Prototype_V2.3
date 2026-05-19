@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Filter, Eye, Plus } from "lucide-react";
+import { Filter, Eye, Plus, ChevronDown } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
 import { mockSurveyRecords } from "@/lib/mockData";
@@ -58,15 +58,15 @@ export default function SurveysPage() {
         {/* Filter bar */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Status tabs */}
-          <div className="flex items-center gap-1 bg-surface-2 rounded-xl p-1">
+          <div className="flex items-center gap-1 rounded-xl p-1" style={{ background: "#E0F2F2" }}>
             {FILTER_TABS.map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => setFilter(id)}
                 className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-semibold font-body transition-all",
+                  "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all",
                   filter === id
-                    ? "bg-surface text-text shadow-sm"
+                    ? "bg-white shadow-sm text-primary border border-border"
                     : "text-text-muted hover:text-text"
                 )}
               >
@@ -77,17 +77,20 @@ export default function SurveysPage() {
 
           {/* Project dropdown */}
           <div className="flex items-center gap-1.5">
-            <Filter size={14} className="text-text-muted" />
-            <select
-              value={projectFilter}
-              onChange={(e) => setProjectFilter(e.target.value)}
-              className="text-xs font-body text-text bg-surface border border-border rounded-lg px-2 py-1.5 focus:outline-none focus:border-primary cursor-pointer"
-            >
-              <option value="all">All projects</option>
-              {projects.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
+            <Filter size={14} className="text-text-muted hidden" />
+            <div className="relative min-w-[140px]">
+              <select
+                value={projectFilter}
+                onChange={(e) => setProjectFilter(e.target.value)}
+                className="w-full appearance-none rounded-xl border border-[#969696] bg-white text-[#222B27] transition-all duration-200 pr-10 cursor-pointer hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] h-9 text-xs px-4"
+              >
+                <option value="all">All projects</option>
+                {projects.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+              <ChevronDown size={13} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#98A1B2] pointer-events-none" />
+            </div>
           </div>
         </div>
 
