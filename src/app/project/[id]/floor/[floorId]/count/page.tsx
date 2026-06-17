@@ -1198,7 +1198,7 @@ export default function FloorCountPage() {
                   size="sm"
                   onClick={handleStartSession}
                   className="gap-2 h-9 px-5"
-                  icon={<Play size={14} fill="currentColor" />}
+                  icon={<Play size={14} />}
                 >
                   Start counting session
                 </Button>
@@ -1470,7 +1470,7 @@ export default function FloorCountPage() {
                                 disabled={!isRecording}
                                 onClick={() => handleStartCounting(room.id)}
                                 className="w-auto px-4"
-                                icon={<Play size={13} fill="currentColor" />}
+                                icon={<Play size={13} />}
                               >
                                 Start counting
                               </Button>
@@ -1801,7 +1801,6 @@ export default function FloorCountPage() {
                   <Button
                     size="md"
                     className="flex-1"
-                    icon={<Play size={15} fill="currentColor" />}
                     onClick={() => { setStartModalDismissed(true); handleStartSession(); }}
                   >
                     Start counting session
