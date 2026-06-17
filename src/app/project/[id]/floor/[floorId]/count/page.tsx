@@ -1686,7 +1686,7 @@ export default function FloorCountPage() {
                       className="text-sm font-bold text-text"
                       style={{ fontFamily: "var(--font-manrope)" }}
                     >
-                      Room history
+                      Counting history
                     </h4>
                     <button
                       className="text-xs font-semibold text-primary"
@@ -2006,13 +2006,15 @@ export default function FloorCountPage() {
                 <div className="flex gap-3">
                   <Button
                     variant="secondary"
-                    className="flex-1 h-12 rounded-xl"
+                    size="md"
+                    className="flex-1"
                     onClick={() => setShowQuestionsModal(false)}
                   >
                     Cancel
                   </Button>
                   <Button
-                    className="flex-1 h-12 rounded-xl shadow-lg shadow-primary/20"
+                    size="md"
+                    className="flex-1"
                     onClick={() => {
                       alert("Your questions have been sent to our consultants.");
                       setShowQuestionsModal(false);
