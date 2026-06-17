@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useAppI18n } from "@/hooks/use-app-i18n";
-import { X, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart, Check } from "lucide-react";
+import { X, Mail, ArrowLeft, ArrowRight, Upload, FileText, Building2, ShoppingCart, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
@@ -70,7 +70,7 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
         <div className="px-6 py-5 space-y-5 max-h-[75vh] overflow-y-auto">
           {/* Action points */}
           <div className="space-y-3">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">Your options</p>
+            <p className="text-[10px] font-bold text-text-muted tracking-widest font-body mb-3 px-1">Your options</p>
             <div className="flex items-start gap-4 p-4 rounded-2xl border border-border bg-surface-2/50">
               <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <Building2 size={16} className="text-primary" />
@@ -98,7 +98,7 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
 
           {/* Consultant contacts — 2 separate cards */}
           <div className="space-y-3">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-3 px-1">About our experts</p>
+            <p className="text-[10px] font-bold text-text-muted tracking-widest font-body mb-3 px-1">About our experts</p>
             {CONSULTANTS.map((c) => (
               <div key={c.name} className="p-4 rounded-2xl border border-border bg-surface-2/50">
                 <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
@@ -856,7 +856,7 @@ function OnboardingStepIndicator({ steps, currentStep, onStepClick }: {
 
 
 // ─── Market averages (Norway commercial office benchmarks) ───────────────────
-const MKT_SPACE = 13;    // m² per person
+const MKT_SPACE = 22.5;    // m² per person (midpoint of 20-25)
 const MKT_COST  = 60000; // NOK per person per year
 
 function barColor(value: number, marketAvg: number): string {
@@ -864,6 +864,12 @@ function barColor(value: number, marketAvg: number): string {
   if (ratio > 1.1)  return "#E46A6A"; // red — above market avg
   if (ratio < 0.9)  return "#4FBF9F"; // green — below market avg
   return "#F4C66E";                    // yellow — at market avg
+}
+
+function getSpaceColor(value: number): string {
+  if (value < 20) return "#4FBF9F"; // green
+  if (value > 25) return "#E46A6A"; // red
+  return "#F4C66E";                 // yellow
 }
 
 const STATUS_INDICATORS = [
@@ -879,13 +885,14 @@ function fmtNOK(n: number) {
 }
 
 // ─── Single bar chart with x/y axes ─────────────────────────────────────────
-function BarChart({ label, value, marketAvg, formatValue }: {
+function BarChart({ label, value, marketAvg, formatValue, customColor }: {
   label: string;
   value: number;
   marketAvg: number;
   formatValue: (n: number) => string;
+  customColor?: string;
 }) {
-  const color = barColor(value, marketAvg);
+  const color = customColor || barColor(value, marketAvg);
   const maxVal = Math.max(value * 1.3, marketAvg * 1.5);
   const barPct = maxVal > 0 ? Math.min(100, Math.max(4, (value / maxVal) * 100)) : 4;
   const midVal = maxVal / 2;
@@ -961,10 +968,10 @@ function useLeaseMetrics() {
   const hcDisplay      = Math.round(effectiveHC * 10) / 10;
   const spacePerPerson = effectiveHC > 0 ? totalArea / effectiveHC : 0;
   const costPerPerson  = effectiveHC > 0 ? (annualRent + commonAreaCost) / effectiveHC : 0;
-  const spaceColor     = barColor(spacePerPerson, MKT_SPACE);
+  const spaceColor     = getSpaceColor(spacePerPerson);
   const costColor      = barColor(costPerPerson,  MKT_COST);
   const hasPotential   = spaceColor === "#E46A6A" || costColor === "#E46A6A";
-  return { employees, consultants, showCon, consultantFTE, hcDisplay, spacePerPerson, costPerPerson, hasPotential };
+  return { employees, consultants, showCon, consultantFTE, hcDisplay, spacePerPerson, costPerPerson, hasPotential, spaceColor, costColor };
 }
 
 // ─── Headcount card ───────────────────────────────────────────────────────────
@@ -1009,14 +1016,14 @@ function HeadcountCard() {
 
 // ─── Efficiency charts + opportunity card ─────────────────────────────────────
 function EfficiencyCard() {
-  const { spacePerPerson, costPerPerson, hasPotential } = useLeaseMetrics();
+  const { spacePerPerson, costPerPerson, hasPotential, spaceColor, costColor } = useLeaseMetrics();
 
   return (
     <div className="flex-1 rounded-[14px] border border-border bg-[#FDFBF7] p-5 flex flex-col">
       <p className="text-sm font-medium text-text font-body mb-4">Efficiency charts</p>
       <div className="flex-1 flex flex-col gap-6">
-        <BarChart label="Space efficiency · m² per person" value={spacePerPerson} marketAvg={MKT_SPACE} formatValue={(n) => `${n.toFixed(1)} m²`} />
-        <BarChart label="Cost per employee · NOK / year"   value={costPerPerson}  marketAvg={MKT_COST}  formatValue={(n) => fmtNOK(n) + " NOK"} />
+        <BarChart label="Space efficiency · m² per person" value={spacePerPerson} marketAvg={MKT_SPACE} formatValue={(n) => `${n.toFixed(1)} m²`} customColor={spaceColor} />
+        <BarChart label="Cost per employee · NOK / year"   value={costPerPerson}  marketAvg={MKT_COST}  formatValue={(n) => fmtNOK(n) + " NOK"} customColor={costColor} />
       </div>
       <div className="mt-6 rounded-[10px] border p-4 shrink-0"
         style={hasPotential ? { background: "#F9F6EF", borderColor: "#F6DFA0" } : { background: "#EAF5EE", borderColor: "#C4E3D2" }}>
@@ -1085,7 +1092,7 @@ export default function OnboardingPage() {
 
                 {/* Section 1: Header */}
                 <div className="px-8 py-6 border-b border-border">
-                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)" }}>Step 2 of 3</p>
+                  <p className="text-[10px] font-bold tracking-[.1em] mb-1" style={{ color: "var(--color-primary)" }}>Step 2 of 3</p>
                   <h2 className="text-2xl mb-0.5" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Lease parameters</h2>
                   <p className="text-sm text-text-muted leading-relaxed">Type your figures — the preview updates live.</p>
                 </div>
@@ -1100,16 +1107,40 @@ export default function OnboardingPage() {
                         <Step3Lease onNext={nextStep} />
                       </div>
 
-                      <label className="flex flex-col items-center justify-center gap-4 py-10 rounded-[14px] border-2 border-dashed border-primary/30 bg-[#FDFBF7] hover:bg-[#FAF3E9] hover:border-primary/50 transition-all cursor-pointer group">
-                        <div className="w-12 h-12 rounded-full border border-[#FAF3E9] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#FAF3E9" }}>
-                          <Upload size={22} className="text-accent" />
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-start gap-3 p-4 rounded-xl border border-primary/20 bg-[#EAF5EE]">
+                          <Info size={18} className="text-primary shrink-0 mt-0.5" />
+                          <p className="text-sm font-medium text-[#1F5C3C] leading-relaxed">
+                            We need your lease agreement to accurately estimate your space efficiency and calculate potential savings. <span className="font-bold">This is confidential, we don&apos;t share this anywhere else.</span>
+                          </p>
                         </div>
-                        <div className="text-center">
-                          <p className="text-sm font-semibold text-text">Add lease contract and additional agreements (e.g. parking, storage)</p>
-                          <p className="text-xs text-text-muted mt-1 font-body">PDF · multiple files supported</p>
+                        
+                        <div className="flex flex-col gap-4">
+                          {/* Option 1 */}
+                          <label className="flex flex-col items-center justify-center gap-3 py-6 rounded-xl border-2 border-dashed border-primary/30 bg-white hover:bg-[#FAF3E9] hover:border-primary/50 transition-all cursor-pointer group w-full">
+                            <div className="w-10 h-10 rounded-full border border-[#FAF3E9] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#FAF3E9" }}>
+                              <Upload size={18} className="text-accent" />
+                            </div>
+                            <div className="text-center px-4">
+                              <p className="text-sm font-semibold text-text">Add lease agreement</p>
+                              <p className="text-[11px] text-text-muted mt-0.5 font-body">(mandatory)</p>
+                            </div>
+                            <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
+                          </label>
+
+                          {/* Option 2 */}
+                          <label className="flex flex-col items-center justify-center gap-3 py-6 rounded-xl border-2 border-dashed border-primary/30 bg-white hover:bg-[#FAF3E9] hover:border-primary/50 transition-all cursor-pointer group w-full">
+                            <div className="w-10 h-10 rounded-full border border-[#FAF3E9] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: "#FAF3E9" }}>
+                              <Upload size={18} className="text-accent" />
+                            </div>
+                            <div className="text-center px-4">
+                              <p className="text-sm font-semibold text-text">Last rent invoice</p>
+                              <p className="text-[11px] text-text-muted mt-0.5 font-body">PDF · multiple files supported</p>
+                            </div>
+                            <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
+                          </label>
                         </div>
-                        <input type="file" className="hidden" accept=".pdf" multiple onChange={(e) => { const files = Array.from(e.target.files ?? []); if (files.length) setUploadedFiles((prev) => [...prev, ...files]); e.target.value = ""; }} />
-                      </label>
+                      </div>
                       {uploadedFiles.length > 0 && (
                         <div className="space-y-1.5">
                           {uploadedFiles.map((file, idx) => (
@@ -1164,7 +1195,7 @@ export default function OnboardingPage() {
             <div className="flex flex-col overflow-y-auto" style={{ background: "var(--color-bg)" }}>
               <div className="flex flex-col w-full max-w-[540px] mx-auto px-8 py-10 gap-8 min-h-full">
                 <div className="rounded-[18px] border border-border bg-surface shadow-card flex-1" style={{ padding: "34px 36px" }}>
-                  <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1.5" style={{ color: "var(--color-primary)" }}>Step 1 of 3</p>
+                  <p className="text-[10px] font-bold tracking-[.1em] mb-1.5" style={{ color: "var(--color-primary)" }}>Step 1 of 3</p>
                   <h2 className="text-2xl mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Create your first project</h2>
                   <p className="text-sm text-text-muted mb-7 leading-relaxed">Tell us about your building and location.</p>
                   <Step1Project onNext={nextStep} />
@@ -1180,7 +1211,7 @@ export default function OnboardingPage() {
               <div className="rounded-[18px] border border-border bg-surface shadow-card" style={{ padding: "34px 36px" }}>
                 <div className="flex items-start justify-between gap-4 mb-1">
                   <div>
-                    <p className="text-[10px] font-bold tracking-[.1em] uppercase mb-1" style={{ color: "var(--color-primary)" }}>Step 3 of 3</p>
+                    <p className="text-[10px] font-bold tracking-[.1em] mb-1" style={{ color: "var(--color-primary)" }}>Step 3 of 3</p>
                     <h2 className="text-2xl" style={{ fontFamily: "var(--font-manrope)", fontWeight: 500, letterSpacing: "-.02em" }}>Add floor plans</h2>
                   </div>
                   <button type="button" onClick={() => setShowConsultantModal(true)} className="shrink-0 text-sm font-medium text-text-muted hover:text-primary underline underline-offset-2 transition-colors font-body mt-1">

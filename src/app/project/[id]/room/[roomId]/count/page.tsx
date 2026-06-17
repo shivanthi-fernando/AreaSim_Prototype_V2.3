@@ -873,7 +873,7 @@ function CountScreen({
           </div>
           <div className="grid grid-cols-4 px-5 py-2.5 bg-[#F7F9FC]">
             {["Count", "By", "Date", "Time"].map((h) => (
-              <span key={h} className="text-[11px] font-semibold text-[#8CA3B0] uppercase tracking-wider">{h}</span>
+              <span key={h} className="text-[11px] font-semibold text-[#8CA3B0] tracking-wider">{h}</span>
             ))}
           </div>
           {history.slice(0, 8).map((entry, i) => (

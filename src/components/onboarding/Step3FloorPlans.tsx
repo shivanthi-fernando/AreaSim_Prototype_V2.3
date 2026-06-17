@@ -416,7 +416,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
                 {/* ── Your options ── */}
                 <div className="space-y-3">
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">Your options</p>
+                  <p className="text-[10px] font-bold text-text-muted tracking-widest font-body px-1">Your options</p>
 
                   {/* Get from landlord */}
                   <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-surface hover:border-primary/30 hover:bg-primary/[0.02] transition-all cursor-default">
@@ -450,7 +450,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
                 {/* ── Contact us ── */}
                 <div className="space-y-3">
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">Contact us</p>
+                  <p className="text-[10px] font-bold text-text-muted tracking-widest font-body px-1">Contact us</p>
                   <div className="flex items-start gap-4 p-4 rounded-2xl border border-border bg-surface">
                     <div className="w-10 h-10 rounded-2xl bg-[#0A4F6E]/10 flex items-center justify-center shrink-0">
                       <Mail size={18} className="text-[#0A4F6E]" />
@@ -473,7 +473,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
 
                 {/* ── About our experts ── */}
                 <div className="space-y-3">
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body px-1">
+                  <p className="text-[10px] font-bold text-text-muted tracking-widest font-body px-1">
                     About our experts
                   </p>
                   <ConsultantCards />

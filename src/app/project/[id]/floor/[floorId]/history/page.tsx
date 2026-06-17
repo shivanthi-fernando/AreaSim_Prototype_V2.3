@@ -30,7 +30,12 @@ import {
   Legend,
 } from "recharts";
 import { useCanvasStore } from "@/store/canvas";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/Table";
+import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
+import { mockProject } from "@/lib/mockData";
 import { cn, formatNumber } from "@/lib/utils";
+
+const MotionTableRow = motion.create(TableRow);
 
 // ── Palette ──────────────────────────────────────────────────────────────────
 const C = {
@@ -144,9 +149,9 @@ export default function RoomHistoryPage() {
     <div className="h-screen bg-bg flex flex-col font-body overflow-hidden">
 
       {/* ── Header ── */}
-      <header className="bg-white border-b border-[#E2E8F0] px-6 py-4 shrink-0">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
+      <header className="bg-white px-3 py-2 shrink-0">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/count#session-details`)}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
@@ -154,11 +159,21 @@ export default function RoomHistoryPage() {
               <ArrowLeft size={14} /> Back to counting
             </button>
             <div className="w-px h-6 bg-[#E2E8F0]" />
-            <div className="flex flex-col">
-              <span className="text-[10px] text-text-muted font-bold tracking-wider uppercase mb-0.5">Analytics</span>
-              <h1 className="text-xl text-text leading-none" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                Counting history
-              </h1>
+            <span className="hidden sm:block text-sm font-semibold text-text font-body truncate max-w-[200px]">
+              {mockProject.name}
+            </span>
+            <div className="w-px h-6 bg-[#E2E8F0] hidden sm:block" />
+            <div className="relative min-w-[148px]">
+              <select
+                value={floorId}
+                onChange={(e) => router.push(`/project/${projectId}/floor/${e.target.value}/history`)}
+                className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-9 py-1.5 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
+              >
+                {floors.map((f) => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
+                ))}
+              </select>
+              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
             </div>
           </div>
 
@@ -170,7 +185,7 @@ export default function RoomHistoryPage() {
             >
               <LayoutGrid size={16} className="text-primary" />
               <div className="flex-1 text-left">
-                <p className="text-[10px] text-text-muted font-bold uppercase leading-none mb-1">Selected room</p>
+                <p className="text-[10px] text-text-muted font-bold leading-none mb-1">Selected room</p>
                 <p className="text-sm font-bold text-text leading-none">{selectedRoom?.name || "Select room"}</p>
               </div>
               <ChevronDown size={14} className={cn("text-text-muted transition-transform", isDropdownOpen && "rotate-180")} />
@@ -194,6 +209,9 @@ export default function RoomHistoryPage() {
           </div>
         </div>
       </header>
+
+      {/* ── Workplace Journey Bar ── */}
+      <WorkplaceJourneyBar activeStep="1-2" />
 
       <main className="flex-1 overflow-y-auto p-6">
         <div className="max-w-[1400px] mx-auto space-y-6">
@@ -319,48 +337,43 @@ export default function RoomHistoryPage() {
           </div>
 
           {/* ── Session records table ── */}
-          <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-[#F1F5F9] bg-bg/50">
-              <h3 className="text-lg font-bold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>Session records</h3>
-            </div>
+          <section className="flex flex-col gap-3">
+            <h3 className="text-lg font-bold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>Session records</h3>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-bg border-b border-[#E2E8F0]">
-                  <tr className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                    <th className="px-6 py-4">Date</th>
-                    <th className="px-6 py-4">Time</th>
-                    <th className="px-6 py-4">Round</th>
-                    <th className="px-6 py-4">No. of seats</th>
-                    <th className="px-6 py-4">Count</th>
-                    <th className="px-6 py-4 text-right">Conducted by</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#F1F5F9]">
+            {historyData.length === 0 ? (
+              <div className="rounded-2xl border border-border bg-surface py-20 text-center">
+                <p className="text-sm text-text-muted">No history records found for this room.</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Time</TableHead>
+                    <TableHead>Round</TableHead>
+                    <TableHead>No. of seats</TableHead>
+                    <TableHead>Count</TableHead>
+                    <TableHead className="text-right">Conducted by</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {historyData.map((row, idx) => (
-                    <motion.tr
+                    <MotionTableRow
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       key={idx}
-                      className="hover:bg-bg transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.date}</td>
-                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.time}</td>
-                      <td className="px-6 py-4 text-sm text-text-muted font-body">{row.round}</td>
-                      <td className="px-6 py-4 text-sm text-text-muted font-body">12</td>
-                      <td className="px-6 py-4 text-sm text-text-muted font-body">{formatNumber(row.count)}</td>
-                      <td className="px-6 py-4 text-sm text-text-muted font-body text-right">{row.by}</td>
-                    </motion.tr>
+                      <TableCell className="font-semibold text-text">{row.date}</TableCell>
+                      <TableCell>{row.time}</TableCell>
+                      <TableCell>{row.round}</TableCell>
+                      <TableCell>12</TableCell>
+                      <TableCell className="tabular-nums">{formatNumber(row.count)}</TableCell>
+                      <TableCell className="text-right">{row.by}</TableCell>
+                    </MotionTableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-
-            {historyData.length === 0 && (
-              <div className="py-20 text-center">
-                <p className="text-sm text-text-muted">No history records found for this room.</p>
-              </div>
+                </TableBody>
+              </Table>
             )}
           </section>
 
@@ -368,7 +381,7 @@ export default function RoomHistoryPage() {
       </main>
 
       <footer className="bg-white border-t border-[#E2E8F0] px-6 py-4 shrink-0">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between text-[11px] text-[#8CA3B0] font-bold tracking-wider uppercase">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between text-[11px] text-[#8CA3B0] font-bold tracking-wider">
           <span>Areasim analytics engine</span>
           <span>Export CSV • Export PDF</span>
         </div>

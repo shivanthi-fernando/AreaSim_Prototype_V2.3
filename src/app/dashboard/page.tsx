@@ -257,7 +257,7 @@ export default function DashboardPage() {
         {showInviteModal && <InviteModal onClose={() => setShowInviteModal(false)} />}
       </AnimatePresence>
 
-      <div className="px-6 py-8 max-w-7xl mx-auto space-y-8">
+      <div className="px-2 py-2 max-w-7xl mx-auto space-y-8">
         {/* ── Welcome Banner ── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -273,7 +273,7 @@ export default function DashboardPage() {
               <p className="text-[#4A6650]/80 text-sm font-body mt-2 max-w-md">
                 You have {mockProjects.filter((p) => p.status === "active").length} project(s) in setup — pick up where you left off.
               </p>
-              <Button onClick={() => router.push("/project")} className="mt-2">
+              <Button onClick={() => router.push("/project")} className="mt-4">
                 View all projects
               </Button>
             </div>

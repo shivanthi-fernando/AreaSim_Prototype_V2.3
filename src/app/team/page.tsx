@@ -8,8 +8,11 @@ import {
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/Table";
 import { mockTeamMembers } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+
+const MotionTableRow = motion.create(TableRow);
 
 type Role = "Admin" | "Analyst" | "Observer";
 type Status = "active" | "pending";
@@ -169,57 +172,70 @@ function MemberRow({ member, onRemove, index }: { member: Member; onRemove: () =
   const [menuOpen, setMenuOpen] = useState(false);
   const cfg = ROLE_CONFIG[member.role];
   return (
-    <motion.div
+    <MotionTableRow
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-4 px-5 py-3.5 hover:bg-surface-2 transition-colors group"
+      transition={{ delay: index * 0.04 }}
+      className="group"
     >
-      {/* Avatar */}
-      <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0", PASTEL_AVATAR_COLORS[index % 4])}>
-        {member.avatar}
-      </div>
-      {/* Name + email */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-text truncate">{member.name}</p>
-        <p className="text-xs text-text-muted truncate">{member.email}</p>
-      </div>
+      {/* Member: avatar + name + email */}
+      <TableCell>
+        <div className="flex items-center gap-3 min-w-0">
+          <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0", PASTEL_AVATAR_COLORS[index % 4])}>
+            {member.avatar}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-text font-body truncate">{member.name}</p>
+            <p className="text-xs text-text-muted font-body truncate">{member.email}</p>
+          </div>
+        </div>
+      </TableCell>
+
       {/* Role badge */}
-      <span className={cn("hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold font-body", cfg.color)}>
-        {cfg.icon} {member.role}
-      </span>
+      <TableCell className="hidden sm:table-cell">
+        <span className={cn("inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold font-body", cfg.color)}>
+          {cfg.icon} {member.role}
+        </span>
+      </TableCell>
+
       {/* Status badge */}
-      <span className={cn("hidden md:inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold font-body",
-        member.status === "active" ? "bg-accent/10 text-accent" : "bg-amber-500/10 text-amber-600")}>
-        {member.status === "active" ? "Active" : "Pending"}
-      </span>
+      <TableCell className="hidden md:table-cell">
+        <span className={cn("inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold font-body",
+          member.status === "active" ? "bg-accent/10 text-accent" : "bg-amber-500/10 text-amber-600")}>
+          {member.status === "active" ? "Active" : "Pending"}
+        </span>
+      </TableCell>
+
       {/* Actions */}
-      <div className="relative">
-        <button onClick={() => setMenuOpen(!menuOpen)}
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-text-muted hover:bg-border transition-colors opacity-0 group-hover:opacity-100">
-          <MoreHorizontal size={15} />
-        </button>
-        <AnimatePresence>
-          {menuOpen && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92, y: -4 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.92 }}
-                className="absolute right-0 top-full mt-1 w-40 rounded-xl border border-border bg-surface shadow-lg z-50 py-1 overflow-hidden"
-              >
-                <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-text-muted hover:bg-surface-2 hover:text-text transition-colors font-body">
-                  <Pencil size={12} /> Edit role
-                </button>
-                <button onClick={() => { onRemove(); setMenuOpen(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors font-body">
-                  <Trash2 size={12} /> Remove
-                </button>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+      <TableCell className="text-right">
+        <div className="relative inline-block">
+          <button onClick={() => setMenuOpen(!menuOpen)}
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-text-muted hover:bg-border transition-colors opacity-0 group-hover:opacity-100">
+            <MoreHorizontal size={15} />
+          </button>
+          <AnimatePresence>
+            {menuOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  className="absolute right-0 top-full mt-1 w-40 rounded-xl border border-border bg-surface shadow-lg z-50 py-1 overflow-hidden text-left"
+                >
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-text-muted hover:bg-surface-2 hover:text-text transition-colors font-body">
+                    <Pencil size={12} /> Edit role
+                  </button>
+                  <button onClick={() => { onRemove(); setMenuOpen(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors font-body">
+                    <Trash2 size={12} /> Remove
+                  </button>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
+      </TableCell>
+    </MotionTableRow>
   );
 }
 
@@ -278,39 +294,36 @@ export default function TeamPage() {
         </div>
 
         {/* Members table */}
-        <div className="rounded-2xl border border-border bg-surface overflow-hidden">
-          {/* Table header */}
-          <div className="hidden sm:grid grid-cols-[1fr_1fr_120px_100px_40px] gap-4 px-5 py-2.5 bg-surface-2 border-b border-border text-[11px] font-semibold text-text-muted tracking-wider font-body">
-            <span>Member</span>
-            <span>Email</span>
-            <span>Role</span>
-            <span>Status</span>
-            <span />
+        {filtered.length === 0 ? (
+          <div className="rounded-2xl border border-border bg-surface py-16 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-surface-2 flex items-center justify-center mx-auto mb-3">
+              <Users size={20} className="text-text-muted" />
+            </div>
+            <p className="text-sm font-semibold text-text">No members found</p>
+            <p className="text-xs text-text-muted mt-1">Try adjusting your search or filters</p>
           </div>
-          {filtered.length === 0 ? (
-            <div className="py-16 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-surface-2 flex items-center justify-center mx-auto mb-3">
-                <Users size={20} className="text-text-muted" />
-              </div>
-              <p className="text-sm font-semibold text-text">No members found</p>
-              <p className="text-xs text-text-muted mt-1">Try adjusting your search or filters</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Member</TableHead>
+                <TableHead className="hidden sm:table-cell w-40">Role</TableHead>
+                <TableHead className="hidden md:table-cell w-28">Status</TableHead>
+                <TableHead className="w-12 text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map((member, i) => (
-                <motion.div key={member.id}
-                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}>
-                  <MemberRow
-                    member={member}
-                    onRemove={() => setMembers(prev => prev.filter(m => m.id !== member.id))}
-                    index={i}
-                  />
-                </motion.div>
+                <MemberRow
+                  key={member.id}
+                  member={member}
+                  onRemove={() => setMembers(prev => prev.filter(m => m.id !== member.id))}
+                  index={i}
+                />
               ))}
-            </div>
-          )}
-        </div>
+            </TableBody>
+          </Table>
+        )}
 
         {/* Info note */}
         <p className="text-xs text-text-muted font-body text-center">

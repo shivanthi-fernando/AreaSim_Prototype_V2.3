@@ -65,7 +65,7 @@ export default function SurveyDetailPage() {
           ].map((stat) => (
             <div key={stat.label} className="rounded-2xl border border-border bg-surface p-4 text-center">
               <p className="text-2xl font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{stat.value}</p>
-              <p className="text-xs text-text-muted font-body uppercase tracking-wider mt-1">{stat.label}</p>
+              <p className="text-xs text-text-muted font-body tracking-wider mt-1">{stat.label}</p>
             </div>
           ))}
         </div>

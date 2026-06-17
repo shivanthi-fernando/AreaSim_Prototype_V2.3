@@ -10,6 +10,12 @@ import {
   Card,
   Logo,
   EmptyState,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
 } from "@/components/ui";
 import { UserAvatar } from "@/components/ui/UserAvatar";
 import {
@@ -109,7 +115,7 @@ export default function StyleGuidePage() {
       <aside className="w-64 border-r border-border bg-surface p-8 sticky top-0 h-screen overflow-y-auto hidden lg:block">
         <div className="mb-12">
           <Logo size="sm" />
-          <p className="text-[10px] uppercase tracking-widest text-text-muted mt-2 font-semibold">Design System v1.0</p>
+          <p className="text-[10px] tracking-widest text-text-muted mt-2 font-semibold">Design System v1.0</p>
         </div>
 
         <nav className="space-y-0.5">
@@ -182,7 +188,7 @@ export default function StyleGuidePage() {
             </h3>
             <Card className="p-8 space-y-8">
               <div>
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4">Logos</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-4">Logos</p>
                 <div className="flex flex-wrap items-end gap-12">
                   <div className="space-y-2">
                     <Logo size="sm" />
@@ -200,7 +206,7 @@ export default function StyleGuidePage() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Primary Color Palette</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Primary Color Palette</p>
                 <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
                   <ColorBox hex="#e0f2f2" name="Primary 50" />
                   <ColorBox hex="#b2dfde" name="Primary 100" />
@@ -216,7 +222,7 @@ export default function StyleGuidePage() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Secondary Color Palette</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Secondary Color Palette</p>
                 <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
                   <ColorBox hex="#fbf6ee" name="Secondary 50" isMain />
                   <ColorBox hex="#f2e7db" name="Secondary 100" />
@@ -232,7 +238,7 @@ export default function StyleGuidePage() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Neutral Color Palette</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Neutral Color Palette</p>
                 <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
                   <ColorBox hex="#fafafa" name="Neutral 50" />
                   <ColorBox hex="#f5f5f5" name="Neutral 100" />
@@ -248,7 +254,7 @@ export default function StyleGuidePage() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">UX Illustration Palette</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">UX Illustration Palette</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-4">
                   <div className="space-y-4">
                     <p className="text-xs font-bold text-text-muted">Sage Green</p>
@@ -302,7 +308,7 @@ export default function StyleGuidePage() {
               </div>
 
               <div className="pt-8 border-t border-border">
-                <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Color Usage Reference</p>
+                <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Color Usage Reference</p>
                 <div className="space-y-12">
                   <div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
@@ -343,7 +349,7 @@ export default function StyleGuidePage() {
             <Card className="p-8">
               <div className="space-y-12">
                 <div>
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Font Families</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Font Families</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     <div className="space-y-4">
                       <div className="text-4xl font-bold font-manrope">Aa</div>
@@ -389,7 +395,7 @@ export default function StyleGuidePage() {
                 <div className="space-y-16">
                   {/* Variants Section */}
                   <div>
-                    <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Button Variants</p>
+                    <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Button Variants</p>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-y-12 gap-x-8">
                       {[
                         { id: 'primary', label: 'Primary' },
@@ -407,7 +413,7 @@ export default function StyleGuidePage() {
                           <Button variant={v.id as ButtonVariant} icon={v.icon}>
                             {v.label}
                           </Button>
-                          <p className="text-[10px] text-text-muted font-medium uppercase tracking-tighter">{v.id}</p>
+                          <p className="text-[10px] text-text-muted font-medium tracking-tighter">{v.id}</p>
                         </div>
                       ))}
                     </div>
@@ -415,7 +421,7 @@ export default function StyleGuidePage() {
 
                   {/* Sizes Section */}
                   <div className="pt-12 border-t border-border">
-                    <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Button Sizes</p>
+                    <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Button Sizes</p>
                     <div className="flex flex-wrap items-end gap-12">
                       <div className="space-y-4 text-center">
                         <Button size="sm" variant="primary">Small Button</Button>
@@ -434,7 +440,7 @@ export default function StyleGuidePage() {
 
                   {/* States Section */}
                   <div className="pt-12 border-t border-border">
-                    <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Interaction States</p>
+                    <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Interaction States</p>
                     <div className="flex flex-wrap items-center gap-6">
                       <div className="space-y-2 text-center">
                         <Button variant="primary">Default</Button>
@@ -469,7 +475,7 @@ export default function StyleGuidePage() {
 
                   {/* Icon Support Section */}
                   <div className="pt-12 border-t border-border">
-                    <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Icon Support</p>
+                    <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Icon Support</p>
                     <div className="flex flex-wrap items-center gap-8">
                       <Button variant="secondary" icon={<Plus size={16} />}>
                         Left Icon
@@ -487,16 +493,16 @@ export default function StyleGuidePage() {
 
                 {/* Link Buttons */}
                 <div className="pt-12 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Link Buttons</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-2">Link Buttons</p>
                   <p className="text-xs text-text-muted font-body mb-8">Use for inline navigation links. Always underlined, no icon, no arrow. Applied via <code className="text-[11px] bg-surface-2 px-1 rounded font-mono">underline</code> className on a native button or anchor.</p>
                   <div className="flex flex-wrap items-center gap-8">
                     <div className="space-y-2 flex flex-col items-start">
                       <button className="text-xs text-primary font-semibold font-body underline">View all</button>
-                      <p className="text-[10px] text-text-muted uppercase tracking-tighter">xs · Section link</p>
+                      <p className="text-[10px] text-text-muted tracking-tighter">xs · Section link</p>
                     </div>
                     <div className="space-y-2 flex flex-col items-start">
                       <button className="text-sm text-primary font-semibold font-body underline">Add another</button>
-                      <p className="text-[10px] text-text-muted uppercase tracking-tighter">sm · Form link</p>
+                      <p className="text-[10px] text-text-muted tracking-tighter">sm · Form link</p>
                     </div>
                   </div>
                 </div>
@@ -513,7 +519,7 @@ export default function StyleGuidePage() {
               {/* ─── Field Types ─────────────────────────────────────────────── */}
               <Card className="p-8 space-y-16">
                 <div>
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Field Types</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Field Types</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
 
                     {/* Text Input */}
@@ -557,7 +563,7 @@ export default function StyleGuidePage() {
 
                 {/* ─── Sizes ───────────────────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Field Sizes</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Field Sizes</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
                     <div className="space-y-3">
                       <Input fieldSize="sm" label="Small" placeholder="Small — h-9, text-xs" />
@@ -588,38 +594,38 @@ export default function StyleGuidePage() {
 
                 {/* ─── States ──────────────────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Interaction States</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Interaction States</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Default</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Default</p>
                       <Input placeholder="Default state" />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Hover (simulated)</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Hover (simulated)</p>
                       <Input placeholder="Hover state" className="border-[#999999] shadow-[0_2px_8px_rgba(0,0,0,0.05)]" />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Focus (simulated)</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Focus (simulated)</p>
                       <Input placeholder="Focus state" className="border-[#139485] ring-4 ring-[rgba(19,148,133,0.18)]" />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Disabled</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Disabled</p>
                       <Input placeholder="Disabled state" disabled />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Error</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Error</p>
                       <Input placeholder="Error state" error="This field is required" defaultValue="" />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Success</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Success</p>
                       <Input placeholder="Success state" success="Looks great!" defaultValue="valid@email.com" />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Loading</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Loading</p>
                       <Input placeholder="Loading…" loading />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Read-only</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Read-only</p>
                       <Input placeholder="" value="Read-only value" readOnly className="cursor-default" />
                     </div>
                   </div>
@@ -627,7 +633,7 @@ export default function StyleGuidePage() {
 
                 {/* ─── Dropdown / Select ────────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Dropdown / Select Field</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Dropdown / Select Field</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <SelectFieldDemo label="Default select" />
                     <SelectFieldDemo label="Error state" hasError />
@@ -642,13 +648,13 @@ export default function StyleGuidePage() {
 
                 {/* ─── Multi-select ─────────────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Multi-select / Token Field</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Multi-select / Token Field</p>
                   <MultiSelectDemo />
                 </div>
 
                 {/* ─── Labels & Helper Text ─────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-8">Labels & Helper Text</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Labels & Helper Text</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     <Input label="Required Field" required placeholder="Required — shows * indicator" />
                     <Input label="Optional Field" optionalLabel placeholder="Optional — shows 'Optional' label" />
@@ -661,10 +667,10 @@ export default function StyleGuidePage() {
 
                 {/* ─── Design Tokens ────────────────────────────────────────────── */}
                 <div className="pt-4 border-t border-border">
-                  <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-6">Design Tokens</p>
+                  <p className="text-sm font-semibold text-text-muted tracking-wider mb-6">Design Tokens</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Colors</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Colors</p>
                       <div className="space-y-2 text-xs font-mono">
                         {[
                           { label: "Default border",  value: "#B8B8B8" },
@@ -690,7 +696,7 @@ export default function StyleGuidePage() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Sizing & Spacing</p>
+                      <p className="text-[10px] font-bold text-text-muted tracking-wider">Sizing & Spacing</p>
                       <div className="space-y-2 text-xs font-mono">
                         {[
                           { label: "Border radius",    value: "9999px — pill / rounded-full" },
@@ -725,7 +731,7 @@ export default function StyleGuidePage() {
               <Card className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                   <div className="space-y-6">
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Checkboxes</p>
+                    <p className="text-[10px] font-bold text-text-muted tracking-widest">Checkboxes</p>
                     <div className="space-y-4">
                       <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="w-5 h-5 rounded border-2 border-border bg-surface group-hover:border-primary transition-colors flex items-center justify-center">
@@ -740,7 +746,7 @@ export default function StyleGuidePage() {
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Radio Buttons</p>
+                    <p className="text-[10px] font-bold text-text-muted tracking-widest">Radio Buttons</p>
                     <div className="space-y-4">
                       <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="w-5 h-5 rounded-full border-2 border-border bg-surface group-hover:border-primary transition-colors flex items-center justify-center">
@@ -755,7 +761,7 @@ export default function StyleGuidePage() {
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Toggle Switches</p>
+                    <p className="text-[10px] font-bold text-text-muted tracking-widest">Toggle Switches</p>
                     <div className="space-y-4">
                       <label className="flex items-center gap-3 cursor-pointer">
                         <div className="w-10 h-6 rounded-full bg-primary relative transition-colors">
@@ -788,7 +794,7 @@ export default function StyleGuidePage() {
                   <Badge variant="urgent">Urgent</Badge>
                   <Badge variant="new">New</Badge>
                   <Badge variant="archived">Archived</Badge>
-                  <div className="px-3 py-1 rounded-full bg-surface border border-border text-[10px] font-bold text-text-muted uppercase tracking-wider">Default Tag</div>
+                  <div className="px-3 py-1 rounded-full bg-surface border border-border text-[10px] font-bold text-text-muted tracking-wider">Default Tag</div>
                 </div>
               </Card>
             </div>
@@ -802,7 +808,7 @@ export default function StyleGuidePage() {
               <Card className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div className="space-y-6">
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Avatars</p>
+                    <p className="text-[10px] font-bold text-text-muted tracking-widest">Avatars</p>
                     <div className="flex items-center gap-6">
                       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">KN</div>
                       <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary-900 font-bold text-sm">AS</div>
@@ -812,7 +818,7 @@ export default function StyleGuidePage() {
                     </div>
                     {/* User Avatar component */}
                     <div className="space-y-3">
-                      <p className="text-xs font-bold text-text-muted uppercase tracking-wider">User Avatar</p>
+                      <p className="text-xs font-bold text-text-muted tracking-wider">User Avatar</p>
                       <div className="flex items-center gap-4">
                         <UserAvatar />
                         <div>
@@ -823,7 +829,7 @@ export default function StyleGuidePage() {
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Navigation Icons</p>
+                    <p className="text-[10px] font-bold text-text-muted tracking-widest">Navigation Icons</p>
                     <div className="flex flex-wrap gap-6 text-text-muted">
                       <LayoutDashboard className="w-5 h-5" />
                       <BarChart3 className="w-5 h-5" />
@@ -877,7 +883,7 @@ export default function StyleGuidePage() {
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-text flex justify-between">
                       Email Address
-                      <span className="text-[10px] text-primary uppercase">Required</span>
+                      <span className="text-[10px] text-primary">Required</span>
                     </label>
                     <Input placeholder="kari@areasim.com" />
                   </div>
@@ -926,7 +932,7 @@ export default function StyleGuidePage() {
               </h3>
               {/* Overview Stat Card — horizontal layout */}
               <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Overview Stat Card</p>
+                <p className="text-xs font-semibold text-text-muted tracking-wider mb-3">Overview Stat Card</p>
                 <p className="text-xs text-text-muted font-body mb-4">Horizontal layout: icon on left, number + label on right. Use pastel icon background matching activity section colors.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                   {[
@@ -950,20 +956,20 @@ export default function StyleGuidePage() {
 
               {/* Legacy vertical stat cards */}
               <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Legacy Vertical Cards</p>
+                <p className="text-xs font-semibold text-text-muted tracking-wider mb-3">Legacy Vertical Cards</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card className="p-6 space-y-2">
-                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Active Projects</p>
+                    <p className="text-xs font-bold text-text-muted tracking-wider">Active Projects</p>
                     <h4 className="text-3xl font-bold text-text">12</h4>
                     <p className="text-[10px] text-success font-bold">+2 from last month</p>
                   </Card>
                   <Card className="p-6 space-y-2">
-                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider">Team Members</p>
+                    <p className="text-xs font-bold text-text-muted tracking-wider">Team Members</p>
                     <h4 className="text-3xl font-bold text-text">48</h4>
                     <p className="text-[10px] text-text-muted">3 pending invites</p>
                   </Card>
                   <Card className="p-6 space-y-2 border-primary/20 bg-primary/5">
-                    <p className="text-xs font-bold text-primary uppercase tracking-wider">Storage Used</p>
+                    <p className="text-xs font-bold text-primary tracking-wider">Storage Used</p>
                     <h4 className="text-3xl font-bold text-text">84%</h4>
                     <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
                       <div className="w-[84%] h-full bg-primary"></div>
@@ -1068,68 +1074,64 @@ export default function StyleGuidePage() {
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Data Table
               </h3>
-              <Card className="p-0 overflow-hidden shadow-sm">
-                <table className="w-full text-left">
-                  <thead className="bg-background-alt border-b border-border">
-                    <tr>
-                      <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Project Name</th>
-                      <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Status</th>
-                      <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">Occupancy</th>
-                      <th className="px-6 py-4 text-[10px] font-bold text-text-muted uppercase tracking-widest text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {[
-                      { name: "Oslo Headquarters", status: "active", occupancy: "84%", id: 1 },
-                      { name: "Stockholm Studio", status: "pending", occupancy: "62%", id: 2 },
-                      { name: "Copenhagen Hub", status: "archived", occupancy: "45%", id: 3 },
-                    ].map((row) => (
-                      <tr key={row.id} className="hover:bg-background-alt transition-colors group">
-                        <td className="px-6 py-4 text-sm font-bold text-text">{row.name}</td>
-                        <td className="px-6 py-4">
-                          <Badge variant={row.status as "active" | "pending" | "archived"}>{row.status}</Badge>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-text-muted font-body">{row.occupancy}</td>
-                        <td className="px-6 py-4 text-right">
-                          <Button variant="ghost" size="sm">Manage</Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Project Name</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Occupancy</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { name: "Oslo Headquarters", status: "active", occupancy: "84%", id: 1 },
+                    { name: "Stockholm Studio", status: "pending", occupancy: "62%", id: 2 },
+                    { name: "Copenhagen Hub", status: "archived", occupancy: "45%", id: 3 },
+                  ].map((row) => (
+                    <TableRow key={row.id} className="group">
+                      <TableCell className="font-semibold text-text">{row.name}</TableCell>
+                      <TableCell>
+                        <Badge variant={row.status as "active" | "pending" | "archived"}>{row.status}</Badge>
+                      </TableCell>
+                      <TableCell className="tabular-nums">{row.occupancy}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm">Manage</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
                 {/* Table style guidelines */}
                 <div className="mt-8 space-y-4">
                   <div>
-                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-1">Standard Table Guidelines</p>
-                    <p className="text-sm text-text-muted font-body">All read-only data tables follow these rules: consistent <code className="font-mono text-primary">text-sm text-text-muted font-body</code> for all body cells, no icons inside cells, <code className="font-mono text-primary">text-[11px] font-bold text-text-muted uppercase tracking-wider</code> for headers, <code className="font-mono text-primary">divide-y divide-[#F1F5F9]</code> row dividers.</p>
+                    <p className="text-xs font-bold text-text-muted tracking-wider mb-1">Standard Table Guidelines</p>
+                    <p className="text-sm text-text-muted font-body">All tables share one visual language (see <code className="font-mono text-primary">DESIGN.md → Table Design Standard</code>): wrapper <code className="font-mono text-primary">rounded-2xl border border-border bg-surface</code>, header <code className="font-mono text-primary">bg-surface-2</code> with <code className="font-mono text-primary">text-[11px] font-semibold text-text-muted tracking-wider font-body</code>, body cells <code className="font-mono text-primary">text-sm text-text-muted font-body</code> (name cell <code className="font-mono text-primary">font-semibold text-text</code>), <code className="font-mono text-primary">divide-y divide-border</code> horizontal dividers only — <strong>never</strong> vertical column borders, no icons inside cells, hover <code className="font-mono text-primary">hover:bg-surface-2</code>. Padding: <code className="font-mono text-primary">px-5 py-4</code> comfortable / <code className="font-mono text-primary">px-4 py-3</code> compact.</p>
                   </div>
-                  <Card className="p-0 overflow-hidden shadow-sm">
-                    <table className="w-full text-left">
-                      <thead className="bg-bg border-b border-[#E2E8F0]">
-                        <tr className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                          <th className="px-6 py-4">Date</th>
-                          <th className="px-6 py-4">Round</th>
-                          <th className="px-6 py-4">Count</th>
-                          <th className="px-6 py-4 text-right">Conducted by</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#F1F5F9]">
-                        {[
-                          { date: "Apr 22, 2024", round: "Round 1", count: "12", by: "John K." },
-                          { date: "Apr 22, 2024", round: "Round 2", count: "8",  by: "Sarah L." },
-                          { date: "Apr 23, 2024", round: "Round 1", count: "15", by: "John K." },
-                        ].map((row, i) => (
-                          <tr key={i} className="hover:bg-bg transition-colors">
-                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.date}</td>
-                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.round}</td>
-                            <td className="px-6 py-4 text-sm text-text-muted font-body">{row.count}</td>
-                            <td className="px-6 py-4 text-sm text-text-muted font-body text-right">{row.by}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Card>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Round</TableHead>
+                        <TableHead>Count</TableHead>
+                        <TableHead className="text-right">Conducted by</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[
+                        { date: "Apr 22, 2024", round: "Round 1", count: "12", by: "John K." },
+                        { date: "Apr 22, 2024", round: "Round 2", count: "8",  by: "Sarah L." },
+                        { date: "Apr 23, 2024", round: "Round 1", count: "15", by: "John K." },
+                      ].map((row, i) => (
+                        <TableRow key={i}>
+                          <TableCell className="font-semibold text-text">{row.date}</TableCell>
+                          <TableCell>{row.round}</TableCell>
+                          <TableCell className="tabular-nums">{row.count}</TableCell>
+                          <TableCell className="text-right">{row.by}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
             </div>
           </div>
@@ -1141,7 +1143,7 @@ export default function StyleGuidePage() {
           <p className="text-text-muted mb-12">Page-level layouts that articulate the underlying content structure.</p>
           <Card className="p-12 text-center border-dashed">
             <Layout className="w-12 h-12 text-border mx-auto mb-4" />
-            <p className="text-sm font-bold text-text-muted uppercase">Layout Previews</p>
+            <p className="text-sm font-bold text-text-muted">Layout Previews</p>
             <p className="text-xs text-text-muted mt-2">Templates and final Pages are available in the dedicated preview app.</p>
           </Card>
         </section>
@@ -1362,14 +1364,14 @@ function ColorBox({ hex, name, isMain }: { hex: string; name: string; isMain?: b
         style={{ backgroundColor: hex }}
       >
         {isMain && (
-          <span className="bg-white/90 backdrop-blur-sm text-[7px] font-bold px-1 py-0.5 rounded uppercase tracking-tighter shadow-sm">
+          <span className="bg-white/90 backdrop-blur-sm text-[7px] font-bold px-1 py-0.5 rounded tracking-tighter shadow-sm">
             Main
           </span>
         )}
       </div>
       <div>
         <p className="text-[10px] font-bold text-text truncate leading-none">{name}</p>
-        <p className="text-[8px] text-text-muted font-mono uppercase">{hex}</p>
+        <p className="text-[8px] text-text-muted font-mono">{hex}</p>
       </div>
     </div>
   );
@@ -1378,7 +1380,7 @@ function ColorBox({ hex, name, isMain }: { hex: string; name: string; isMain?: b
 function UsageGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-4">
-      <h4 className="text-xs font-bold text-text uppercase tracking-widest border-b border-border pb-2">{title}</h4>
+      <h4 className="text-xs font-bold text-text tracking-widest border-b border-border pb-2">{title}</h4>
       <div className="space-y-3">
         {children}
       </div>
@@ -1397,7 +1399,7 @@ function UsageItem({ label, color, token }: { label: string; color: string; toke
         <span className="text-xs font-medium text-text-muted group-hover:text-text transition-colors">{label}</span>
       </div>
       <div className="text-right">
-        <p className="text-[9px] font-bold text-text uppercase tracking-tighter">{token}</p>
+        <p className="text-[9px] font-bold text-text tracking-tighter">{token}</p>
         <p className="text-[8px] text-text-muted font-mono leading-none">{color}</p>
       </div>
     </div>

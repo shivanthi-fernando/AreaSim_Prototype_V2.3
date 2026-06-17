@@ -6,9 +6,12 @@ import { motion } from "framer-motion";
 import { Filter, Eye, Plus, ChevronDown } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/Table";
 import { mockSurveyRecords } from "@/lib/mockData";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
+
+const MotionTableRow = motion.create(TableRow);
 
 type FilterTab = "all" | "sent" | "draft" | "archived";
 
@@ -101,76 +104,80 @@ export default function SurveysPage() {
             subtitle="No surveys match your current filter. Try adjusting the filters above."
           />
         ) : (
-          <div className="rounded-2xl border border-border bg-surface overflow-hidden">
-            {/* Table header */}
-            <div className="grid grid-cols-[2fr_1.5fr_1fr_80px_120px_80px_auto] gap-4 px-5 py-3 border-b border-border bg-surface-2 text-xs font-semibold text-text-muted tracking-wider font-body">
-              <span>Survey Name</span>
-              <span className="hidden md:block">Project / Floor</span>
-              <span className="hidden lg:block">Sent To</span>
-              <span className="hidden lg:block">Responses</span>
-              <span className="hidden sm:block">Completion</span>
-              <span>Status</span>
-              <span></span>
-            </div>
-
-            {/* Rows */}
-            {filtered.map((survey, i) => {
-              const pct = survey.sentTo > 0 ? Math.round((survey.responses / survey.sentTo) * 100) : 0;
-              return (
-                <motion.div
-                  key={survey.id}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="grid grid-cols-[2fr_1.5fr_1fr_80px_120px_80px_auto] gap-4 px-5 py-4 border-b border-border last:border-0 items-center hover:bg-surface-2 transition-colors"
-                >
-                  {/* Survey Name */}
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-text font-body truncate">{survey.name}</p>
-                    <p className="text-xs text-text-muted font-body">{survey.createdAt}</p>
-                  </div>
-
-                  {/* Project / Floor */}
-                  <div className="hidden md:block min-w-0">
-                    <p className="text-xs font-medium text-text font-body truncate">{survey.project}</p>
-                    <p className="text-xs text-text-muted font-body truncate">{survey.floor}</p>
-                  </div>
-
-                  {/* Sent To */}
-                  <span className="hidden lg:block text-sm text-text font-body">{survey.sentTo > 0 ? survey.sentTo : "—"}</span>
-
-                  {/* Responses */}
-                  <span className="hidden lg:block text-sm font-semibold text-text">{survey.responses}</span>
-
-                  {/* Completion bar */}
-                  <div className="hidden sm:block">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-surface-2 overflow-hidden">
-                        <div
-                          className="h-full rounded-full transition-all bg-[#bfa483]"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-text w-8 text-right">{pct}%</span>
-                    </div>
-                  </div>
-
-                  {/* Status */}
-                  <span className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold font-body whitespace-nowrap", STATUS_STYLES[survey.status])}>
-                    {survey.status.charAt(0).toUpperCase() + survey.status.slice(1)}
-                  </span>
-
-                  {/* Actions */}
-                  <button
-                    onClick={() => router.push(`/surveys/${survey.id}`)}
-                    className="flex items-center gap-1 text-xs font-semibold text-text-muted hover:text-primary transition-colors font-body whitespace-nowrap"
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Survey Name</TableHead>
+                <TableHead className="hidden md:table-cell">Project / Floor</TableHead>
+                <TableHead className="hidden lg:table-cell w-20">Sent To</TableHead>
+                <TableHead className="hidden lg:table-cell w-24">Responses</TableHead>
+                <TableHead className="hidden sm:table-cell w-40">Completion</TableHead>
+                <TableHead className="w-24">Status</TableHead>
+                <TableHead className="w-20 text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((survey, i) => {
+                const pct = survey.sentTo > 0 ? Math.round((survey.responses / survey.sentTo) * 100) : 0;
+                return (
+                  <MotionTableRow
+                    key={survey.id}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    <Eye size={13} /> View
-                  </button>
-                </motion.div>
-              );
-            })}
-          </div>
+                    {/* Survey Name */}
+                    <TableCell className="min-w-0">
+                      <p className="text-sm font-semibold text-text font-body truncate">{survey.name}</p>
+                      <p className="text-xs text-text-muted font-body">{survey.createdAt}</p>
+                    </TableCell>
+
+                    {/* Project / Floor */}
+                    <TableCell className="hidden md:table-cell min-w-0">
+                      <p className="text-xs font-medium text-text font-body truncate">{survey.project}</p>
+                      <p className="text-xs text-text-muted font-body truncate">{survey.floor}</p>
+                    </TableCell>
+
+                    {/* Sent To */}
+                    <TableCell className="hidden lg:table-cell tabular-nums">{survey.sentTo > 0 ? survey.sentTo : "—"}</TableCell>
+
+                    {/* Responses */}
+                    <TableCell className="hidden lg:table-cell font-semibold text-text tabular-nums">{survey.responses}</TableCell>
+
+                    {/* Completion bar */}
+                    <TableCell className="hidden sm:table-cell">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 rounded-full bg-surface-2 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all bg-[#bfa483]"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-semibold text-text w-8 text-right">{pct}%</span>
+                      </div>
+                    </TableCell>
+
+                    {/* Status */}
+                    <TableCell>
+                      <span className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold font-body whitespace-nowrap", STATUS_STYLES[survey.status])}>
+                        {survey.status.charAt(0).toUpperCase() + survey.status.slice(1)}
+                      </span>
+                    </TableCell>
+
+                    {/* Actions */}
+                    <TableCell className="text-right">
+                      <button
+                        onClick={() => router.push(`/surveys/${survey.id}`)}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-text-muted hover:text-primary transition-colors font-body whitespace-nowrap"
+                      >
+                        <Eye size={13} /> View
+                      </button>
+                    </TableCell>
+                  </MotionTableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         )}
       </div>
     </AppLayout>

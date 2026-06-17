@@ -47,7 +47,7 @@ export function PotentialScoreWidget({
 
         {/* Score info */}
         <div className="relative z-10">
-          <p className="text-[8px] font-bold uppercase tracking-widest leading-none text-[#006A61]">
+          <p className="text-[8px] font-bold tracking-widest leading-none text-[#006A61]">
             Your Potential Score
           </p>
           <p

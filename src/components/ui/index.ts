@@ -11,3 +11,4 @@ export * from "./Select";
 export * from "./StepIndicator";
 export * from "./ThemeToggle";
 export * from "./Toast";
+export * from "./Table";

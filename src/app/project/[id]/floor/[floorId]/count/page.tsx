@@ -14,7 +14,6 @@ import {
   Minus,
   X,
   ClipboardList,
-  Calendar,
   Clock,
   HelpCircle,
   MessageSquare,
@@ -33,6 +32,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/Table";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { useCanvasStore } from "@/store/canvas";
 import { mockProject, mockCountHistory } from "@/lib/mockData";
@@ -278,7 +278,7 @@ export default function FloorCountPage() {
       setStartModalDismissed(true);
       window.history.replaceState(null, "", window.location.pathname);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Show instructions modal only when arriving via #show-instructions hash
@@ -287,7 +287,7 @@ export default function FloorCountPage() {
       setShowInstructionsModal(true);
       window.history.replaceState(null, "", window.location.pathname);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Timer
@@ -506,8 +506,8 @@ export default function FloorCountPage() {
   if (countingPhase === "setup") {
     return (
       <div className="h-screen flex flex-col font-body overflow-hidden" style={{ background: "#FBF6EE" }}>
-        <header className="px-6 py-3 shrink-0 bg-white">
-          <div className="max-w-[1200px] mx-auto flex items-center gap-4">
+        <header className="px-3 py-2 shrink-0 bg-white">
+          <div className="flex items-center gap-3">
             <button
               onClick={handleBackToCanvas}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
@@ -618,9 +618,8 @@ export default function FloorCountPage() {
                         <button
                           key={fc.id}
                           onClick={() => setBulkCategory(fc.id)}
-                          className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border transition-all min-w-[120px] text-left shrink-0 ${
-                            isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC]"
-                          }`}
+                          className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border transition-all min-w-[120px] text-left shrink-0 ${isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC]"
+                            }`}
                         >
                           <div className={`${isSelected ? "text-primary" : "text-text-muted"}`}>{icon}</div>
                           <div>
@@ -660,159 +659,162 @@ export default function FloorCountPage() {
               )}
             </AnimatePresence>
 
-            {/* Per-room setup table */}
-            <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden">
+            {/* Per-room setup */}
+            <div className="space-y-3">
               {/* Progress bar */}
-              <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center gap-3">
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+              <div className="flex items-center gap-3 px-1">
+                <span className="text-[11px] font-semibold text-text-muted tracking-wider font-body whitespace-nowrap">
                   {rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length} of {rooms.length} rooms verified
                 </span>
-                <div className="flex-1 h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-300"
+                    className="h-full bg-[#bfa483] rounded-full transition-all duration-300"
                     style={{ width: `${rooms.length ? (rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length / rooms.length) * 100 : 0}%` }}
                   />
                 </div>
               </div>
 
-              {/* Column headers */}
-              <div className="grid gap-4 px-6 py-3 border-b border-[#F1F5F9] bg-[#FAFBFC]" style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr" }}>
-                {/* Select-all checkbox */}
-                <div className="flex items-center">
-                  <button
-                    onClick={toggleSelectAll}
-                    className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selectedRoomIds.size === rooms.length && rooms.length > 0
-                        ? "bg-primary border-primary"
-                        : selectedRoomIds.size > 0
-                          ? "bg-primary/30 border-primary"
-                          : "border-[#C0D0DC] bg-white"
-                      }`}
-                    title="Select all rooms"
-                  >
-                    {selectedRoomIds.size > 0 && <Check size={11} className="text-white" strokeWidth={3} />}
-                  </button>
-                </div>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Room</span>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Category</span>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Seats</span>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider text-center">Status</span>
-              </div>
-
-              <div className="divide-y divide-[#F1F5F9]">
-                {rooms.map((room) => {
-                  const cat = roomCategories[room.id];
-                  const seats = roomSeats[room.id] || 1;
-                  const isVerified = verifiedRooms.has(room.id);
-                  const isChecked = selectedRoomIds.has(room.id);
-                  return (
-                    <div
-                      key={room.id}
-                      className={`grid gap-4 px-6 py-4 items-center transition-colors ${isChecked ? "bg-primary/5" : "hover:bg-[#FAFBFC]"}`}
-                      style={{ gridTemplateColumns: "44px 1fr 1fr 1fr 1fr" }}
-                    >
-                      {/* Checkbox */}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-11">
                       <button
-                        onClick={() => toggleRoomSelect(room.id)}
-                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
+                        onClick={toggleSelectAll}
+                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selectedRoomIds.size === rooms.length && rooms.length > 0
+                          ? "bg-primary border-primary"
+                          : selectedRoomIds.size > 0
+                            ? "bg-primary/30 border-primary"
+                            : "border-[#C0D0DC] bg-white"
                           }`}
+                        title="Select all rooms"
                       >
-                        {isChecked && <Check size={11} className="text-white" strokeWidth={3} />}
+                        {selectedRoomIds.size > 0 && <Check size={11} className="text-white" strokeWidth={3} />}
                       </button>
-
-                      {/* Room info */}
-                      <div>
-                        <p className="text-sm font-bold text-text">{room.name}</p>
-                        <p className="text-xs text-text-muted">{formatNumber(room.sqm || 25)} m²</p>
-                      </div>
-
-                      {/* Category dropdown — unchanged */}
-                      <div className="relative">
-                        <select
-                          value={cat || ""}
-                          onChange={(e) => {
-                            if (e.target.value === "add-new") {
-                              setAddCategoryRoomId(room.id);
-                              setNewCategoryInput("");
-                              setShowAddCategoryModal(true);
-                            } else {
-                              setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
-                              setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; });
-                            }
-                          }}
-                          className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
-                        >
-                          <option value="" disabled>Select category...</option>
-                          {FLOOR_CATEGORIES.map((fc) => (
-                            <option key={fc.id} value={fc.id}>{fc.label}</option>
-                          ))}
-                          {customCategories.map((cc) => (
-                            <option key={cc} value={cc}>{cc}</option>
-                          ))}
-                          <option value="add-new">+ Add new category</option>
-                        </select>
-                        <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                      </div>
-
-                      {/* Seats — ± buttons + editable number */}
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => {
-                            const n = Math.max(1, seats - 1);
-                            updateSeats(room.id, n);
-                            setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
-                          }}
-                          className="w-7 h-7 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all"
-                        >
-                          <Minus size={12} strokeWidth={3} />
-                        </button>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          value={getSeatInputValue(room.id)}
-                          onChange={(e) =>
-                            setRoomSeatInputs((prev) => ({ ...prev, [room.id]: e.target.value.replace(/\D/g, "") }))
-                          }
-                          onBlur={(e) => commitSeatInput(room.id, e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
-                          className="w-10 text-center text-sm font-bold text-text tabular-nums rounded-lg border border-[#E2E8F0] py-0.5 focus:outline-none focus:border-primary transition-colors bg-white"
-                        />
-                        <button
-                          onClick={() => {
-                            const n = seats + 1;
-                            updateSeats(room.id, n);
-                            setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
-                          }}
-                          className="w-7 h-7 rounded-lg border border-primary bg-primary/5 flex items-center justify-center text-primary hover:bg-primary/10 transition-all"
-                        >
-                          <Plus size={12} strokeWidth={3} />
-                        </button>
-                      </div>
-
-                      {/* Verify / Verified */}
-                      <div className="flex justify-center">
-                        {isVerified ? (
+                    </TableHead>
+                    <TableHead>Room</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead className="text-center">Seats</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rooms.map((room) => {
+                    const cat = roomCategories[room.id];
+                    const seats = roomSeats[room.id] || 1;
+                    const isVerified = verifiedRooms.has(room.id);
+                    const isChecked = selectedRoomIds.has(room.id);
+                    return (
+                      <TableRow key={room.id} className={isChecked ? "bg-primary/5 hover:bg-primary/5" : undefined}>
+                        {/* Checkbox */}
+                        <TableCell>
                           <button
-                            onClick={() => setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; })}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold hover:bg-emerald-100 transition-all"
+                            onClick={() => toggleRoomSelect(room.id)}
+                            className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
+                              }`}
                           >
-                            <Check size={11} strokeWidth={3} /> Verified
+                            {isChecked && <Check size={11} className="text-white" strokeWidth={3} />}
                           </button>
-                        ) : (
-                          <button
-                            disabled={!cat}
-                            onClick={() => setVerifiedRooms((prev) => new Set([...prev, room.id]))}
-                            className="px-3 py-1.5 rounded-full text-xs font-semibold border border-primary text-primary hover:bg-primary/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            Verify
-                          </button>
-                        )}
-                      </div>
+                        </TableCell>
 
-                    </div>
-                  );
-                })}
-              </div>
+                        {/* Room info */}
+                        <TableCell>
+                          <p className="text-sm font-semibold text-text font-body">{room.name}</p>
+                          <p className="text-xs text-text-muted font-body">{formatNumber(room.sqm || 25)} m²</p>
+                        </TableCell>
 
+                        {/* Category dropdown */}
+                        <TableCell>
+                          <div className="relative">
+                            <select
+                              value={cat || ""}
+                              onChange={(e) => {
+                                if (e.target.value === "add-new") {
+                                  setAddCategoryRoomId(room.id);
+                                  setNewCategoryInput("");
+                                  setShowAddCategoryModal(true);
+                                } else {
+                                  setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
+                                  setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; });
+                                }
+                              }}
+                              className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
+                            >
+                              <option value="" disabled>Select category...</option>
+                              {FLOOR_CATEGORIES.map((fc) => (
+                                <option key={fc.id} value={fc.id}>{fc.label}</option>
+                              ))}
+                              {customCategories.map((cc) => (
+                                <option key={cc} value={cc}>{cc}</option>
+                              ))}
+                              <option value="add-new">+ Add new category</option>
+                            </select>
+                            <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                          </div>
+                        </TableCell>
+
+                        {/* Seats — ± buttons + editable number */}
+                        <TableCell>
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => {
+                                const n = Math.max(1, seats - 1);
+                                updateSeats(room.id, n);
+                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
+                              }}
+                              className="w-7 h-7 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all"
+                            >
+                              <Minus size={12} strokeWidth={3} />
+                            </button>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              value={getSeatInputValue(room.id)}
+                              onChange={(e) =>
+                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: e.target.value.replace(/\D/g, "") }))
+                              }
+                              onBlur={(e) => commitSeatInput(room.id, e.target.value)}
+                              onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+                              className="w-10 text-center text-sm font-bold text-text tabular-nums rounded-lg border border-[#E2E8F0] py-0.5 focus:outline-none focus:border-primary transition-colors bg-white"
+                            />
+                            <button
+                              onClick={() => {
+                                const n = seats + 1;
+                                updateSeats(room.id, n);
+                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
+                              }}
+                              className="w-7 h-7 rounded-lg border border-primary bg-primary/5 flex items-center justify-center text-primary hover:bg-primary/10 transition-all"
+                            >
+                              <Plus size={12} strokeWidth={3} />
+                            </button>
+                          </div>
+                        </TableCell>
+
+                        {/* Verify / Verified */}
+                        <TableCell>
+                          <div className="flex justify-center">
+                            {isVerified ? (
+                              <button
+                                onClick={() => setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; })}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold hover:bg-emerald-100 transition-all"
+                              >
+                                <Check size={11} strokeWidth={3} /> Verified
+                              </button>
+                            ) : (
+                              <button
+                                disabled={!cat}
+                                onClick={() => setVerifiedRooms((prev) => new Set([...prev, room.id]))}
+                                className="px-3 py-1.5 rounded-full text-xs font-semibold border border-primary text-primary hover:bg-primary/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              >
+                                Verify
+                              </button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </div>
 
           </div>
@@ -857,10 +859,10 @@ export default function FloorCountPage() {
                         badgeBg: "rgba(19,148,133,0.12)",
                         icon: (
                           <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                            <path d="M15 38 C15 30 21 26 21 17 C21 13 18 10 15 10" stroke="#139485" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                            <circle cx="15" cy="10" r="3.5" stroke="#139485" strokeWidth="2.5" fill="none"/>
-                            <circle cx="31" cy="38" r="3.5" fill="#139485"/>
-                            <path d="M21 17 C21 26 27 30 27 38" stroke="#139485" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                            <path d="M15 38 C15 30 21 26 21 17 C21 13 18 10 15 10" stroke="#139485" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                            <circle cx="15" cy="10" r="3.5" stroke="#139485" strokeWidth="2.5" fill="none" />
+                            <circle cx="31" cy="38" r="3.5" fill="#139485" />
+                            <path d="M21 17 C21 26 27 30 27 38" stroke="#139485" strokeWidth="2.5" strokeLinecap="round" fill="none" />
                           </svg>
                         ),
                         title: "Plan your route",
@@ -873,8 +875,8 @@ export default function FloorCountPage() {
                         badgeBg: "rgba(58,111,181,0.12)",
                         icon: (
                           <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                            <circle cx="23" cy="23" r="14" stroke="#3A6FB5" strokeWidth="2.5"/>
-                            <path d="M23 14 L23 23 L29 29" stroke="#3A6FB5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="23" cy="23" r="14" stroke="#3A6FB5" strokeWidth="2.5" />
+                            <path d="M23 14 L23 23 L29 29" stroke="#3A6FB5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ),
                         title: "Count at the right time",
@@ -887,10 +889,10 @@ export default function FloorCountPage() {
                         badgeBg: "rgba(232,130,10,0.12)",
                         icon: (
                           <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                            <rect x="11" y="10" width="24" height="15" rx="4" stroke="#E8820A" strokeWidth="2.5" fill="none"/>
-                            <path d="M11 25 L11 37" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round"/>
-                            <path d="M35 25 L35 37" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round"/>
-                            <path d="M8 29 L38 29" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round"/>
+                            <rect x="11" y="10" width="24" height="15" rx="4" stroke="#E8820A" strokeWidth="2.5" fill="none" />
+                            <path d="M11 25 L11 37" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round" />
+                            <path d="M35 25 L35 37" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round" />
+                            <path d="M8 29 L38 29" stroke="#E8820A" strokeWidth="2.5" strokeLinecap="round" />
                           </svg>
                         ),
                         title: "Enter occupied seats",
@@ -903,10 +905,10 @@ export default function FloorCountPage() {
                         badgeBg: "rgba(124,58,237,0.12)",
                         icon: (
                           <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                            <path d="M9 13 C9 11.3 10.3 10 12 10 L34 10 C35.7 10 37 11.3 37 13 L37 27 C37 28.7 35.7 30 34 30 L26 30 L19 37 L19 30 L12 30 C10.3 30 9 28.7 9 27 Z" stroke="#7C3AED" strokeWidth="2.5" fill="none" strokeLinejoin="round"/>
-                            <circle cx="18" cy="20" r="2.2" fill="#7C3AED"/>
-                            <circle cx="23" cy="20" r="2.2" fill="#7C3AED"/>
-                            <circle cx="28" cy="20" r="2.2" fill="#7C3AED"/>
+                            <path d="M9 13 C9 11.3 10.3 10 12 10 L34 10 C35.7 10 37 11.3 37 13 L37 27 C37 28.7 35.7 30 34 30 L26 30 L19 37 L19 30 L12 30 C10.3 30 9 28.7 9 27 Z" stroke="#7C3AED" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
+                            <circle cx="18" cy="20" r="2.2" fill="#7C3AED" />
+                            <circle cx="23" cy="20" r="2.2" fill="#7C3AED" />
+                            <circle cx="28" cy="20" r="2.2" fill="#7C3AED" />
                           </svg>
                         ),
                         title: "Add notes if needed",
@@ -919,8 +921,8 @@ export default function FloorCountPage() {
                         badgeBg: "rgba(15,155,110,0.12)",
                         icon: (
                           <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                            <circle cx="23" cy="23" r="14" stroke="#0F9B6E" strokeWidth="2.5"/>
-                            <path d="M15 23 L20 28 L31 17" stroke="#0F9B6E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="23" cy="23" r="14" stroke="#0F9B6E" strokeWidth="2.5" />
+                            <path d="M15 23 L20 28 L31 17" stroke="#0F9B6E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ),
                         title: "Finish the session",
@@ -965,9 +967,9 @@ export default function FloorCountPage() {
                           {/* Tip info box — pinned to bottom */}
                           <div className="mx-3 mb-5 rounded-xl bg-[#F5F7FA] border border-[#E5EAF0] px-3 py-2.5 flex items-start gap-2 text-left w-[calc(100%-24px)]">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 mt-px">
-                              <circle cx="7" cy="7" r="6" stroke="#B0BAC6" strokeWidth="1.2"/>
-                              <path d="M7 6.5v3.5" stroke="#94A3B8" strokeWidth="1.3" strokeLinecap="round"/>
-                              <circle cx="7" cy="4.5" r="0.75" fill="#94A3B8"/>
+                              <circle cx="7" cy="7" r="6" stroke="#B0BAC6" strokeWidth="1.2" />
+                              <path d="M7 6.5v3.5" stroke="#94A3B8" strokeWidth="1.3" strokeLinecap="round" />
+                              <circle cx="7" cy="4.5" r="0.75" fill="#94A3B8" />
                             </svg>
                             <p className="text-[10.5px] text-text-muted leading-relaxed">{step.tip}</p>
                           </div>
@@ -1102,9 +1104,9 @@ export default function FloorCountPage() {
     <div className="h-screen bg-bg flex flex-col font-body overflow-hidden">
 
       {/* ── Header ───────────────────────────────────────────────────────────── */}
-      <header className="bg-white border-b border-[#E2E8F0] px-6 py-3 shrink-0">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
+      <header className="bg-white px-3 py-2 shrink-0">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
             <button
               onClick={handleBackToCanvas}
               className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
@@ -1112,12 +1114,22 @@ export default function FloorCountPage() {
               <ArrowLeft size={14} /> Back to canvas
             </button>
             <div className="w-px h-6 bg-[#E2E8F0]" />
-            <h1
-              className="text-lg font-800 text-text leading-none"
-              style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}
-            >
-              Room counting
-            </h1>
+            <span className="hidden sm:block text-sm font-semibold text-text font-body truncate max-w-[200px]">
+              {selectedProject}
+            </span>
+            <div className="w-px h-6 bg-[#E2E8F0] hidden sm:block" />
+            <div className="relative min-w-[148px]">
+              <select
+                value={selectedFloorName}
+                onChange={(e) => setSelectedFloorName(e.target.value)}
+                className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-9 py-1.5 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
+              >
+                <option>Ground Floor</option>
+                <option>1st Floor</option>
+                <option>2nd Floor</option>
+              </select>
+              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -1188,30 +1200,8 @@ export default function FloorCountPage() {
         </div>
       </header>
 
-      {/* ── Sub-header ───────────────────────────────────────────────────────── */}
-      <div className="bg-white border-b border-[#E2E8F0] px-6 py-4 shrink-0">
-        <div className="max-w-[1600px] mx-auto flex items-center gap-8">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Project:</span>
-            <span className="text-sm font-bold text-text">{selectedProject}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Floor:</span>
-            <div className="relative min-w-[160px]">
-              <select
-                value={selectedFloorName}
-                onChange={(e) => setSelectedFloorName(e.target.value)}
-                className="appearance-none block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-4 pr-10 py-1.5 text-xs font-bold text-text focus:outline-none focus:border-primary transition-all"
-              >
-                <option>Ground Floor</option>
-                <option>1st Floor</option>
-                <option>2nd Floor</option>
-              </select>
-              <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ── Workplace Journey Bar ── */}
+      <WorkplaceJourneyBar activeStep="1-2" />
 
       <main className="flex-1 overflow-hidden flex relative p-6 gap-6 max-w-[1600px] mx-auto w-full">
 
@@ -1286,243 +1276,239 @@ export default function FloorCountPage() {
                 {/* Summary stats */}
                 <div className="flex bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden divide-x divide-[#E2E8F0] shadow-sm">
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Total seats in floor</span>
+                    <span className="text-[12px] font-bold text-text-muted tracking-wider">Total seats in floor</span>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(rooms.reduce((acc, r) => acc + (roomSeats[r.id] || 0), 0))}
                       </span>
-                      <span className="text-[10px] font-bold text-text-muted uppercase">Seats total</span>
+                      <span className="text-[10px] font-bold text-text-muted">Seats total</span>
                     </div>
                   </div>
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Seats used today (Avg)</span>
+                    <span className="text-[10px] font-bold text-text-muted tracking-wider">Seats used today (Avg)</span>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(Math.round(
                           rooms.reduce((acc, r) => acc + (sessionCounts[r.id] || 0), 0) /
                           Math.max(rooms.filter((r) => sessionCounts[r.id] !== undefined).length, 1)
                         ))}
                       </span>
-                      <span className="text-[10px] font-bold text-text-muted uppercase">Occupants avg</span>
+                      <span className="text-[10px] font-bold text-text-muted">Occupants avg</span>
                     </div>
                   </div>
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Total floor area</span>
+                    <span className="text-[10px] font-bold text-text-muted tracking-wider">Total floor area</span>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                      <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(rooms.reduce((acc, r) => acc + (r.sqm || 25), 0))}
                       </span>
-                      <span className="text-[10px] font-bold text-text-muted uppercase">m² total</span>
+                      <span className="text-[10px] font-bold text-text-muted">m² total</span>
                     </div>
                   </div>
                 </div>
 
                 {/* ── Room table ─────────────────────────────────────────────── */}
-                <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                      <tr className="text-[11px] font-bold text-text">
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Room</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Category</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Square Meters</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">No of seats</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Status</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Counted by</th>
-                        <th className="px-4 py-3 border-r border-[#E2E8F0]">Counting</th>
-                        <th className="px-4 py-3">Edit</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#F1F5F9]">
-                      {rooms.map((room) => {
-                        const meta = roomMeta[room.id] ?? { status: "pending" as RoomStatus };
-                        const isLockedByOther =
-                          meta.status === "ongoing" && meta.lockedBy !== "You";
-                        const count = sessionCounts[room.id];
+                <Table>
+                  <TableHeader>
+                    <TableRow className="text-[11px] font-bold text-text">
+                      <TableHead>Room</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Square Meters</TableHead>
+                      <TableHead>No of seats</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Counted by</TableHead>
+                      <TableHead>Counting</TableHead>
+                      <TableHead>Edit</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rooms.map((room) => {
+                      const meta = roomMeta[room.id] ?? { status: "pending" as RoomStatus };
+                      const isLockedByOther =
+                        meta.status === "ongoing" && meta.lockedBy !== "You";
+                      const count = sessionCounts[room.id];
 
-                        return (
-                          <tr
-                            key={room.id}
-                            className={cn(
-                              "transition-colors",
-                              isLockedByOther
-                                ? "bg-amber-50/40 opacity-70"
-                                : meta.status === "counted"
-                                  ? "bg-emerald-50/30"
-                                  : "hover:bg-[#F8FAFC]"
+                      return (
+                        <TableRow
+                          key={room.id}
+                          className={cn(
+                            isLockedByOther
+                              ? "bg-amber-50/40 opacity-70"
+                              : meta.status === "counted"
+                                ? "bg-emerald-50/30"
+                                : "hover:bg-surface-2"
+                          )}
+                        >
+                          {/* Room name */}
+                          <TableCell>
+                            {editingRowId === room.id ? (
+                              <input
+                                value={editRowData.name}
+                                onChange={(e) => setEditRowData((p) => ({ ...p, name: e.target.value }))}
+                                className="w-full rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                              />
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                {isLockedByOther && <Lock size={12} className="text-amber-500 shrink-0" />}
+                                <span className="text-sm font-bold text-text">{room.name}</span>
+                              </div>
                             )}
-                          >
-                            {/* Room name */}
-                            <td className="px-4 py-4 border-r border-[#F1F5F9]">
-                              {editingRowId === room.id ? (
-                                <input
-                                  value={editRowData.name}
-                                  onChange={(e) => setEditRowData((p) => ({ ...p, name: e.target.value }))}
-                                  className="w-full rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
-                                />
-                              ) : (
-                                <div className="flex items-center gap-2">
-                                  {isLockedByOther && <Lock size={12} className="text-amber-500 shrink-0" />}
-                                  <span className="text-sm font-bold text-text">{room.name}</span>
-                                </div>
-                              )}
-                            </td>
+                          </TableCell>
 
-                            {/* Category */}
-                            <td className="px-4 py-4 text-sm text-text border-r border-[#F1F5F9]">
-                              {editingRowId === room.id ? (
-                                <select
-                                  value={editRowData.category}
-                                  onChange={(e) => setEditRowData((p) => ({ ...p, category: e.target.value }))}
-                                  className="rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-xs font-semibold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all appearance-none"
-                                >
-                                  {FLOOR_CATEGORIES.map((fc) => <option key={fc.id} value={fc.id}>{fc.label}</option>)}
-                                </select>
-                              ) : (
-                                <span className="px-2 py-1 rounded-md bg-[#F1F5F9] text-[10px] font-bold">
-                                  {roomCategories[room.id] || "Meeting"}
+                          {/* Category */}
+                          <TableCell className="text-sm text-text">
+                            {editingRowId === room.id ? (
+                              <select
+                                value={editRowData.category}
+                                onChange={(e) => setEditRowData((p) => ({ ...p, category: e.target.value }))}
+                                className="rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-xs font-semibold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all appearance-none"
+                              >
+                                {FLOOR_CATEGORIES.map((fc) => <option key={fc.id} value={fc.id}>{fc.label}</option>)}
+                              </select>
+                            ) : (
+                              <span className="px-2 py-1 rounded-md bg-[#F1F5F9] text-[10px] font-bold">
+                                {roomCategories[room.id] || "Meeting"}
+                              </span>
+                            )}
+                          </TableCell>
+
+                          {/* Sqm */}
+                          <TableCell className="text-sm text-text">
+                            {editingRowId === room.id ? (
+                              <input
+                                value={editRowData.sqm}
+                                onChange={(e) => setEditRowData((p) => ({ ...p, sqm: e.target.value.replace(/\D/g, "") }))}
+                                className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                              />
+                            ) : (
+                              <span className="font-bold text-text">{formatNumber(room.sqm || 25)} m²</span>
+                            )}
+                          </TableCell>
+
+                          {/* Seats */}
+                          <TableCell className="text-sm">
+                            {editingRowId === room.id ? (
+                              <input
+                                value={editRowData.seats}
+                                onChange={(e) => setEditRowData((p) => ({ ...p, seats: e.target.value.replace(/\D/g, "") }))}
+                                className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
+                              />
+                            ) : (
+                              <span className="font-bold text-text tabular-nums">{roomSeats[room.id] || 0}</span>
+                            )}
+                          </TableCell>
+
+                          {/* Status */}
+                          <TableCell>
+                            <StatusBadge status={meta.status} />
+                          </TableCell>
+
+                          {/* Counted by */}
+                          <TableCell>
+                            {meta.status === "counted" && meta.countedBy ? (
+                              <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-[8px] font-bold text-emerald-700 shrink-0">
+                                  {meta.countedBy.split(" ").map((n) => n[0]).join("")}
+                                </div>
+                                <span className="text-xs font-medium text-text">{meta.countedBy}</span>
+                              </div>
+                            ) : meta.status === "ongoing" && meta.lockedBy ? (
+                              <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
+                                  <User size={9} className="text-amber-700" />
+                                </div>
+                                <span className="text-xs text-text">{meta.lockedBy}</span>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-text">—</span>
+                            )}
+                          </TableCell>
+
+                          {/* Counting action */}
+                          <TableCell>
+                            {isLockedByOther ? (
+                              <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold">
+                                <Lock size={11} />
+                                Locked by {meta.lockedBy}
+                              </div>
+                            ) : meta.status === "counted" ? (
+                              <div className="flex items-center justify-between px-2">
+                                <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                                  {count ?? 0}
                                 </span>
-                              )}
-                            </td>
-
-                            {/* Sqm */}
-                            <td className="px-4 py-4 text-sm text-text-muted border-r border-[#F1F5F9]">
-                              {editingRowId === room.id ? (
-                                <input
-                                  value={editRowData.sqm}
-                                  onChange={(e) => setEditRowData((p) => ({ ...p, sqm: e.target.value.replace(/\D/g, "") }))}
-                                  className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
-                                />
-                              ) : (
-                                <span className="font-bold text-text">{formatNumber(room.sqm || 25)} m²</span>
-                              )}
-                            </td>
-
-                            {/* Seats */}
-                            <td className="px-4 py-4 text-sm border-r border-[#F1F5F9]">
-                              {editingRowId === room.id ? (
-                                <input
-                                  value={editRowData.seats}
-                                  onChange={(e) => setEditRowData((p) => ({ ...p, seats: e.target.value.replace(/\D/g, "") }))}
-                                  className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
-                                />
-                              ) : (
-                                <span className="font-bold text-text tabular-nums">{roomSeats[room.id] || 0}</span>
-                              )}
-                            </td>
-
-                            {/* Status */}
-                            <td className="px-4 py-4 border-r border-[#F1F5F9]">
-                              <StatusBadge status={meta.status} />
-                            </td>
-
-                            {/* Counted by */}
-                            <td className="px-4 py-4 border-r border-[#F1F5F9]">
-                              {meta.status === "counted" && meta.countedBy ? (
-                                <div className="flex items-center gap-2">
-                                  <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-[8px] font-bold text-emerald-700 shrink-0">
-                                    {meta.countedBy.split(" ").map((n) => n[0]).join("").toUpperCase()}
-                                  </div>
-                                  <span className="text-xs font-medium text-text">{meta.countedBy}</span>
-                                </div>
-                              ) : meta.status === "ongoing" && meta.lockedBy ? (
-                                <div className="flex items-center gap-2">
-                                  <div className="w-5 h-5 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
-                                    <User size={9} className="text-amber-700" />
-                                  </div>
-                                  <span className="text-xs text-text">{meta.lockedBy}</span>
-                                </div>
-                              ) : (
-                                <span className="text-xs text-text">—</span>
-                              )}
-                            </td>
-
-                            {/* Counting action */}
-                            <td className="px-4 py-4 border-r border-[#F1F5F9]">
-                              {isLockedByOther ? (
-                                <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold">
-                                  <Lock size={11} />
-                                  Locked by {meta.lockedBy}
-                                </div>
-                              ) : meta.status === "counted" ? (
-                                <div className="flex items-center justify-between px-2">
-                                  <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                                    {count ?? 0}
-                                  </span>
-                                  <button
-                                    onClick={() => handleStartCounting(room.id)}
-                                    className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
-                                  >
-                                    Edit
-                                  </button>
-                                </div>
-                              ) : count !== undefined ? (
-                                <div className="flex items-center justify-between px-2">
-                                  <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                                    {count}
-                                  </span>
-                                  <button
-                                    onClick={() => handleStartCounting(room.id)}
-                                    className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
-                                  >
-                                    Edit
-                                  </button>
-                                </div>
-                              ) : (
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  disabled={!isRecording}
+                                <button
                                   onClick={() => handleStartCounting(room.id)}
-                                  className="w-auto px-4"
-                                >
-                                  Start counting
-                                </Button>
-                              )}
-                            </td>
-
-                            {/* Edit column */}
-                            <td className="px-4 py-4">
-                              {editingRowId === room.id ? (
-                                <Button
-                                  size="sm"
-                                  className="gap-1.5 px-3"
-                                  icon={<Save size={13} />}
-                                  onClick={() => {
-                                    const seats = parseInt(editRowData.seats) || 1;
-                                    setRoomSeats((prev) => ({ ...prev, [room.id]: seats }));
-                                    if (editRowData.category) setRoomCategories((prev) => ({ ...prev, [room.id]: editRowData.category }));
-                                    setEditingRowId(null);
-                                  }}
-                                >
-                                  Save
-                                </Button>
-                              ) : (
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  className="gap-1.5 px-3"
-                                  icon={<Pencil size={13} />}
-                                  onClick={() => {
-                                    setEditingRowId(room.id);
-                                    setEditRowData({
-                                      name: room.name,
-                                      sqm: String(room.sqm || 25),
-                                      seats: String(roomSeats[room.id] || 0),
-                                      category: roomCategories[room.id] || "meeting",
-                                    });
-                                  }}
+                                  className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
                                 >
                                   Edit
-                                </Button>
-                              )}
-                            </td>
+                                </button>
+                              </div>
+                            ) : count !== undefined ? (
+                              <div className="flex items-center justify-between px-2">
+                                <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                                  {count}
+                                </span>
+                                <button
+                                  onClick={() => handleStartCounting(room.id)}
+                                  className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
+                                >
+                                  Edit
+                                </button>
+                              </div>
+                            ) : (
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                disabled={!isRecording}
+                                onClick={() => handleStartCounting(room.id)}
+                                className="w-auto px-4"
+                              >
+                                Start counting
+                              </Button>
+                            )}
+                          </TableCell>
 
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                          {/* Edit column */}
+                          <TableCell>
+                            {editingRowId === room.id ? (
+                              <Button
+                                size="sm"
+                                className="gap-1.5 px-3"
+                                icon={<Save size={13} />}
+                                onClick={() => {
+                                  const seats = parseInt(editRowData.seats) || 1;
+                                  setRoomSeats((prev) => ({ ...prev, [room.id]: seats }));
+                                  if (editRowData.category) setRoomCategories((prev) => ({ ...prev, [room.id]: editRowData.category }));
+                                  setEditingRowId(null);
+                                }}
+                              >
+                                Save
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                className="gap-1.5 px-3"
+                                icon={<Pencil size={13} />}
+                                onClick={() => {
+                                  setEditingRowId(room.id);
+                                  setEditRowData({
+                                    name: room.name,
+                                    sqm: String(room.sqm || 25),
+                                    seats: String(roomSeats[room.id] || 0),
+                                    category: roomCategories[room.id] || "meeting",
+                                  });
+                                }}
+                              >
+                                Edit
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
               </div>
             </>
           )}
@@ -1654,62 +1640,36 @@ export default function FloorCountPage() {
                     </button>
                   </div>
 
-                  <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
-                    <table className="w-full text-left border-collapse">
-                      <thead className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                        <tr className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
-                          <th className="px-3 py-2">Date</th>
-                          <th className="px-3 py-2">Time</th>
-                          <th className="px-3 py-2">Round</th>
-                          <th className="px-3 py-2">No. of seats</th>
-                          <th className="px-3 py-2">Count</th>
-                          <th className="px-3 py-2 text-right">By</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#F1F5F9]">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Time</TableHead>
+                          <TableHead>Round</TableHead>
+                          <TableHead>No. of seats</TableHead>
+                          <TableHead>Count</TableHead>
+                          <TableHead className="text-right">By</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
                         {(selectedRoom?.countHistory.length
                           ? selectedRoom.countHistory
                           : mockCountHistory
                         )
                           .slice(0, 5)
                           .map((entry, i) => (
-                            <tr
-                              key={i}
-                              className="text-[12px] text-text hover:bg-[#F8FAFC] transition-colors"
-                            >
-                              <td className="px-3 py-3 font-medium">
-                                <div className="flex items-center gap-1.5">
-                                  <Calendar size={12} className="text-text-muted" />
-                                  {entry.date}
-                                </div>
-                              </td>
-                              <td className="px-3 py-3 text-text-muted">
-                                <div className="flex items-center gap-1.5">
-                                  <Clock size={12} />
-                                  {entry.time}
-                                </div>
-                              </td>
-                              <td className="px-3 py-3">
-                                <span className="text-primary font-bold">Round {i + 1}</span>
-                              </td>
-                              <td className="px-3 py-3 text-text-muted">
-                                {roomSeats[selectedRoomId!] || 0}
-                              </td>
-                              <td className="px-3 py-3 font-bold text-lg tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
-                                {formatNumber(entry.count)}
-                              </td>
-                              <td className="px-3 py-3 text-right">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <span className="text-text-muted">{entry.by}</span>
-                                  <div className="w-5 h-5 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[8px] font-bold text-primary border border-white shrink-0">
-                                    {entry.by.split(" ").map((n) => n[0]).join("")}
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
+                            <TableRow key={i}>
+                              <TableCell className="font-semibold text-text whitespace-nowrap">{entry.date}</TableCell>
+                              <TableCell className="whitespace-nowrap">{entry.time}</TableCell>
+                              <TableCell className="text-primary font-semibold whitespace-nowrap">Round {i + 1}</TableCell>
+                              <TableCell className="tabular-nums">{roomSeats[selectedRoomId!] || 0}</TableCell>
+                              <TableCell className="font-semibold text-text tabular-nums">{formatNumber(entry.count)}</TableCell>
+                              <TableCell className="text-right whitespace-nowrap">{entry.by}</TableCell>
+                            </TableRow>
                           ))}
-                      </tbody>
-                    </table>
+                      </TableBody>
+                    </Table>
                   </div>
                 </div>
               </div>
@@ -1931,7 +1891,7 @@ export default function FloorCountPage() {
               </div>
               <div className="p-6 space-y-6">
                 <div className="space-y-3">
-                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
+                  <p className="text-[11px] font-bold text-text-muted tracking-wider">
                     Common Questions
                   </p>
                   <div className="divide-y divide-[#E2E8F0] rounded-2xl border border-[#E2E8F0] overflow-hidden">
@@ -1970,7 +1930,7 @@ export default function FloorCountPage() {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
+                  <p className="text-[11px] font-bold text-text-muted tracking-wider">
                     Something else?
                   </p>
                   <textarea

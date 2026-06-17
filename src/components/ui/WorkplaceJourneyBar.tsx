@@ -104,7 +104,7 @@ function IconOptimization() {
 const STEPS = [
   {
     id: "1-2",
-    label: "STEP 1 and 2",
+    label: "Step 1 and 2",
     name: "Count + Collect",
     Icon: IconCountCollect,
     color: "#6351AC",          // active text — #6351AC per spec
@@ -115,7 +115,7 @@ const STEPS = [
   },
   {
     id: "3",
-    label: "STEP 3",
+    label: "Step 3",
     name: "Analysis + Advice",
     Icon: IconAnalysis,
     color: "#7A4A10",          // darker amber
@@ -126,7 +126,7 @@ const STEPS = [
   },
   {
     id: "4",
-    label: "STEP 4",
+    label: "Step 4",
     name: "Workplace Concept",
     Icon: IconWorkplaceConcept,
     color: "#0A6359",          // darker teal
@@ -137,7 +137,7 @@ const STEPS = [
   },
   {
     id: "5",
-    label: "STEP 5",
+    label: "Step 5",
     name: "Room Program",
     Icon: IconRoomProgram,
     color: "#1D4ED8",          // darker blue
@@ -148,7 +148,7 @@ const STEPS = [
   },
   {
     id: "6",
-    label: "STEP 6",
+    label: "Step 6",
     name: "Design Phase",
     Icon: IconDesignPhase,
     color: "#9D174D",          // darker rose
@@ -159,7 +159,7 @@ const STEPS = [
   },
   {
     id: "7",
-    label: "STEP 7",
+    label: "Step 7",
     name: "Optimisation",
     Icon: IconOptimization,
     color: "#065F46",          // darker green
@@ -191,7 +191,7 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
           zIndex: 30,
         }}
       >
-        <span className="text-[14px] font-black uppercase leading-none tracking-tight">Start</span>
+        <span className="text-[14px] font-black leading-none tracking-tight">Start</span>
         <span className="text-[10px] font-semibold leading-none mt-0.5">Journey</span>
       </div>
 
@@ -243,7 +243,7 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
                 {/* Text */}
                 <div className="min-w-0 flex-1">
                   <p
-                    className="text-[8px] font-extrabold uppercase tracking-[0.05em] leading-none truncate"
+                    className="text-[8px] font-extrabold tracking-[0.05em] leading-none truncate"
                     style={{ color: step.textColor, opacity: isActive ? 1 : 0.75 }}
                   >
                     {step.label}

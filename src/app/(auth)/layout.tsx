@@ -9,7 +9,7 @@ export default function AuthLayout({
   return (
     <div className="min-h-screen flex">
       {/* Brand panel */}
-      <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] relative overflow-hidden shrink-0 bg-surface">
+      <div className="hidden lg:flex lg:w-1/3 relative overflow-hidden shrink-0 bg-surface">
         <Image
           src="/Signup_Illustration.svg"
           alt="AreaSim Illustration"
