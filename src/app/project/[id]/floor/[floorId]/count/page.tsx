@@ -1289,7 +1289,7 @@ export default function FloorCountPage() {
 
                 {/* Summary stats */}
                 <div className="flex bg-surface-2 border border-border rounded-2xl overflow-hidden divide-x divide-border shadow-sm font-body">
-                  <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
+                  <div className="flex-1 p-5 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Total seats in floor</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1298,7 +1298,7 @@ export default function FloorCountPage() {
                       <span className="text-[10px] font-bold text-text-muted">Seats total</span>
                     </div>
                   </div>
-                  <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
+                  <div className="flex-1 p-5 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Seats used today (Avg)</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1310,7 +1310,7 @@ export default function FloorCountPage() {
                       <span className="text-[10px] font-bold text-text-muted">Occupants avg</span>
                     </div>
                   </div>
-                  <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
+                  <div className="flex-1 p-5 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Total floor area</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1554,10 +1554,10 @@ export default function FloorCountPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Comments — collapsible */}
-                <div className={cn("rounded-2xl border border-[#E2E8F0] overflow-hidden font-body", commentsExpanded ? "bg-white" : "bg-[#fafafa]")}>
+                <div className={cn("rounded-2xl border border-[#E2E8F0] overflow-hidden font-body", commentsExpanded ? "bg-white" : "bg-[#FFFCF8]")}>
                   <button
                     onClick={() => setCommentsExpanded((v) => !v)}
-                    className="w-full flex items-start gap-3 px-5 py-4 text-left transition-colors"
+                    className="w-full flex items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-[#fafafa]"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-text font-body">Comments</p>
