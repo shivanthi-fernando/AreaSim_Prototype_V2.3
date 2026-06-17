@@ -17,7 +17,6 @@ import {
   Clock,
   HelpCircle,
   MessageSquare,
-  Send,
   Bell,
   Lock,
   User,
@@ -226,6 +225,7 @@ export default function FloorCountPage() {
 
   // Comment state
   const [roomComment, setRoomComment] = useState("");
+  const [commentsExpanded, setCommentsExpanded] = useState(false);
   const [_roomComments, setRoomComments] = useState<Record<string, string>>({});
   const [showSaveCommentsModal, setShowSaveCommentsModal] = useState(false);
   const [commentPendingAction, setCommentPendingAction] = useState<"done" | "exit" | null>(null);
@@ -1553,39 +1553,65 @@ export default function FloorCountPage() {
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {/* Comments — scrolls with content */}
-                <div>
-                  <h4 className="text-sm font-extrabold text-text mb-3" style={{ fontFamily: "var(--font-manrope)" }}>Comments</h4>
-                  <textarea
-                    value={roomComment}
-                    onChange={(e) => setRoomComment(e.target.value)}
-                    placeholder="Add any observations, issues, or notes about this floor…"
-                    rows={3}
-                    className="w-full rounded-xl border border-[#D1D1D1] bg-white px-4 py-2.5 text-xs text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] hover:border-[#999999] transition-all resize-none"
-                  />
-                  <div className="flex justify-end gap-2 mt-2">
-                    <Button
-                      variant="text"
-                      size="sm"
-                      onClick={() => setRoomComment("")}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      size="sm"
-                      disabled={!roomComment.trim()}
-                      onClick={() => {
-                        if (roomComment.trim()) {
-                          setRoomComments((prev) => ({
-                            ...prev,
-                            [selectedRoomId ?? "floor"]: roomComment.trim(),
-                          }));
-                        }
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </div>
+                {/* Comments — collapsible */}
+                <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden">
+                  <button
+                    onClick={() => setCommentsExpanded((v) => !v)}
+                    className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-surface-2 transition-colors"
+                  >
+                    <MessageSquare size={16} className="text-text-muted shrink-0" />
+                    <span className="text-sm font-extrabold text-text shrink-0" style={{ fontFamily: "var(--font-manrope)" }}>Comments</span>
+                    {!commentsExpanded && (
+                      <span className="text-sm text-text-muted/70 font-body truncate min-w-0">
+                        {roomComment.trim() ? roomComment : "Add notes about current room"}
+                      </span>
+                    )}
+                    <ChevronDown size={18} className={cn("ml-auto text-text-muted transition-transform shrink-0", commentsExpanded && "rotate-180")} />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {commentsExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="border-t border-[#F1F5F9] p-5 space-y-3">
+                          <textarea
+                            value={roomComment}
+                            onChange={(e) => setRoomComment(e.target.value)}
+                            placeholder="Add any observations, issues, or notes about this room…"
+                            rows={3}
+                            className="w-full rounded-xl border border-[#E2E8F0] bg-surface-2 px-4 py-3 text-sm text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] transition-all resize-none"
+                          />
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="text"
+                              size="sm"
+                              onClick={() => { setRoomComment(""); setCommentsExpanded(false); }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              size="sm"
+                              disabled={!roomComment.trim()}
+                              onClick={() => {
+                                if (roomComment.trim()) {
+                                  setRoomComments((prev) => ({
+                                    ...prev,
+                                    [selectedRoomId ?? "floor"]: roomComment.trim(),
+                                  }));
+                                }
+                              }}
+                            >
+                              Save
+                            </Button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Room name heading */}
@@ -1974,18 +2000,26 @@ export default function FloorCountPage() {
                     className="w-full h-24 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4 text-sm focus:outline-none focus:border-primary transition-colors resize-none"
                   />
                 </div>
-                <Button
-                  className="w-full h-12 rounded-xl shadow-lg shadow-primary/20 gap-2"
-                  onClick={() => {
-                    alert("Your questions have been sent to our consultants.");
-                    setShowQuestionsModal(false);
-                    setExpandedFaq(null);
-                    setCustomQuestion("");
-                  }}
-                  icon={<Send size={16} />}
-                >
-                  Send to consultants
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    variant="secondary"
+                    className="flex-1 h-12 rounded-xl"
+                    onClick={() => setShowQuestionsModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex-1 h-12 rounded-xl shadow-lg shadow-primary/20"
+                    onClick={() => {
+                      alert("Your questions have been sent to our consultants.");
+                      setShowQuestionsModal(false);
+                      setExpandedFaq(null);
+                      setCustomQuestion("");
+                    }}
+                  >
+                    Send to consultants
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>

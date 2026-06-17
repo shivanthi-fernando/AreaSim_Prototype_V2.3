@@ -125,6 +125,8 @@ Two button styles live in `globals.css` as `@layer utilities` because their hove
 
 **Button** (`src/components/ui/Button.tsx`): variants `primary | secondary | tertiary | ghost | text | link | destructive | success | icon | fab`; sizes `sm | md | lg`. Always use `<Button>` rather than raw `<button>` for interactive actions visible to the user.
 
+**Chip** (`src/components/ui/Chip.tsx`): one pill for table categories, statuses, and small labels — tones `neutral | success | warning | info | accent`, optional `icon`. Use it instead of hand-rolling status/category pills.
+
 **Pastel icon backgrounds**: Use `bg-[#7A6BAF]/10 text-[#7A6BAF]`, `bg-[#4A7AAE]/10 text-[#4A7AAE]`, `bg-[#139485]/10 text-[#139485]`, `bg-[#C47A2C]/10 text-[#C47A2C]` — cycle through these four for stat card icons, avatars, and section icons.
 
 **Progress bars**: Always use `bg-[#bfa483]` (warm sand). No gradients.

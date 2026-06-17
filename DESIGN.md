@@ -44,7 +44,8 @@ AreaSim is a **frontend-only** Next.js 14 (App Router) prototype written in Type
                 │                             │
        ┌────────▼─────────────────────────────▼──────────┐
        │  Design-system primitives (src/components/ui/**) │
-       │  Button · Input · Card · Modal · Table · Badge…  │
+       │  Button · Input · Card · Modal · Table · Badge ·  │
+       │  Chip · Select · Toast · EmptyState · …           │
        └────────┬─────────────────────────────────────────┘
                 │
        ┌────────▼──────────┐   ┌──────────────────────────┐
@@ -139,6 +140,8 @@ Rationale: hover/active bevel + gradient states (`.btn-primary` / `.btn-secondar
 A fixed four-color pastel set (`#7A6BAF`, `#4A7AAE`, `#139485`, `#C47A2C`) is cycled by index for stat-card icons, section icons, and avatars — never the primary→accent gradient for avatars. Progress bars are always warm sand `#bfa483` (no gradients). Lease-parameter cards use `#F2E7DB`. Link buttons are underline-only, no arrow icon. Rationale: these emerged from repeated design-review feedback and keep screens visually coherent. Consequence: reuse them rather than inventing new accents; the `/styleguide` route documents them.
 
 **Sentence case, no `uppercase`.** All labels/headings use sentence case (capitalise the first letter only); the Tailwind `uppercase` class is not used anywhere. Rationale: ALL-CAPS micro-labels read as shouty and were applied inconsistently. Consequence: don't reach for `uppercase`. The **only** exception is the onboarding Step-2 lease-parameter `BarChart` axis label (`src/app/onboarding/page.tsx`), kept uppercase by request.
+
+**One `Chip` for all pills.** The `ui/Chip` component (tones `neutral/success/warning/info/accent`, optional icon) is the single source for table category/status pills and small labels — don't hand-roll status pills. The `/styleguide` route catalogs every component under Atoms / Molecules / Organisms / Templates / Pages.
 
 **One unified table standard.** See [Table Design Standard](#table-design-standard) below — all tables across the app share the same visual language. Rationale: tables had drifted into 5 different styles (different header backgrounds, divider colors, paddings, and some with vertical column borders). Consequence: match the standard when building any new table; reuse the shared `Table` component where practical.
 

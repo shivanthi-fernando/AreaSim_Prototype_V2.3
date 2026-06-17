@@ -8,6 +8,7 @@ import {
   Input,
   Badge,
   Card,
+  Chip,
   Logo,
   EmptyState,
   Table,
@@ -22,6 +23,7 @@ import {
   Search,
   Plus,
   ArrowRight,
+  Check,
   CheckCircle2,
   AlertCircle,
   Settings,
@@ -36,9 +38,6 @@ import {
   ChevronDown,
   Map,
   Users,
-  Layout,
-  Monitor,
-  FileText,
   Calendar,
   Mail,
   Phone,
@@ -787,14 +786,26 @@ export default function StyleGuidePage() {
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Badges & Chips
               </h3>
-              <Card className="p-8">
-                <div className="flex flex-wrap gap-4">
-                  <Badge variant="active">Active</Badge>
-                  <Badge variant="pending">Pending</Badge>
-                  <Badge variant="urgent">Urgent</Badge>
-                  <Badge variant="new">New</Badge>
-                  <Badge variant="archived">Archived</Badge>
-                  <div className="px-3 py-1 rounded-full bg-surface border border-border text-[10px] font-bold text-text-muted tracking-wider">Default Tag</div>
+              <Card className="p-8 space-y-6">
+                <div>
+                  <p className="text-xs font-bold text-text-muted tracking-wider mb-3">Badge — <code className="font-mono text-primary">ui/Badge</code></p>
+                  <div className="flex flex-wrap gap-4">
+                    <Badge variant="active">Active</Badge>
+                    <Badge variant="pending">Pending</Badge>
+                    <Badge variant="urgent">Urgent</Badge>
+                    <Badge variant="new">New</Badge>
+                    <Badge variant="archived">Archived</Badge>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-text-muted tracking-wider mb-3">Chip — <code className="font-mono text-primary">ui/Chip</code> · used for table category &amp; status</p>
+                  <div className="flex flex-wrap gap-4">
+                    <Chip tone="neutral">Neutral</Chip>
+                    <Chip tone="success" icon={<Check size={9} strokeWidth={3} />}>Success</Chip>
+                    <Chip tone="warning" icon={<span className="w-1.5 h-1.5 rounded-full bg-amber-500" />}>Warning</Chip>
+                    <Chip tone="info">Info</Chip>
+                    <Chip tone="accent">Accent</Chip>
+                  </div>
                 </div>
               </Card>
             </div>
@@ -1134,42 +1145,65 @@ export default function StyleGuidePage() {
                   </Table>
                 </div>
             </div>
+
+            {/* Feature organisms catalog */}
+            <div className="space-y-6 scroll-mt-8">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
+                <div className="w-1.5 h-6 bg-primary rounded-full" />
+                Feature organisms
+              </h3>
+              <p className="text-sm text-text-muted font-body -mt-2">Stateful, feature-level components — explore them live in the app.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { name: "AppLayout", path: "components/layout/AppLayout", desc: "Sticky top-nav shell wrapping all post-auth pages." },
+                  { name: "WorkplaceJourneyBar", path: "components/ui/WorkplaceJourneyBar", desc: "Seven-step workplace journey progress bar." },
+                  { name: "PotentialScoreWidget", path: "components/ui/PotentialScoreWidget", desc: "Workspace potential-score widget." },
+                  { name: "FloorCanvas", path: "components/canvas/FloorCanvas", desc: "Konva floor-plan editor: pen / select / zone / eraser." },
+                  { name: "GuideOverlay", path: "components/canvas/GuideOverlay", desc: "Step-by-step canvas tutorial overlay." },
+                  { name: "DetailPanel", path: "components/canvas/DetailPanel", desc: "Selected-room detail & edit side panel." },
+                  { name: "RoomModal", path: "components/canvas/RoomModal", desc: "Zone-assignment modal." },
+                  { name: "SurveyModal", path: "components/canvas/SurveyModal", desc: "Launch-survey modal." },
+                  { name: "CompletionModal", path: "components/canvas/CompletionModal", desc: "Floor-completion modal." },
+                  { name: "ScoreWidget", path: "components/canvas/ScoreWidget", desc: "In-canvas score widget." },
+                  { name: "IllustrationDrawRoom", path: "components/canvas/IllustrationDrawRoom", desc: "Draw-room illustration." },
+                ].map((c) => <CatalogCard key={c.name} {...c} />)}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Templates & Pages Section */}
+        {/* Templates Section */}
         <section id="templates" className="mb-24 scroll-mt-8">
           <h2 className="text-3xl font-extrabold text-text mb-2">4. Templates</h2>
-          <p className="text-text-muted mb-12">Page-level layouts that articulate the underlying content structure.</p>
-          <Card className="p-12 text-center border-dashed">
-            <Layout className="w-12 h-12 text-border mx-auto mb-4" />
-            <p className="text-sm font-bold text-text-muted">Layout Previews</p>
-            <p className="text-xs text-text-muted mt-2">Templates and final Pages are available in the dedicated preview app.</p>
-          </Card>
+          <p className="text-text-muted mb-12">Page-level layouts and multi-step flows.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { name: "AppLayout shell", path: "components/layout/AppLayout", desc: "Top-nav + scrollable content frame for every post-auth page." },
+              { name: "Onboarding · Project", path: "components/onboarding/Step1Project", desc: "Step 1 — create project (name, location, category)." },
+              { name: "Onboarding · Lease parameters", path: "components/onboarding/Step3Lease", desc: "Step 2 — lease params + live efficiency charts." },
+              { name: "Onboarding · Floor plans", path: "components/onboarding/Step3FloorPlans", desc: "Step 3 — upload floor plans (or skip)." },
+              { name: "Onboarding · Done", path: "components/onboarding/Step6Done", desc: "Completion step — potential score reveal." },
+            ].map((c) => <CatalogCard key={c.name} {...c} />)}
+          </div>
         </section>
 
+        {/* Pages Section */}
         <section id="pages" className="mb-24 scroll-mt-8">
           <h2 className="text-3xl font-extrabold text-text mb-2">5. Pages</h2>
-          <p className="text-text-muted mb-12">Specific instances of templates that represent the final user experience.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="p-8 group cursor-pointer hover:border-primary transition-all shadow-sm">
-              <div className="aspect-video bg-background-alt rounded-xl mb-4 border border-border overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center text-border">
-                  <Monitor className="w-12 h-12" />
-                </div>
-              </div>
-              <h4 className="font-extrabold text-text group-hover:text-primary transition-colors">Dashboard Overview</h4>
-              <p className="text-xs text-text-muted mt-1">Live analytics and project management hub.</p>
-            </Card>
-            <Card className="p-8 group cursor-pointer hover:border-primary transition-all shadow-sm">
-              <div className="aspect-video bg-background-alt rounded-xl mb-4 border border-border overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center text-border">
-                  <FileText className="w-12 h-12" />
-                </div>
-              </div>
-              <h4 className="font-extrabold text-text group-hover:text-primary transition-colors">Project Details</h4>
-              <p className="text-xs text-text-muted mt-1">Granular floor plan and occupancy data.</p>
-            </Card>
+          <p className="text-text-muted mb-12">Final routes that compose templates and organisms into real screens.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { name: "Dashboard", path: "app/dashboard", desc: "Stats, activity feed, recent projects." },
+              { name: "Projects", path: "app/project", desc: "Projects list grid." },
+              { name: "Project detail", path: "app/project/[id]", desc: "Overview / Floors / Team tabs." },
+              { name: "Canvas", path: "app/project/[id]/floor/[floorId]", desc: "Konva floor-plan editor + guide." },
+              { name: "Room counting", path: "…/floor/[floorId]/count", desc: "Room setup, session details & counting." },
+              { name: "Counting history", path: "…/floor/[floorId]/history", desc: "Charts + session records." },
+              { name: "Surveys", path: "app/surveys", desc: "Survey list + detail." },
+              { name: "Members", path: "app/team", desc: "Team management." },
+              { name: "Onboarding", path: "app/onboarding", desc: "Multi-step setup wizard." },
+              { name: "Auth", path: "app/(auth)", desc: "Sign up / in, verify, password, org details." },
+            ].map((c) => <CatalogCard key={c.name} {...c} />)}
           </div>
         </section>
 
@@ -1181,6 +1215,18 @@ export default function StyleGuidePage() {
           </div>
         </footer>
       </main>
+    </div>
+  );
+}
+
+// ─── Component catalog card ────────────────────────────────────────────────────
+
+function CatalogCard({ name, path, desc }: { name: string; path: string; desc: string }) {
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/30 hover:shadow-card transition-all">
+      <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{name}</p>
+      <p className="text-xs text-text-muted font-body mt-1 leading-relaxed">{desc}</p>
+      <code className="inline-block mt-3 text-[11px] font-mono text-primary break-all">{path}</code>
     </div>
   );
 }
