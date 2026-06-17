@@ -1554,19 +1554,23 @@ export default function FloorCountPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Comments — collapsible */}
-                <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden">
+                <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden font-body">
                   <button
                     onClick={() => setCommentsExpanded((v) => !v)}
-                    className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-surface-2 transition-colors"
+                    className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-surface-2 transition-colors"
                   >
-                    <MessageSquare size={16} className="text-text-muted shrink-0" />
-                    <span className="text-sm font-extrabold text-text shrink-0" style={{ fontFamily: "var(--font-manrope)" }}>Comments</span>
-                    {!commentsExpanded && (
-                      <span className="text-sm text-text-muted/70 font-body truncate min-w-0">
-                        {roomComment.trim() ? roomComment : "Add notes about current room"}
-                      </span>
-                    )}
-                    <ChevronDown size={18} className={cn("ml-auto text-text-muted transition-transform shrink-0", commentsExpanded && "rotate-180")} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-text font-body">Comments</p>
+                      <p className="text-xs text-text-muted font-body mt-0.5">
+                        Use this space to add comments for each room you visit, then submit them all at once.
+                      </p>
+                      {!commentsExpanded && roomComment.trim() && (
+                        <p className="text-xs text-text-muted/80 italic font-body mt-1 truncate">
+                          {roomComment}
+                        </p>
+                      )}
+                    </div>
+                    <ChevronDown size={18} className={cn("text-text-muted transition-transform shrink-0 mt-0.5", commentsExpanded && "rotate-180")} />
                   </button>
                   <AnimatePresence initial={false}>
                     {commentsExpanded && (
@@ -1581,20 +1585,22 @@ export default function FloorCountPage() {
                           <textarea
                             value={roomComment}
                             onChange={(e) => setRoomComment(e.target.value)}
-                            placeholder="Add any observations, issues, or notes about this room…"
+                            placeholder="Here you can add any observations, issues, or comments..."
                             rows={3}
-                            className="w-full rounded-xl border border-[#E2E8F0] bg-surface-2 px-4 py-3 text-sm text-[#222B27] placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] transition-all resize-none"
+                            className="w-full rounded-xl border border-[#E2E8F0] bg-surface-2 px-4 py-3 text-sm text-[#222B27] font-body placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] transition-all resize-none"
                           />
                           <div className="flex justify-end gap-2">
                             <Button
-                              variant="text"
-                              size="sm"
+                              variant="secondary"
+                              size="md"
+                              className="px-7"
                               onClick={() => { setRoomComment(""); setCommentsExpanded(false); }}
                             >
                               Cancel
                             </Button>
                             <Button
-                              size="sm"
+                              size="md"
+                              className="px-7"
                               disabled={!roomComment.trim()}
                               onClick={() => {
                                 if (roomComment.trim()) {
@@ -1613,9 +1619,6 @@ export default function FloorCountPage() {
                     )}
                   </AnimatePresence>
                 </div>
-
-                {/* Room name heading */}
-                <h4 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Room name</h4>
 
                 <div className="text-center space-y-8">
                   {/* Room name + zone — shown above round indicator */}
@@ -1715,7 +1718,7 @@ export default function FloorCountPage() {
                             <TableRow key={i}>
                               <TableCell className="text-text whitespace-nowrap">{entry.date}</TableCell>
                               <TableCell className="whitespace-nowrap">{entry.time}</TableCell>
-                              <TableCell className="text-primary whitespace-nowrap">Round {i + 1}</TableCell>
+                              <TableCell className="whitespace-nowrap">Round {i + 1}</TableCell>
                               <TableCell className="tabular-nums">{roomSeats[selectedRoomId!] || 0}</TableCell>
                               <TableCell className="text-text tabular-nums">{formatNumber(entry.count)}</TableCell>
                               <TableCell className="text-right whitespace-nowrap">{entry.by}</TableCell>
