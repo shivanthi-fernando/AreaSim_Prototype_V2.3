@@ -191,6 +191,7 @@ export default function FloorCountPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [timer, setTimer] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startPromptTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [startDate, setStartDate] = useState(getFormattedDate(new Date()));
   const [endDate, setEndDate] = useState(() => {
@@ -291,6 +292,9 @@ export default function FloorCountPage() {
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [isRecording]);
+
+  // Clear the delayed start-session prompt timeout on unmount
+  useEffect(() => () => { if (startPromptTimeoutRef.current) clearTimeout(startPromptTimeoutRef.current); }, []);
 
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId);
   const selectedZone = (floor?.zones || []).find((z) => z.id === selectedRoom?.zoneId);
@@ -497,7 +501,9 @@ export default function FloorCountPage() {
       setStartModalDismissed(true);
     } else {
       // First-time setup via "Verify and continue" — prompt to start the session
-      setStartModalDismissed(false);
+      // after a short delay so the user first sees the session details.
+      if (startPromptTimeoutRef.current) clearTimeout(startPromptTimeoutRef.current);
+      startPromptTimeoutRef.current = setTimeout(() => setStartModalDismissed(false), 3000);
     }
   };
 
