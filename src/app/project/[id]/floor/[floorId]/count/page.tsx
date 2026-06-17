@@ -1554,10 +1554,10 @@ export default function FloorCountPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Comments — collapsible */}
-                <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden font-body">
+                <div className={cn("rounded-2xl border border-[#E2E8F0] overflow-hidden font-body", commentsExpanded ? "bg-white" : "bg-[#fafafa]")}>
                   <button
                     onClick={() => setCommentsExpanded((v) => !v)}
-                    className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-surface-2 transition-colors"
+                    className="w-full flex items-start gap-3 px-5 py-4 text-left transition-colors"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-text font-body">Comments</p>
@@ -1566,7 +1566,7 @@ export default function FloorCountPage() {
                       </p>
                       {!commentsExpanded && roomComment.trim() && (
                         <p className="text-xs text-text-muted/80 italic font-body mt-1 truncate">
-                          {roomComment}
+                          &ldquo;{roomComment}&rdquo;
                         </p>
                       )}
                     </div>
@@ -1620,19 +1620,15 @@ export default function FloorCountPage() {
                   </AnimatePresence>
                 </div>
 
-                <div className="text-center space-y-8">
-                  {/* Room name + zone — shown above round indicator */}
-                  <div>
-                    <h3
-                      className="text-lg font-bold text-text leading-none mb-1"
-                      style={{ fontFamily: "var(--font-manrope)" }}
-                    >
-                      {selectedRoom?.name}
-                    </h3>
-                    <p className="text-xs text-text-muted">
-                      {selectedZone ? selectedZone.name : "Unzoned room"}
-                    </p>
-                  </div>
+                <div className="text-center space-y-6">
+                  {/* Room name + zone — one line, separated by a dash */}
+                  <h3
+                    className="text-lg font-extrabold text-text leading-none"
+                    style={{ fontFamily: "var(--font-manrope)" }}
+                  >
+                    {selectedRoom?.name}
+                    <span className="font-normal text-text-muted"> – {selectedZone ? selectedZone.name : "Unzoned room"}</span>
+                  </h3>
                   <p
                     className="text-sm font-bold text-primary"
                     style={{ fontFamily: "var(--font-manrope)" }}
@@ -2000,7 +1996,7 @@ export default function FloorCountPage() {
                     value={customQuestion}
                     onChange={(e) => setCustomQuestion(e.target.value)}
                     placeholder="Type your question here..."
-                    className="w-full h-24 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4 text-sm focus:outline-none focus:border-primary transition-colors resize-none"
+                    className="w-full h-24 rounded-xl border border-[#969696] bg-white text-[#222B27] font-body placeholder:text-[#98A1B2] px-5 py-3 text-sm transition-all duration-200 hover:border-[#999999] hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] focus:shadow-none resize-none"
                   />
                 </div>
                 <div className="flex gap-3">
