@@ -1803,7 +1803,7 @@ export default function FloorCountPage() {
                     className="flex-1"
                     onClick={() => { setStartModalDismissed(true); handleStartSession(); }}
                   >
-                    Start counting session
+                    Start
                   </Button>
                 </div>
               </div>
