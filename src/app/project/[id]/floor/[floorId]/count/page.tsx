@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Chip } from "@/components/ui/Chip";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/Table";
 import { WorkplaceJourneyBar } from "@/components/ui/WorkplaceJourneyBar";
 import { useCanvasStore } from "@/store/canvas";
@@ -90,25 +91,16 @@ interface RoomMeta {
 // ─── Status badge ─────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: RoomStatus }) {
   if (status === "counted") {
-    return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-bold whitespace-nowrap">
-        <Check size={9} strokeWidth={3} /> Counted
-      </span>
-    );
+    return <Chip tone="success" icon={<Check size={9} strokeWidth={3} />}>Counted</Chip>;
   }
   if (status === "ongoing") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-[10px] font-bold whitespace-nowrap">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+      <Chip tone="warning" icon={<span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />}>
         Ongoing
-      </span>
+      </Chip>
     );
   }
-  return (
-    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#F1F5F9] text-text-muted text-[10px] font-bold whitespace-nowrap">
-      Pending
-    </span>
-  );
+  return <Chip tone="neutral">Pending</Chip>;
 }
 
 // ─── Round notification banner ────────────────────────────────────────────────
@@ -551,8 +543,8 @@ export default function FloorCountPage() {
         {/* ── Workplace Journey Bar ── */}
         <WorkplaceJourneyBar activeStep="1-2" />
 
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[1200px] mx-auto">
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-[1600px] mx-auto w-full">
             <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-6 sm:p-8 space-y-6">
               {/* Title */}
               <div className="border-b border-[#F1F5F9] pt-6 sm:pt-8 pb-5 -mt-6 sm:-mt-8 -mx-6 sm:-mx-8 px-6 sm:px-8 flex flex-col gap-3">
@@ -1344,7 +1336,7 @@ export default function FloorCountPage() {
                               ? "bg-amber-50/40 opacity-70"
                               : meta.status === "counted"
                                 ? "bg-emerald-50/30"
-                                : "hover:bg-surface-2"
+                                : "hover:bg-[#fafafa]"
                           )}
                         >
                           {/* Room name */}
@@ -1374,9 +1366,9 @@ export default function FloorCountPage() {
                                 {FLOOR_CATEGORIES.map((fc) => <option key={fc.id} value={fc.id}>{fc.label}</option>)}
                               </select>
                             ) : (
-                              <span className="px-2 py-1 rounded-md bg-[#F1F5F9] text-[10px] font-bold">
+                              <Chip tone="neutral">
                                 {roomCategories[room.id] || "Meeting"}
-                              </span>
+                              </Chip>
                             )}
                           </TableCell>
 
@@ -1470,6 +1462,7 @@ export default function FloorCountPage() {
                                 disabled={!isRecording}
                                 onClick={() => handleStartCounting(room.id)}
                                 className="w-auto px-4"
+                                icon={<Play size={13} fill="currentColor" />}
                               >
                                 Start counting
                               </Button>
