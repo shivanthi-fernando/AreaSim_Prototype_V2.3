@@ -491,6 +491,14 @@ export default function FloorCountPage() {
   // ── Setup screen confirm ──────────────────────────────────────────────────────
   const handleSetupConfirm = () => {
     setCountingPhase("ready");
+    if (editRoomSettings) {
+      // Returning from "Edit room setup" — don't prompt to start the session
+      setEditRoomSettings(false);
+      setStartModalDismissed(true);
+    } else {
+      // First-time setup via "Verify and continue" — prompt to start the session
+      setStartModalDismissed(false);
+    }
   };
 
   const _allRoomsSetup = rooms.every((r) => roomCategories[r.id] && verifiedRooms.has(r.id));
@@ -549,14 +557,14 @@ export default function FloorCountPage() {
               {/* Title */}
               <div className="border-b border-[#F1F5F9] pt-6 sm:pt-8 pb-5 -mt-6 sm:-mt-8 -mx-6 sm:-mx-8 px-6 sm:px-8 flex flex-col gap-3">
                 <div className="flex items-center gap-1.5 text-xs font-body">
-                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">Room counting tool</span>
                   <span className="text-text-muted">/</span>
                   <span className="font-semibold text-text">
-                    {editRoomSettings ? "Edit room settings" : "Set room category and capacity"}
+                    {editRoomSettings ? "Edit room setup" : "Room setup"}
                   </span>
                 </div>
                 <h2 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                  {editRoomSettings ? "Edit room settings" : "Set room category and capacity"}
+                  {editRoomSettings ? "Edit room setup" : "Room setup"}
                 </h2>
               </div>
 
@@ -835,7 +843,7 @@ export default function FloorCountPage() {
                 <div className="flex items-start justify-between px-7 pt-7 pb-5 border-b border-[#F1F5F9]">
                   <div>
                     <h2 className="text-xl font-extrabold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                      How to use the counting tool
+                      How to use the room counting tool
                     </h2>
                     <p className="text-sm text-text-muted mt-1 leading-relaxed">
                       Follow these steps to get accurate, consistent room data.
@@ -1140,7 +1148,7 @@ export default function FloorCountPage() {
               className="h-9 px-5 gap-2"
               onClick={() => { setEditRoomSettings(true); setCountingPhase("setup"); }}
             >
-              Edit room settings
+              Edit room setup
             </Button>
 
             <Button
@@ -1192,7 +1200,7 @@ export default function FloorCountPage() {
                   className="gap-2 h-9 px-5"
                   icon={<Play size={14} fill="currentColor" />}
                 >
-                  Start session
+                  Start counting session
                 </Button>
               )}
             </AnimatePresence>
@@ -1229,7 +1237,7 @@ export default function FloorCountPage() {
               {/* Panel header */}
               <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-3">
                 <div className="flex items-center gap-1.5 text-xs font-body">
-                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">Room counting tool</span>
                   <span className="text-text-muted">/</span>
                   <span className="font-semibold text-text">Session details</span>
                 </div>
@@ -1529,7 +1537,7 @@ export default function FloorCountPage() {
               {/* Panel header */}
               <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-3 shrink-0">
                 <div className="flex items-center gap-1.5 text-xs font-body">
-                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">Room counting tool</span>
                   <span className="text-text-muted">/</span>
                   <span className="font-semibold text-text">Room counting</span>
                 </div>
@@ -1774,23 +1782,31 @@ export default function FloorCountPage() {
               >
                 <X size={16} />
               </button>
-              <div className="p-8 text-center space-y-6">
+              <div className="p-8 text-center space-y-5">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                  <Play size={20} fill="currentColor" className="text-primary" />
+                </div>
                 <div className="space-y-2">
                   <h4 className="text-xl font-800 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
-                    Ready to start counting?
+                    Start counting session?
                   </h4>
                   <p className="text-sm text-text-muted leading-relaxed">
-                    You&apos;re all set. Start the session to begin recording occupancy counts for <span className="font-bold text-text">{floor?.name || "this floor"}</span>.
+                    Rooms are set up for <span className="font-bold text-text">{floor?.name || "this floor"}</span>. Start the session to begin recording occupancy counts.
                   </p>
                 </div>
-                <Button
-                  size="lg"
-                  className="w-full h-12 rounded-2xl shadow-lg shadow-primary/20 text-base font-bold gap-2"
-                  onClick={handleStartSession}
-                  icon={<Play size={18} fill="currentColor" />}
-                >
-                  Start counting session
-                </Button>
+                <div className="flex gap-3 pt-1">
+                  <Button variant="secondary" size="md" className="flex-1" onClick={() => setStartModalDismissed(true)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="md"
+                    className="flex-1"
+                    icon={<Play size={15} fill="currentColor" />}
+                    onClick={() => { setStartModalDismissed(true); handleStartSession(); }}
+                  >
+                    Start counting session
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>
