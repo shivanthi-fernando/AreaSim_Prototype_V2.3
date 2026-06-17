@@ -110,7 +110,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-manrope);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.2;
   color: var(--color-text);
 }

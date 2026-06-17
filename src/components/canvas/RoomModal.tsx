@@ -54,7 +54,7 @@ export function RoomModal({ room, floorId, onClose }: RoomModalProps) {
       >
         {/* Header with close */}
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
-          <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+          <h3 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
             {type === "room" ? "New room" : "New zone"}
           </h3>
           <button

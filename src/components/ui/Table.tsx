@@ -8,7 +8,7 @@ const Table = React.forwardRef<
   <div className="border border-border rounded-2xl overflow-hidden bg-surface">
     <table
       ref={ref}
-      className={cn("w-full text-left border-collapse", className)}
+      className={cn("w-full text-left border-collapse font-body", className)}
       {...props}
     />
   </div>
@@ -42,7 +42,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "transition-colors hover:bg-surface-2",
+      "transition-colors hover:bg-[#FFFDFA]",
       className
     )}
     {...props}
@@ -57,7 +57,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "px-5 py-3 text-[11px] font-semibold text-text-muted tracking-wider font-body",
+      "px-5 py-3 text-[13px] font-bold text-text tracking-wider font-body",
       className
     )}
     {...props}

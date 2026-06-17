@@ -77,7 +77,7 @@ export default function SurveyDetailPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+            <h2 className="text-base font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
               Response Breakdown
             </h2>
             {survey.questions.map((q, qi) => {

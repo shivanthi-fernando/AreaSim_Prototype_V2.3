@@ -75,7 +75,7 @@ export default function VerifyEmailPage() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <h1 className="text-2xl text-text mb-2" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+          <h1 className="text-2xl text-text mb-2" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
             Check your inbox
           </h1>
           <p className="text-sm text-text-muted font-body">

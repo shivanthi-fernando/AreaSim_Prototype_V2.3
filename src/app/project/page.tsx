@@ -48,7 +48,7 @@ export default function ProjectsPage() {
                     <Building2 size={20} className="text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-text truncate" style={{ fontFamily: "var(--font-manrope)" }}>
+                    <p className="text-sm font-extrabold text-text truncate" style={{ fontFamily: "var(--font-manrope)" }}>
                       {project.name}
                     </p>
                     <p className="text-xs text-text-muted font-body truncate">{project.buildingName}</p>

@@ -39,7 +39,7 @@ export function SurveyModal() {
           >
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-lg font-700 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+                <h2 className="text-lg font-700 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                   Conduct Survey
                 </h2>
                 <p className="text-sm text-text-muted font-body">Select a template to send to your floor</p>

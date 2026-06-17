@@ -552,271 +552,279 @@ export default function FloorCountPage() {
         <WorkplaceJourneyBar activeStep="1-2" />
 
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[1200px] mx-auto space-y-6">
-            {/* Title */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Layers size={20} className="text-primary" />
+          <div className="max-w-[1200px] mx-auto">
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-6 sm:p-8 space-y-6">
+              {/* Title */}
+              <div className="border-b border-[#F1F5F9] pt-6 sm:pt-8 pb-5 -mt-6 sm:-mt-8 -mx-6 sm:-mx-8 px-6 sm:px-8 flex flex-col gap-3">
+                <div className="flex items-center gap-1.5 text-xs font-body">
+                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">/</span>
+                  <span className="font-semibold text-text">
+                    {editRoomSettings ? "Edit room settings" : "Set room category and capacity"}
+                  </span>
                 </div>
-                <h2 className="text-xl font-bold text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                <h2 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                   {editRoomSettings ? "Edit room settings" : "Set room category and capacity"}
                 </h2>
               </div>
-              <p className="text-sm text-text-muted pl-[52px]">
-                Set the category and verify the number of seats for each room. This is a one-time setup.
+
+              {/* Description helper text */}
+              <p className="text-sm text-text-muted">
+                {editRoomSettings
+                  ? "Update the room categories, areas, and capacities as needed."
+                  : "Set the category and verify the number of seats for each room. This is a one-time setup."}
               </p>
-            </div>
 
-            {/* ── Inline bulk category card — shown when rooms are selected ── */}
-            <AnimatePresence>
-              {selectedRoomIds.size > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-4"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
-                        Set category
-                      </h3>
-                      <p className="text-xs text-text-muted">
-                        Apply to {selectedRoomIds.size} selected room{selectedRoomIds.size > 1 ? "s" : ""}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
-                      className="text-text-muted hover:text-text transition-colors"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                  {/* Category icon cards */}
-                  <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
-                    {[
-                      ...FLOOR_CATEGORIES,
-                      ...customCategories.map((cc) => ({
-                        id: cc,
-                        label: cc,
-                        desc: "Custom category",
-                        color: "border-gray-200 bg-gray-50",
-                        badge: "bg-gray-100 text-gray-600",
-                        text: "text-gray-600",
-                      })),
-                    ].map((fc) => {
-                      const iconMap: Record<string, React.ReactNode> = {
-                        meeting: <Users size={16} />,
-                        focus: <Target size={16} />,
-                        social: <Coffee size={16} />,
-                        empty: <Box size={16} />,
-                      };
-                      const icon = iconMap[fc.id] ?? <Layers size={16} />;
-                      const isSelected = bulkCategory === fc.id;
-                      return (
-                        <button
-                          key={fc.id}
-                          onClick={() => setBulkCategory(fc.id)}
-                          className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border transition-all min-w-[120px] text-left shrink-0 ${isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC]"
-                            }`}
-                        >
-                          <div className={`${isSelected ? "text-primary" : "text-text-muted"}`}>{icon}</div>
-                          <div>
-                            <p className={`text-xs font-bold leading-none mb-0.5 ${isSelected ? "text-primary" : "text-text"}`}>{fc.label}</p>
-                            <p className="text-[10px] text-text-muted leading-tight">{fc.desc}</p>
-                          </div>
-                          {isSelected && <Check size={10} className="text-primary ml-auto mt-auto" strokeWidth={3} />}
-                        </button>
-                      );
-                    })}
-                    {/* Add new category */}
-                    <button
-                      onClick={() => { setAddCategoryRoomId(null); setNewCategoryInput(""); setShowAddCategoryModal(true); }}
-                      className="flex flex-col items-start gap-1.5 p-3 rounded-xl border border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC] transition-all min-w-[90px] shrink-0"
-                    >
-                      <Plus size={16} className="text-text-muted" />
-                      <p className="text-[10px] font-bold text-text-muted">Add new</p>
-                    </button>
-                  </div>
-                  {/* Action buttons */}
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
-                      className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-3 py-1.5"
-                    >
-                      Cancel
-                    </button>
-                    <Button
-                      size="sm"
-                      disabled={!bulkCategory}
-                      onClick={applyBulkCategory}
-                    >
-                      Apply to {selectedRoomIds.size} room{selectedRoomIds.size > 1 ? "s" : ""}
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Per-room setup */}
-            <div className="space-y-3">
-              {/* Progress bar */}
-              <div className="flex items-center gap-3 px-1">
-                <span className="text-[11px] font-semibold text-text-muted tracking-wider font-body whitespace-nowrap">
-                  {rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length} of {rooms.length} rooms verified
-                </span>
-                <div className="flex-1 h-1.5 bg-surface-2 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#bfa483] rounded-full transition-all duration-300"
-                    style={{ width: `${rooms.length ? (rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length / rooms.length) * 100 : 0}%` }}
-                  />
-                </div>
-              </div>
-
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-11">
+              {/* ── Inline bulk category card — shown when rooms are selected ── */}
+              <AnimatePresence>
+                {selectedRoomIds.size > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-4"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h3 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                          Set category
+                        </h3>
+                        <p className="text-xs text-text-muted">
+                          Apply to {selectedRoomIds.size} selected room{selectedRoomIds.size > 1 ? "s" : ""}
+                        </p>
+                      </div>
                       <button
-                        onClick={toggleSelectAll}
-                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selectedRoomIds.size === rooms.length && rooms.length > 0
-                          ? "bg-primary border-primary"
-                          : selectedRoomIds.size > 0
-                            ? "bg-primary/30 border-primary"
-                            : "border-[#C0D0DC] bg-white"
-                          }`}
-                        title="Select all rooms"
+                        onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
+                        className="text-text-muted hover:text-text transition-colors"
                       >
-                        {selectedRoomIds.size > 0 && <Check size={11} className="text-white" strokeWidth={3} />}
+                        <X size={16} />
                       </button>
-                    </TableHead>
-                    <TableHead>Room</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="text-center">Seats</TableHead>
-                    <TableHead className="text-center">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {rooms.map((room) => {
-                    const cat = roomCategories[room.id];
-                    const seats = roomSeats[room.id] || 1;
-                    const isVerified = verifiedRooms.has(room.id);
-                    const isChecked = selectedRoomIds.has(room.id);
-                    return (
-                      <TableRow key={room.id} className={isChecked ? "bg-primary/5 hover:bg-primary/5" : undefined}>
-                        {/* Checkbox */}
-                        <TableCell>
+                    </div>
+                    {/* Category icon cards */}
+                    <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
+                      {[
+                        ...FLOOR_CATEGORIES,
+                        ...customCategories.map((cc) => ({
+                          id: cc,
+                          label: cc,
+                          desc: "Custom category",
+                          color: "border-gray-200 bg-gray-50",
+                          badge: "bg-gray-100 text-gray-600",
+                          text: "text-gray-600",
+                        })),
+                      ].map((fc) => {
+                        const iconMap: Record<string, React.ReactNode> = {
+                          meeting: <Users size={16} />,
+                          focus: <Target size={16} />,
+                          social: <Coffee size={16} />,
+                          empty: <Box size={16} />,
+                        };
+                        const icon = iconMap[fc.id] ?? <Layers size={16} />;
+                        const isSelected = bulkCategory === fc.id;
+                        return (
                           <button
-                            onClick={() => toggleRoomSelect(room.id)}
-                            className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
+                            key={fc.id}
+                            onClick={() => setBulkCategory(fc.id)}
+                            className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border transition-all min-w-[120px] text-left shrink-0 ${isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC]"
                               }`}
                           >
-                            {isChecked && <Check size={11} className="text-white" strokeWidth={3} />}
+                            <div className={`${isSelected ? "text-primary" : "text-text-muted"}`}>{icon}</div>
+                            <div>
+                              <p className={`text-xs font-bold leading-none mb-0.5 ${isSelected ? "text-primary" : "text-text"}`}>{fc.label}</p>
+                              <p className="text-[10px] text-text-muted leading-tight">{fc.desc}</p>
+                            </div>
+                            {isSelected && <Check size={10} className="text-primary ml-auto mt-auto" strokeWidth={3} />}
                           </button>
-                        </TableCell>
+                        );
+                      })}
+                      {/* Add new category */}
+                      <button
+                        onClick={() => { setAddCategoryRoomId(null); setNewCategoryInput(""); setShowAddCategoryModal(true); }}
+                        className="flex flex-col items-start gap-1.5 p-3 rounded-xl border border-[#E2E8F0] bg-white hover:border-primary/40 hover:bg-[#FAFBFC] transition-all min-w-[90px] shrink-0"
+                      >
+                        <Plus size={16} className="text-text-muted" />
+                        <p className="text-[10px] font-bold text-text-muted">Add new</p>
+                      </button>
+                    </div>
+                    {/* Action buttons */}
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => { setSelectedRoomIds(new Set()); setBulkCategory(""); }}
+                        className="text-xs font-semibold text-text-muted hover:text-text transition-colors px-3 py-1.5"
+                      >
+                        Cancel
+                      </button>
+                      <Button
+                        size="sm"
+                        disabled={!bulkCategory}
+                        onClick={applyBulkCategory}
+                      >
+                        Apply to {selectedRoomIds.size} room{selectedRoomIds.size > 1 ? "s" : ""}
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                        {/* Room info */}
-                        <TableCell>
-                          <p className="text-sm font-semibold text-text font-body">{room.name}</p>
-                          <p className="text-xs text-text-muted font-body">{formatNumber(room.sqm || 25)} m²</p>
-                        </TableCell>
+              {/* Per-room setup */}
+              <div className="space-y-3">
+                {/* Progress bar */}
+                <div className="flex items-center gap-3 px-1">
+                  <span className="text-[11px] font-semibold text-text-muted tracking-wider font-body whitespace-nowrap">
+                    {rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length} of {rooms.length} rooms verified
+                  </span>
+                  <div className="flex-1 h-1.5 bg-surface-2 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#bfa483] rounded-full transition-all duration-300"
+                      style={{ width: `${rooms.length ? (rooms.filter((r) => roomCategories[r.id] && verifiedRooms.has(r.id)).length / rooms.length) * 100 : 0}%` }}
+                    />
+                  </div>
+                </div>
 
-                        {/* Category dropdown */}
-                        <TableCell>
-                          <div className="relative">
-                            <select
-                              value={cat || ""}
-                              onChange={(e) => {
-                                if (e.target.value === "add-new") {
-                                  setAddCategoryRoomId(room.id);
-                                  setNewCategoryInput("");
-                                  setShowAddCategoryModal(true);
-                                } else {
-                                  setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
-                                  setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; });
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-11">
+                        <button
+                          onClick={toggleSelectAll}
+                          className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${selectedRoomIds.size === rooms.length && rooms.length > 0
+                            ? "bg-primary border-primary"
+                            : selectedRoomIds.size > 0
+                              ? "bg-primary/30 border-primary"
+                              : "border-[#C0D0DC] bg-white"
+                            }`}
+                          title="Select all rooms"
+                        >
+                          {selectedRoomIds.size > 0 && <Check size={11} className="text-white" strokeWidth={3} />}
+                        </button>
+                      </TableHead>
+                      <TableHead>Room</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead className="text-center">Seats</TableHead>
+                      <TableHead className="text-center">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rooms.map((room) => {
+                      const cat = roomCategories[room.id];
+                      const seats = roomSeats[room.id] || 1;
+                      const isVerified = verifiedRooms.has(room.id);
+                      const isChecked = selectedRoomIds.has(room.id);
+                      return (
+                        <TableRow key={room.id} className={isChecked ? "bg-primary/5 hover:bg-primary/5" : undefined}>
+                          {/* Checkbox */}
+                          <TableCell>
+                            <button
+                              onClick={() => toggleRoomSelect(room.id)}
+                              className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isChecked ? "bg-primary border-primary" : "border-[#C0D0DC] bg-white hover:border-primary"
+                                }`}
+                            >
+                              {isChecked && <Check size={11} className="text-white" strokeWidth={3} />}
+                            </button>
+                          </TableCell>
+
+                          {/* Room info */}
+                          <TableCell>
+                            <p className="text-sm text-text font-body">{room.name}</p>
+                            <p className="text-xs text-text-muted font-body">{formatNumber(room.sqm || 25)} m²</p>
+                          </TableCell>
+
+                          {/* Category dropdown */}
+                          <TableCell>
+                            <div className="relative">
+                              <select
+                                value={cat || ""}
+                                onChange={(e) => {
+                                  if (e.target.value === "add-new") {
+                                    setAddCategoryRoomId(room.id);
+                                    setNewCategoryInput("");
+                                    setShowAddCategoryModal(true);
+                                  } else {
+                                    setRoomCategories((prev) => ({ ...prev, [room.id]: e.target.value }));
+                                    setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; });
+                                  }
+                                }}
+                                className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
+                              >
+                                <option value="" disabled>Select category...</option>
+                                {FLOOR_CATEGORIES.map((fc) => (
+                                  <option key={fc.id} value={fc.id}>{fc.label}</option>
+                                ))}
+                                {customCategories.map((cc) => (
+                                  <option key={cc} value={cc}>{cc}</option>
+                                ))}
+                                <option value="add-new">+ Add new category</option>
+                              </select>
+                              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                            </div>
+                          </TableCell>
+
+                          {/* Seats — ± buttons + editable number */}
+                          <TableCell>
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => {
+                                  const n = Math.max(1, seats - 1);
+                                  updateSeats(room.id, n);
+                                  setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
+                                }}
+                                className="w-7 h-7 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all"
+                              >
+                                <Minus size={12} strokeWidth={3} />
+                              </button>
+                              <input
+                                type="text"
+                                inputMode="numeric"
+                                value={getSeatInputValue(room.id)}
+                                onChange={(e) =>
+                                  setRoomSeatInputs((prev) => ({ ...prev, [room.id]: e.target.value.replace(/\D/g, "") }))
                                 }
-                              }}
-                              className="appearance-none w-full rounded-xl border border-[#E2E8F0] bg-white pl-3 pr-8 py-2 text-xs font-semibold text-text focus:outline-none focus:border-primary transition-all cursor-pointer"
-                            >
-                              <option value="" disabled>Select category...</option>
-                              {FLOOR_CATEGORIES.map((fc) => (
-                                <option key={fc.id} value={fc.id}>{fc.label}</option>
-                              ))}
-                              {customCategories.map((cc) => (
-                                <option key={cc} value={cc}>{cc}</option>
-                              ))}
-                              <option value="add-new">+ Add new category</option>
-                            </select>
-                            <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                          </div>
-                        </TableCell>
-
-                        {/* Seats — ± buttons + editable number */}
-                        <TableCell>
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => {
-                                const n = Math.max(1, seats - 1);
-                                updateSeats(room.id, n);
-                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
-                              }}
-                              className="w-7 h-7 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all"
-                            >
-                              <Minus size={12} strokeWidth={3} />
-                            </button>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              value={getSeatInputValue(room.id)}
-                              onChange={(e) =>
-                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: e.target.value.replace(/\D/g, "") }))
-                              }
-                              onBlur={(e) => commitSeatInput(room.id, e.target.value)}
-                              onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
-                              className="w-10 text-center text-sm font-bold text-text tabular-nums rounded-lg border border-[#E2E8F0] py-0.5 focus:outline-none focus:border-primary transition-colors bg-white"
-                            />
-                            <button
-                              onClick={() => {
-                                const n = seats + 1;
-                                updateSeats(room.id, n);
-                                setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
-                              }}
-                              className="w-7 h-7 rounded-lg border border-primary bg-primary/5 flex items-center justify-center text-primary hover:bg-primary/10 transition-all"
-                            >
-                              <Plus size={12} strokeWidth={3} />
-                            </button>
-                          </div>
-                        </TableCell>
-
-                        {/* Verify / Verified */}
-                        <TableCell>
-                          <div className="flex justify-center">
-                            {isVerified ? (
+                                onBlur={(e) => commitSeatInput(room.id, e.target.value)}
+                                onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+                                className="w-10 text-center text-sm font-bold text-text tabular-nums rounded-lg border border-[#E2E8F0] py-0.5 focus:outline-none focus:border-primary transition-colors bg-white"
+                              />
                               <button
-                                onClick={() => setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold hover:bg-emerald-100 transition-all"
+                                onClick={() => {
+                                  const n = seats + 1;
+                                  updateSeats(room.id, n);
+                                  setRoomSeatInputs((prev) => ({ ...prev, [room.id]: String(n) }));
+                                }}
+                                className="w-7 h-7 rounded-lg border border-primary bg-primary/5 flex items-center justify-center text-primary hover:bg-primary/10 transition-all"
                               >
-                                <Check size={11} strokeWidth={3} /> Verified
+                                <Plus size={12} strokeWidth={3} />
                               </button>
-                            ) : (
-                              <button
-                                disabled={!cat}
-                                onClick={() => setVerifiedRooms((prev) => new Set([...prev, room.id]))}
-                                className="px-3 py-1.5 rounded-full text-xs font-semibold border border-primary text-primary hover:bg-primary/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                              >
-                                Verify
-                              </button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                            </div>
+                          </TableCell>
+
+                          {/* Verify / Verified */}
+                          <TableCell>
+                            <div className="flex justify-center">
+                              {isVerified ? (
+                                <button
+                                  onClick={() => setVerifiedRooms((prev) => { const n = new Set(prev); n.delete(room.id); return n; })}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold hover:bg-emerald-100 transition-all"
+                                >
+                                  <Check size={11} strokeWidth={3} /> Verified
+                                </button>
+                              ) : (
+                                <button
+                                  disabled={!cat}
+                                  onClick={() => setVerifiedRooms((prev) => new Set([...prev, room.id]))}
+                                  className="px-3 py-1.5 rounded-full text-xs font-semibold border border-primary text-primary hover:bg-primary/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                >
+                                  Verify
+                                </button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+
             </div>
-
           </div>
         </main>
 
@@ -834,7 +842,7 @@ export default function FloorCountPage() {
                 {/* Modal header */}
                 <div className="flex items-start justify-between px-7 pt-7 pb-5 border-b border-[#F1F5F9]">
                   <div>
-                    <h2 className="text-xl font-bold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
+                    <h2 className="text-xl font-extrabold text-text leading-tight" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                       How to use the counting tool
                     </h2>
                     <p className="text-sm text-text-muted mt-1 leading-relaxed">
@@ -947,7 +955,7 @@ export default function FloorCountPage() {
                               className="w-10 h-10 rounded-full flex items-center justify-center"
                               style={{ background: step.badgeBg }}
                             >
-                              <span className="text-sm font-bold" style={{ color: step.color, fontFamily: "var(--font-manrope)" }}>
+                              <span className="text-sm font-extrabold" style={{ color: step.color, fontFamily: "var(--font-manrope)" }}>
                                 {step.num}
                               </span>
                             </div>
@@ -958,7 +966,7 @@ export default function FloorCountPage() {
 
                           {/* Title + description */}
                           <div className="px-4 mb-4 flex-1">
-                            <h3 className="text-sm font-bold text-text mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
+                            <h3 className="text-sm font-extrabold text-text mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
                               {step.title}
                             </h3>
                             <p className="text-[11.5px] text-text-muted leading-relaxed">{step.description}</p>
@@ -1063,7 +1071,7 @@ export default function FloorCountPage() {
                 className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl overflow-hidden w-full max-w-sm"
               >
                 <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2E8F0]">
-                  <h3 className="font-bold text-text text-sm" style={{ fontFamily: "var(--font-manrope)" }}>
+                  <h3 className="font-extrabold text-text text-sm" style={{ fontFamily: "var(--font-manrope)" }}>
                     Add new category
                   </h3>
                   <button onClick={() => setShowAddCategoryModal(false)} className="text-text-muted hover:text-text transition-colors">
@@ -1219,7 +1227,7 @@ export default function FloorCountPage() {
             <div className="flex flex-col items-center h-full pt-6 bg-white w-full">
               <button
                 onClick={() => setActiveSection("left")}
-                className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-text-muted hover:text-primary transition-all"
+                className="p-2.5 rounded-xl bg-surface-2 border border-border text-text-muted hover:text-primary transition-all"
               >
                 <ChevronRight size={20} />
               </button>
@@ -1227,15 +1235,15 @@ export default function FloorCountPage() {
           ) : (
             <>
               {/* Panel header */}
-              <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-1">
-                <h3 className="text-lg font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+              <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-3">
+                <div className="flex items-center gap-1.5 text-xs font-body">
+                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">/</span>
+                  <span className="font-semibold text-text">Session details</span>
+                </div>
+                <h3 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>
                   Session details
                 </h3>
-                <p className="text-xs text-text-muted">
-                  {isRecording
-                    ? "Session is running. Count each room below."
-                    : "Click Start session to begin counting."}
-                </p>
               </div>
 
               {/* Round notification banner */}
@@ -1267,16 +1275,16 @@ export default function FloorCountPage() {
                     </div>
                   </div>
                   <div className="ml-auto pb-0.5">
-                    <p className="text-sm font-bold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
+                    <p className="text-sm font-extrabold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
                       {roundLabel} · Day 1 of 14
                     </p>
                   </div>
                 </div>
 
                 {/* Summary stats */}
-                <div className="flex bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden divide-x divide-[#E2E8F0] shadow-sm">
+                <div className="flex bg-surface-2 border border-border rounded-2xl overflow-hidden divide-x divide-border shadow-sm font-body">
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[12px] font-bold text-text-muted tracking-wider">Total seats in floor</span>
+                    <span className="text-sm font-bold text-text font-body">Total seats in floor</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(rooms.reduce((acc, r) => acc + (roomSeats[r.id] || 0), 0))}
@@ -1285,7 +1293,7 @@ export default function FloorCountPage() {
                     </div>
                   </div>
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[10px] font-bold text-text-muted tracking-wider">Seats used today (Avg)</span>
+                    <span className="text-sm font-bold text-text font-body">Seats used today (Avg)</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(Math.round(
@@ -1297,7 +1305,7 @@ export default function FloorCountPage() {
                     </div>
                   </div>
                   <div className="flex-1 p-5 flex flex-col gap-1 hover:bg-white/50 transition-colors">
-                    <span className="text-[10px] font-bold text-text-muted tracking-wider">Total floor area</span>
+                    <span className="text-sm font-bold text-text font-body">Total floor area</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
                         {formatNumber(rooms.reduce((acc, r) => acc + (r.sqm || 25), 0))}
@@ -1350,7 +1358,7 @@ export default function FloorCountPage() {
                             ) : (
                               <div className="flex items-center gap-2">
                                 {isLockedByOther && <Lock size={12} className="text-amber-500 shrink-0" />}
-                                <span className="text-sm font-bold text-text">{room.name}</span>
+                                <span className="text-sm text-text">{room.name}</span>
                               </div>
                             )}
                           </TableCell>
@@ -1381,7 +1389,7 @@ export default function FloorCountPage() {
                                 className="w-24 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
                               />
                             ) : (
-                              <span className="font-bold text-text">{formatNumber(room.sqm || 25)} m²</span>
+                              <span className="text-text">{formatNumber(room.sqm || 25)} m²</span>
                             )}
                           </TableCell>
 
@@ -1394,7 +1402,7 @@ export default function FloorCountPage() {
                                 className="w-16 rounded-lg border border-[#D1D1D1] bg-white px-3 py-1.5 text-sm font-bold text-text focus:outline-none focus:border-[#139485] focus:ring-2 focus:ring-[rgba(19,148,133,0.18)] transition-all"
                               />
                             ) : (
-                              <span className="font-bold text-text tabular-nums">{roomSeats[room.id] || 0}</span>
+                              <span className="text-text tabular-nums">{roomSeats[room.id] || 0}</span>
                             )}
                           </TableCell>
 
@@ -1410,47 +1418,47 @@ export default function FloorCountPage() {
                                 <div className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-[8px] font-bold text-emerald-700 shrink-0">
                                   {meta.countedBy.split(" ").map((n) => n[0]).join("")}
                                 </div>
-                                <span className="text-xs font-medium text-text">{meta.countedBy}</span>
+                                <span className="text-sm text-text">{meta.countedBy}</span>
                               </div>
                             ) : meta.status === "ongoing" && meta.lockedBy ? (
                               <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 rounded-full bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
                                   <User size={9} className="text-amber-700" />
                                 </div>
-                                <span className="text-xs text-text">{meta.lockedBy}</span>
+                                <span className="text-sm text-text">{meta.lockedBy}</span>
                               </div>
                             ) : (
-                              <span className="text-xs text-text">—</span>
+                              <span className="text-sm text-text">—</span>
                             )}
                           </TableCell>
 
                           {/* Counting action */}
                           <TableCell>
                             {isLockedByOther ? (
-                              <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold">
+                              <div className="flex items-center gap-1.5 text-sm text-amber-600">
                                 <Lock size={11} />
                                 Locked by {meta.lockedBy}
                               </div>
                             ) : meta.status === "counted" ? (
                               <div className="flex items-center justify-between px-2">
-                                <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                                <span className="text-sm text-text">
                                   {count ?? 0}
                                 </span>
                                 <button
                                   onClick={() => handleStartCounting(room.id)}
-                                  className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
+                                  className="text-sm text-text-muted hover:text-primary underline underline-offset-4"
                                 >
                                   Edit
                                 </button>
                               </div>
                             ) : count !== undefined ? (
                               <div className="flex items-center justify-between px-2">
-                                <span className="text-lg font-900 text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                                <span className="text-sm text-text">
                                   {count}
                                 </span>
                                 <button
                                   onClick={() => handleStartCounting(room.id)}
-                                  className="text-xs font-semibold text-text-muted hover:text-primary underline underline-offset-4"
+                                  className="text-sm text-text-muted hover:text-primary underline underline-offset-4"
                                 >
                                   Edit
                                 </button>
@@ -1525,10 +1533,22 @@ export default function FloorCountPage() {
               transition={{ type: "spring", stiffness: 300, damping: 35 }}
               className="flex flex-col h-full bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden"
             >
+              {/* Panel header */}
+              <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-3 shrink-0">
+                <div className="flex items-center gap-1.5 text-xs font-body">
+                  <span className="text-text-muted">Counting tool</span>
+                  <span className="text-text-muted">/</span>
+                  <span className="font-semibold text-text">Room counting</span>
+                </div>
+                <h3 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>
+                  Room counting
+                </h3>
+              </div>
+
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Comments — scrolls with content */}
                 <div>
-                  <h4 className="text-sm font-bold text-text mb-3" style={{ fontFamily: "var(--font-manrope)" }}>Comments</h4>
+                  <h4 className="text-sm font-extrabold text-text mb-3" style={{ fontFamily: "var(--font-manrope)" }}>Comments</h4>
                   <textarea
                     value={roomComment}
                     onChange={(e) => setRoomComment(e.target.value)}
@@ -1562,7 +1582,7 @@ export default function FloorCountPage() {
                 </div>
 
                 {/* Room name heading */}
-                <h4 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Room name</h4>
+                <h4 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Room name</h4>
 
                 <div className="text-center space-y-8">
                   {/* Room name + zone — shown above round indicator */}
@@ -1660,11 +1680,11 @@ export default function FloorCountPage() {
                           .slice(0, 5)
                           .map((entry, i) => (
                             <TableRow key={i}>
-                              <TableCell className="font-semibold text-text whitespace-nowrap">{entry.date}</TableCell>
+                              <TableCell className="text-text whitespace-nowrap">{entry.date}</TableCell>
                               <TableCell className="whitespace-nowrap">{entry.time}</TableCell>
-                              <TableCell className="text-primary font-semibold whitespace-nowrap">Round {i + 1}</TableCell>
+                              <TableCell className="text-primary whitespace-nowrap">Round {i + 1}</TableCell>
                               <TableCell className="tabular-nums">{roomSeats[selectedRoomId!] || 0}</TableCell>
-                              <TableCell className="font-semibold text-text tabular-nums">{formatNumber(entry.count)}</TableCell>
+                              <TableCell className="text-text tabular-nums">{formatNumber(entry.count)}</TableCell>
                               <TableCell className="text-right whitespace-nowrap">{entry.by}</TableCell>
                             </TableRow>
                           ))}
@@ -1776,7 +1796,7 @@ export default function FloorCountPage() {
                   onClick={handleStartSession}
                   icon={<Play size={18} fill="currentColor" />}
                 >
-                  Start session
+                  Start counting session
                 </Button>
               </div>
             </motion.div>
@@ -1803,7 +1823,7 @@ export default function FloorCountPage() {
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <ClipboardList size={18} className="text-primary" />
                     </div>
-                    <h3 className="font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                    <h3 className="font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                       Finish session
                     </h3>
                   </div>
@@ -1878,7 +1898,7 @@ export default function FloorCountPage() {
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                     <MessageSquare size={18} className="text-primary" />
                   </div>
-                  <h3 className="font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                  <h3 className="font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                     Got questions?
                   </h3>
                 </div>

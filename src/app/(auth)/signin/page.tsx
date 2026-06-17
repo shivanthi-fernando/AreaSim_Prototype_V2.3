@@ -42,7 +42,7 @@ export default function SignInPage() {
       {/* White card */}
       <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-[#ECECEC] shadow-sm p-8 space-y-6">
         <div>
-          <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+          <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
             Welcome back
           </h1>
           <p className="text-sm text-text-muted font-body">Sign in to your AreaSim account to continue.</p>

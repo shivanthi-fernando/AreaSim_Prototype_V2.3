@@ -204,7 +204,7 @@ function ConsultantCards() {
     <div className="space-y-3">
       {CONSULTANTS.map((c) => (
         <div key={c.name} className="p-4 rounded-2xl border border-border bg-surface hover:border-primary/20 transition-all">
-          <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
+          <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
           <p className="text-xs font-semibold mb-1.5" style={{ color: "#0A4F6E" }}>{c.title}</p>
           <p className="text-xs text-text-muted font-body leading-relaxed">{c.bio}</p>
         </div>
@@ -342,7 +342,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
             >
               <div className="px-6 py-4 border-b border-border flex flex-col gap-2 bg-surface shrink-0">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                  <h2 className="text-lg font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                     {verifyingFloor.name}
                   </h2>
                   <button
@@ -402,7 +402,7 @@ export function Step3FloorPlans({ onNext, onBack }: Props) {
                     <Building2 size={20} className="text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                    <h2 className="text-base font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                       Don&apos;t have a floor plan?
                     </h2>
                     <p className="text-xs text-text-muted font-body mt-0.5">

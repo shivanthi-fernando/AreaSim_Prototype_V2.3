@@ -101,7 +101,7 @@ function ConsultantModal({ onClose, onDashboard }: { onClose: () => void; onDash
             <p className="text-[10px] font-bold text-text-muted tracking-widest font-body mb-3 px-1">About our experts</p>
             {CONSULTANTS.map((c) => (
               <div key={c.name} className="p-4 rounded-2xl border border-border bg-surface-2/50">
-                <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
+                <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{c.name}</p>
                 <p className="text-xs font-semibold text-accent mb-1.5">{c.title}</p>
                 <p className="text-xs text-text-muted font-body leading-relaxed">{c.bio}</p>
               </div>

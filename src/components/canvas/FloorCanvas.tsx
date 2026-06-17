@@ -473,7 +473,7 @@ export function FloorCanvas({ floorId, imageUrl, showGuide = false, guideStep = 
               >
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
-                  <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+                  <h3 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                     Create zone
                   </h3>
                   <button

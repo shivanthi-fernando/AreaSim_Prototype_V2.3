@@ -107,7 +107,7 @@ export function CompletionModal() {
                   <Lock size={17} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-700 text-text font-display" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+                  <h3 className="text-sm font-700 text-text font-display" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                     Room Program
                   </h3>
                   <p className="text-xs text-text-muted font-body mt-0.5">
@@ -128,7 +128,7 @@ export function CompletionModal() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-text-muted font-body">From</p>
-                  <p className="text-lg font-700 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+                  <p className="text-lg font-700 text-text" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
                     NOK 2,499<span className="text-sm font-400 text-text-muted">/month</span>
                   </p>
                 </div>

@@ -56,7 +56,7 @@ function OverviewTab() {
 
       {/* Building summary */}
       <div className="rounded-2xl border border-border bg-surface p-5">
-        <h3 className="text-sm font-bold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>
+        <h3 className="text-sm font-extrabold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>
           Building summary
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -77,7 +77,7 @@ function OverviewTab() {
       {/* Lease parameters */}
       <div className="rounded-2xl border border-border bg-surface p-5">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+          <h3 className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
             Lease parameters
           </h3>
           <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-600">
@@ -95,7 +95,7 @@ function OverviewTab() {
           ].map((item) => (
             <div key={item.label} className="bg-[#F2E7DB] rounded-xl p-3">
               <p className="text-[11px] text-text-muted font-body mb-1">{item.label}</p>
-              <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{item.value}</p>
+              <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{item.value}</p>
             </div>
           ))}
         </div>
@@ -141,7 +141,7 @@ function FloorsTab() {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{floor.name}</p>
+                  <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>{floor.name}</p>
                   {pct === 100 && (
                     <span className="flex items-center gap-1 text-[11px] font-semibold text-accent">
                       <CheckCircle2 size={12} /> Complete

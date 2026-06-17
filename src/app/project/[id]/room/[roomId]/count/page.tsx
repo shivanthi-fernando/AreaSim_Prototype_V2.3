@@ -349,7 +349,7 @@ function SetupScreen({
         >
           {/* ── Full-width header ── */}
           <div className="mb-6">
-            <h1 className="text-xl font-bold text-[#0D1B2A] mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
+            <h1 className="text-xl font-extrabold text-[#0D1B2A] mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
               Set up room for counting
             </h1>
             <p className="text-2xl font-black text-primary mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
@@ -466,7 +466,7 @@ function SetupScreen({
                 >
                   <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#F0F4F8]">
                     <div>
-                      <p className="text-base font-bold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>Select Category</p>
+                      <p className="text-base font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-manrope)" }}>Select Category</p>
                       <p className="text-xs text-[#8CA3B0] mt-0.5">Apply to {selectedRoomIds.size} selected room{selectedRoomIds.size > 1 ? "s" : ""}</p>
                     </div>
                     <button onClick={() => setShowBulkModal(false)} className="w-8 h-8 rounded-full bg-[#F0F4F8] flex items-center justify-center text-[#5C7A8A] hover:bg-[#E5EAF0] transition-colors">
@@ -882,7 +882,7 @@ function CountScreen({
               transition={{ delay: i * 0.04 + 0.2 }}
               className={`grid grid-cols-4 px-5 py-3 border-b border-[#F0F4F8] last:border-0 ${i % 2 === 0 ? "bg-white" : "bg-[#FAFBFD]"} hover:bg-[#F0F6FB] transition-colors`}
             >
-              <span className="text-sm font-bold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>{entry.count}</span>
+              <span className="text-sm font-extrabold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>{entry.count}</span>
               <span className="text-sm text-[#374151]">{entry.by}</span>
               <span className="text-sm text-[#8CA3B0]">{entry.date}</span>
               <span className="text-sm text-[#8CA3B0]">{entry.time}</span>

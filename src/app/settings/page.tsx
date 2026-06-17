@@ -94,7 +94,7 @@ function NotificationsTab() {
   return (
     <div className="max-w-lg space-y-6">
       <div className="rounded-2xl border border-border bg-surface p-5">
-        <p className="text-sm font-bold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Email Notifications</p>
+        <p className="text-sm font-extrabold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Email Notifications</p>
         <p className="text-xs text-text-muted font-body mb-4">Choose which emails you receive from AreaSim.</p>
         <div>
           <ToggleRow label="Survey completed"        sub="When a survey reaches 100% responses"  defaultOn={true} />
@@ -106,7 +106,7 @@ function NotificationsTab() {
       </div>
 
       <div className="rounded-2xl border border-border bg-surface p-5">
-        <p className="text-sm font-bold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>In-App Notifications</p>
+        <p className="text-sm font-extrabold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>In-App Notifications</p>
         <div>
           <ToggleRow label="Activity feed updates"   defaultOn={true} />
           <ToggleRow label="Mention alerts"          defaultOn={true} />
@@ -121,7 +121,7 @@ function SecurityTab() {
   return (
     <div className="max-w-lg space-y-6">
       <div className="rounded-2xl border border-border bg-surface p-5 space-y-4">
-        <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Change Password</p>
+        <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Change Password</p>
         <InputField label="Current Password"  type="password" placeholder="••••••••" />
         <InputField label="New Password"      type="password" placeholder="••••••••" />
         <InputField label="Confirm Password"  type="password" placeholder="••••••••" />
@@ -131,13 +131,13 @@ function SecurityTab() {
       </div>
 
       <div className="rounded-2xl border border-border bg-surface p-5">
-        <p className="text-sm font-bold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Two-Factor Authentication</p>
+        <p className="text-sm font-extrabold text-text mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Two-Factor Authentication</p>
         <p className="text-xs text-text-muted font-body mb-4">Add an extra layer of security to your account.</p>
         <ToggleRow label="Enable 2FA" sub="Use an authenticator app" defaultOn={false} />
       </div>
 
       <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-5">
-        <p className="text-sm font-bold text-red-500 mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Danger Zone</p>
+        <p className="text-sm font-extrabold text-red-500 mb-1" style={{ fontFamily: "var(--font-manrope)" }}>Danger Zone</p>
         <p className="text-xs text-text-muted font-body mb-4">Permanently delete your account and all associated data.</p>
         <button className="px-4 py-2 rounded-xl border border-red-500/30 text-red-500 text-sm font-semibold hover:bg-red-500/10 transition-colors">
           Delete Account
@@ -151,7 +151,7 @@ function OrganizationTab() {
   return (
     <div className="max-w-lg space-y-6">
       <div className="rounded-2xl border border-border bg-surface p-5 space-y-4">
-        <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Organization Details</p>
+        <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Organization Details</p>
         <InputField label="Organization Name" defaultValue="Oslo Health AS" />
         <InputField label="Organization Number" placeholder="e.g. 123 456 789" />
         <div className="grid grid-cols-2 gap-4">

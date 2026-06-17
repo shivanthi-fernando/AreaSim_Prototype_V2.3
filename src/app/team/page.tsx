@@ -184,7 +184,7 @@ function MemberRow({ member, onRemove, index }: { member: Member; onRemove: () =
             {member.avatar}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-text font-body truncate">{member.name}</p>
+            <p className="text-sm text-text font-body truncate">{member.name}</p>
             <p className="text-xs text-text-muted font-body truncate">{member.email}</p>
           </div>
         </div>

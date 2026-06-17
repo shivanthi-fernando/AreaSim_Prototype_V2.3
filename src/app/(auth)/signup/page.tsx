@@ -44,7 +44,7 @@ export default function SignUpPage() {
       {/* White card */}
       <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-[#ECECEC] shadow-sm p-8 space-y-6">
         <div>
-          <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 700 }}>
+          <h1 className="text-2xl text-text mb-1" style={{ fontFamily: "var(--font-manrope)", fontWeight: 800 }}>
             Create your account
           </h1>
         </div>

@@ -128,7 +128,7 @@ export default function SurveysPage() {
                   >
                     {/* Survey Name */}
                     <TableCell className="min-w-0">
-                      <p className="text-sm font-semibold text-text font-body truncate">{survey.name}</p>
+                      <p className="text-sm text-text font-body truncate">{survey.name}</p>
                       <p className="text-xs text-text-muted font-body">{survey.createdAt}</p>
                     </TableCell>
 
@@ -142,7 +142,7 @@ export default function SurveysPage() {
                     <TableCell className="hidden lg:table-cell tabular-nums">{survey.sentTo > 0 ? survey.sentTo : "—"}</TableCell>
 
                     {/* Responses */}
-                    <TableCell className="hidden lg:table-cell font-semibold text-text tabular-nums">{survey.responses}</TableCell>
+                    <TableCell className="hidden lg:table-cell text-text tabular-nums">{survey.responses}</TableCell>
 
                     {/* Completion bar */}
                     <TableCell className="hidden sm:table-cell">

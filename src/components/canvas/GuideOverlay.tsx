@@ -365,7 +365,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
         <span className="inline-block text-[10px] font-semibold text-[#8B6F47] bg-[#EDE8E0] px-2 py-0.5 rounded-full font-body mb-2">
           Step {step + 1} of {total}
         </span>
-        <h3 className="text-sm font-bold text-[#0D1B2A] font-body mb-1">{current.title}</h3>
+        <h3 className="text-sm font-extrabold text-[#0D1B2A] font-body mb-1">{current.title}</h3>
         <p className="text-xs text-[#5A7184] font-body leading-relaxed mb-3">{current.description}</p>
         <div className="rounded-xl overflow-hidden" style={{ height: 108, background: "rgba(255,255,255,0.5)" }}>
           <Illustration />

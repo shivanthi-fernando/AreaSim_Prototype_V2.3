@@ -338,7 +338,7 @@ export default function RoomHistoryPage() {
 
           {/* ── Session records table ── */}
           <section className="flex flex-col gap-3">
-            <h3 className="text-lg font-bold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>Session records</h3>
+            <h3 className="text-lg font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>Session records</h3>
 
             {historyData.length === 0 ? (
               <div className="rounded-2xl border border-border bg-surface py-20 text-center">
@@ -364,7 +364,7 @@ export default function RoomHistoryPage() {
                       transition={{ delay: idx * 0.05 }}
                       key={idx}
                     >
-                      <TableCell className="font-semibold text-text">{row.date}</TableCell>
+                      <TableCell className="text-text">{row.date}</TableCell>
                       <TableCell>{row.time}</TableCell>
                       <TableCell>{row.round}</TableCell>
                       <TableCell>12</TableCell>
@@ -411,7 +411,7 @@ function ChartCard({
     >
       <div className="px-5 py-4 border-b border-[#E2E8F0]/60 flex items-center justify-between bg-white/70">
         <div>
-          <h3 className="text-sm font-bold text-text leading-none mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
+          <h3 className="text-sm font-extrabold text-text leading-none mb-1" style={{ fontFamily: "var(--font-manrope)" }}>
             {title}
           </h3>
           <p className="text-[11px] text-text-muted">{description}</p>

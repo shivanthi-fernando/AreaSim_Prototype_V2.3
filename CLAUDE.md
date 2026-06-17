@@ -106,8 +106,8 @@ Navigating to the count page with `#show-instructions` in the URL triggers the "
 
 ### Fonts
 
-- **Manrope** (`font-display`, `var(--font-manrope)`) — headings, bold labels, numbers in stat cards
-- **DM Sans** (`font-body`, `var(--font-dm-sans)`) — body text, buttons, labels, all prose
+- **Manrope** (`font-display`, `var(--font-manrope)`) — headings, bold labels, numbers in stat cards. **Bold headings use ExtraBold (800)** — use `font-extrabold` (or `fontWeight: 800`), not `font-bold`; the global `h1–h6` rule is weight 800.
+- **DM Sans** (`font-body`, `var(--font-dm-sans)`) — body text, buttons, labels, all prose. **All tables render in DM Sans** (the shared `Table` sets `font-body` on the `<table>`).
 - Apply heading font inline: `style={{ fontFamily: "var(--font-manrope)" }}` (Tailwind `font-display` works too)
 
 ### Text casing
@@ -133,7 +133,7 @@ Two button styles live in `globals.css` as `@layer utilities` because their hove
 
 **Link buttons**: Underline only, no arrow icon: `className="text-xs text-primary font-semibold font-body underline"`.
 
-**Tables**: One unified standard across the whole app — see [`DESIGN.md` → Table Design Standard](DESIGN.md#table-design-standard). Wrapper `rounded-2xl border border-border bg-surface`; header `bg-surface-2` + `text-[11px] font-semibold text-text-muted tracking-wider font-body` (sentence case — no `uppercase`); body cells `text-sm text-text-muted font-body` (name cell `font-semibold text-text`); `divide-y divide-border` horizontal dividers only — **never** vertical column borders; hover `hover:bg-surface-2`; no icon boxes in name cells. Prefer the shared `Table` component (`src/components/ui/Table.tsx`), which encodes these defaults.
+**Tables**: One unified standard across the whole app — see [`DESIGN.md` → Table Design Standard](DESIGN.md#table-design-standard). Wrapper `rounded-2xl border border-border bg-surface`; header `bg-surface-2` + `text-[13px] font-bold text-text tracking-wider font-body` (bold near-black, sentence case — no `uppercase`); body cells `text-sm text-text-muted font-body` — **never bold**, all columns one font size (name cell may use `text-text` for color, but not bold); `divide-y divide-border` horizontal dividers only — **never** vertical column borders; hover `hover:bg-[#FFFDFA]`; no icon boxes in name cells. Prefer the shared `Table` component (`src/components/ui/Table.tsx`), which encodes these defaults.
 
 **Avatars (user initials)**: Cycle through the four pastel color pairs using the member's index: `PASTEL_COLORS[i % 4]`. Never use the primary→accent gradient for avatars.
 

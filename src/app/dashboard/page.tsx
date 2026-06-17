@@ -283,7 +283,7 @@ export default function DashboardPage() {
 
         {/* ── Quick Stats ── */}
         <div>
-          <h2 className="text-base font-bold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>Overview</h2>
+          <h2 className="text-base font-extrabold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>Overview</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((s) => <StatCard key={s.label} {...s} />)}
           </div>
@@ -293,7 +293,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Recent Projects</h2>
+              <h2 className="text-base font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Recent Projects</h2>
               <button onClick={() => router.push("/project")}
                 className="text-xs text-primary font-semibold font-body underline">
                 View all
@@ -313,7 +313,7 @@ export default function DashboardPage() {
                         <Building2 size={18} className="text-primary" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-text truncate" style={{ fontFamily: "var(--font-manrope)" }}>{project.name}</p>
+                        <p className="text-sm font-extrabold text-text truncate" style={{ fontFamily: "var(--font-manrope)" }}>{project.name}</p>
                         <p className="text-xs text-text-muted font-body truncate">{project.buildingName}</p>
                       </div>
                     </div>
@@ -347,7 +347,7 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <h2 className="text-base font-bold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>Recent Activity</h2>
+            <h2 className="text-base font-extrabold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>Recent Activity</h2>
             <div className="rounded-2xl border border-border bg-surface overflow-hidden">
               <div className="relative">
                 <div className="divide-y divide-border">

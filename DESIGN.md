@@ -130,7 +130,7 @@ Rationale: a single source of truth for color/spacing/radius that both raw CSS a
 **Dark mode is intentionally disabled.**
 Rationale: although `tailwind.config.ts` has `darkMode: "class"` and a `ThemeToggle` exists, `ThemeProvider` force-locks the app to light mode (clears the stored theme, no-ops the toggle). The warm Nordic palette is the brand and only light was polished. Consequence: don't wire up dark-mode styling or assume the toggle works — it's a deliberate no-op.
 
-**Two fonts, role-separated.** Manrope (`font-display`) for headings, numbers, and bold labels; DM Sans (`font-body`) for prose, buttons, and inputs. Headings often set the family inline (`style={{ fontFamily: "var(--font-manrope)" }}`). Consequence: keep this split; don't introduce new font families.
+**Two fonts, role-separated.** Manrope (`font-display`) for headings, numbers, and bold labels; DM Sans (`font-body`) for prose, buttons, inputs, and **all tables** (the shared `Table` sets `font-body`). Headings often set the family inline (`style={{ fontFamily: "var(--font-manrope)" }}`). Bold Manrope headings use **ExtraBold (800)** — `font-extrabold` / `fontWeight: 800`, and the global `h1–h6` rule is weight 800 (not 700). Consequence: keep this split; use `font-extrabold` for heading emphasis, not `font-bold`; don't introduce new font families.
 
 **`<Button>` component over raw `<button>`.**
 Rationale: hover/active bevel + gradient states (`.btn-primary` / `.btn-secondary`) can't be expressed in plain Tailwind and must stay consistent. Consequence: always use `<Button>` for user-visible actions; the CSS classes back its primary/secondary variants.
@@ -167,13 +167,13 @@ The component encodes the standard below as its defaults, so matching is automat
 |---------|------|
 | **Wrapper** | `rounded-2xl border border-border bg-surface overflow-hidden` |
 | **Header background** | `bg-surface-2` (`#FFFCF7`) |
-| **Header text** | `text-[11px] font-semibold text-text-muted tracking-wider font-body` — **sentence case** (no `uppercase`; only the first letter is capitalised) |
+| **Header text** | `text-[13px] font-bold text-text tracking-wider font-body` — **bold, near-black**, **sentence case** (no `uppercase`) |
 | **Header padding** | `px-5 py-3` |
 | **Row dividers** | `divide-y divide-border` (or `border-b border-border last:border-0`) — **horizontal only** |
 | **Vertical column borders** | **None** — never separate columns with borders |
-| **Row hover** | `hover:bg-surface-2 transition-colors` |
-| **Body cell text** | `text-sm text-text-muted font-body` |
-| **Primary/name cell** | `text-sm font-semibold text-text font-body` |
+| **Row hover** | `hover:bg-[#FFFDFA] transition-colors` (a touch lighter than `surface-2`) |
+| **Body cell text** | `text-sm text-text-muted font-body` — **never bold**; all columns share one font size |
+| **Primary/name cell** | `text-sm text-text font-body` (darker color for hierarchy, but **not bold**) |
 | **Body padding** | `px-5 py-4` (comfortable) · `px-4 py-3` (compact — dense side panels only) |
 | **Numeric columns** | add `tabular-nums`; right-align trailing numeric/action columns |
 | **Name cells** | no icon boxes — plain text only |

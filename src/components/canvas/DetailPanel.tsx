@@ -89,7 +89,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
         <div>
           <p className="text-[10px] text-[#8CA3B0] tracking-wider font-body mb-0.5">Floor</p>
           <h2
-            className="text-sm font-bold text-[#0D1B2A] font-display leading-tight"
+            className="text-sm font-extrabold text-[#0D1B2A] font-display leading-tight"
             style={{ fontFamily: "var(--font-manrope)" }}
           >
             {floor?.name ?? "Select Floor"}
@@ -296,7 +296,7 @@ export function DetailPanel({ floorId: _initialFloorId, guideHighlightFirstRoom 
                 <IllustrationDrawRoom />
               </div>
               <div className="p-6">
-                <h3 className="text-lg font-bold text-[#0D1B2A] mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
+                <h3 className="text-lg font-extrabold text-[#0D1B2A] mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
                   Verify with Draw tool
                 </h3>
                 <p className="text-sm text-[#5C7A8A] font-body leading-relaxed mb-6">
@@ -441,7 +441,7 @@ function RoomRow({
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-[#8CA3B0] font-body">Seats</span>
-                    <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{seats}</span>
+                    <span className="text-[10px] font-extrabold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{seats}</span>
                   </div>
                   <div className="h-px bg-[#DAEAF5]" />
                   <div className="grid grid-cols-2 gap-2">
@@ -465,7 +465,7 @@ function RoomRow({
                           transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
                         />
                       </div>
-                      <span className="text-[10px] font-bold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{formatNumber(avgCapacity)}</span>
+                      <span className="text-[10px] font-extrabold text-[#374151] font-mono" style={{ fontFamily: "var(--font-manrope)" }}>{formatNumber(avgCapacity)}</span>
                     </div>
                   </div>
                 </div>

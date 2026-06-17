@@ -168,7 +168,7 @@ export default function StyleGuidePage() {
       {/* Main Content */}
       <main className="flex-1 p-8 lg:p-16 max-w-5xl mx-auto w-full">
         <header className="mb-16">
-          <h1 className="text-4xl font-bold text-text mb-4">UI Component Library</h1>
+          <h1 className="text-4xl font-extrabold text-text mb-4">UI Component Library</h1>
           <p className="text-text-muted text-lg max-w-2xl">
             A comprehensive guide to the AreaSim design system. These components are built with
             accessibility, performance, and aesthetic consistency in mind.
@@ -177,12 +177,12 @@ export default function StyleGuidePage() {
 
         {/* Foundations Section */}
         <section id="foundations" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">Foundations</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">Foundations</h2>
           <p className="text-text-muted mb-12">The basic building blocks and guidelines of the AreaSim design system.</p>
 
           {/* Color Palette (formerly Brand & Identity) */}
           <div id="color-palette" className="space-y-8 mb-16 scroll-mt-8">
-            <h3 className="text-xl font-bold text-text flex items-center gap-2">
+            <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
               <div className="w-1.5 h-6 bg-primary rounded-full"></div>
               Color Palette
             </h3>
@@ -342,7 +342,7 @@ export default function StyleGuidePage() {
 
           {/* Typography */}
           <div id="typography-system" className="space-y-8 scroll-mt-8">
-            <h3 className="text-xl font-bold text-text flex items-center gap-2">
+            <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
               <div className="w-1.5 h-6 bg-primary rounded-full"></div>
               Typography System
             </h3>
@@ -352,7 +352,7 @@ export default function StyleGuidePage() {
                   <p className="text-sm font-semibold text-text-muted tracking-wider mb-8">Font Families</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     <div className="space-y-4">
-                      <div className="text-4xl font-bold font-manrope">Aa</div>
+                      <div className="text-4xl font-extrabold font-manrope">Aa</div>
                       <div>
                         <p className="text-sm font-bold text-text">Manrope</p>
                         <p className="text-xs text-text-muted">Primary Heading Font</p>
@@ -381,13 +381,13 @@ export default function StyleGuidePage() {
 
         {/* Atoms Section */}
         <section id="atoms" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">1. Atoms</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">1. Atoms</h2>
           <p className="text-text-muted mb-12">Foundational UI elements that cannot be broken down further.</p>
 
           <div className="space-y-16">
             {/* Buttons */}
             <div id="buttons" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Buttons
               </h3>
@@ -511,7 +511,7 @@ export default function StyleGuidePage() {
 
             {/* Inputs */}
             <div id="inputs" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Form Fields
               </h3>
@@ -724,7 +724,7 @@ export default function StyleGuidePage() {
 
             {/* Selection Controls */}
             <div id="selection-controls" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Selection Controls
               </h3>
@@ -783,7 +783,7 @@ export default function StyleGuidePage() {
 
             {/* Badges & Status */}
             <div id="badges-chips" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Badges & Chips
               </h3>
@@ -801,7 +801,7 @@ export default function StyleGuidePage() {
 
             {/* Avatars & Icons */}
             <div id="avatars-icons" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Avatars & Icons
               </h3>
@@ -846,13 +846,13 @@ export default function StyleGuidePage() {
 
         {/* Molecules Section */}
         <section id="molecules" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">2. Molecules</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">2. Molecules</h2>
           <p className="text-text-muted mb-12">Groups of atoms bonded together to take on new properties.</p>
 
           <div className="space-y-16">
             {/* Search Bar */}
             <div id="search-bar" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Search Bar
               </h3>
@@ -869,7 +869,7 @@ export default function StyleGuidePage() {
 
             {/* Form Groups */}
             <div id="form-groups" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Form Groups
               </h3>
@@ -896,7 +896,7 @@ export default function StyleGuidePage() {
 
             {/* Tabs & Navigation */}
             <div id="tabs-navigation" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Tabs & Navigation
               </h3>
@@ -926,7 +926,7 @@ export default function StyleGuidePage() {
 
             {/* Stat Cards */}
             <div id="stat-cards" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Stat Cards
               </h3>
@@ -960,17 +960,17 @@ export default function StyleGuidePage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card className="p-6 space-y-2">
                     <p className="text-xs font-bold text-text-muted tracking-wider">Active Projects</p>
-                    <h4 className="text-3xl font-bold text-text">12</h4>
+                    <h4 className="text-3xl font-extrabold text-text">12</h4>
                     <p className="text-[10px] text-success font-bold">+2 from last month</p>
                   </Card>
                   <Card className="p-6 space-y-2">
                     <p className="text-xs font-bold text-text-muted tracking-wider">Team Members</p>
-                    <h4 className="text-3xl font-bold text-text">48</h4>
+                    <h4 className="text-3xl font-extrabold text-text">48</h4>
                     <p className="text-[10px] text-text-muted">3 pending invites</p>
                   </Card>
                   <Card className="p-6 space-y-2 border-primary/20 bg-primary/5">
                     <p className="text-xs font-bold text-primary tracking-wider">Storage Used</p>
-                    <h4 className="text-3xl font-bold text-text">84%</h4>
+                    <h4 className="text-3xl font-extrabold text-text">84%</h4>
                     <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
                       <div className="w-[84%] h-full bg-primary"></div>
                     </div>
@@ -981,7 +981,7 @@ export default function StyleGuidePage() {
 
             {/* Alert Messages */}
             <div id="alert-messages" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Alert Messages
               </h3>
@@ -999,7 +999,7 @@ export default function StyleGuidePage() {
 
             {/* Empty States */}
             <div id="empty-states" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Empty States
               </h3>
@@ -1017,19 +1017,19 @@ export default function StyleGuidePage() {
 
         {/* Organisms Section */}
         <section id="organisms" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">3. Organisms</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">3. Organisms</h2>
           <p className="text-text-muted mb-12">Complex UI components composed of molecules and/or atoms.</p>
 
           <div className="space-y-16">
             {/* Dashboard Header */}
             <div id="dashboard-header" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Dashboard Header
               </h3>
               <div className="w-full bg-surface border border-border p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
                 <div>
-                  <h4 className="text-2xl font-bold text-text mb-1 font-manrope">Good Morning, Kari</h4>
+                  <h4 className="text-2xl font-extrabold text-text mb-1 font-manrope">Good Morning, Kari</h4>
                   <p className="text-sm text-text-muted">Here is what&apos;s happening in your workspace today.</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -1041,7 +1041,7 @@ export default function StyleGuidePage() {
 
             {/* Sidebar Navigation */}
             <div id="sidebar-navigation" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Sidebar Navigation
               </h3>
@@ -1070,7 +1070,7 @@ export default function StyleGuidePage() {
 
             {/* Data Table */}
             <div id="data-table" className="space-y-8 scroll-mt-8">
-              <h3 className="text-xl font-bold text-text flex items-center gap-2">
+              <h3 className="text-xl font-extrabold text-text flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary rounded-full"></div>
                 Data Table
               </h3>
@@ -1090,7 +1090,7 @@ export default function StyleGuidePage() {
                     { name: "Copenhagen Hub", status: "archived", occupancy: "45%", id: 3 },
                   ].map((row) => (
                     <TableRow key={row.id} className="group">
-                      <TableCell className="font-semibold text-text">{row.name}</TableCell>
+                      <TableCell className="text-text">{row.name}</TableCell>
                       <TableCell>
                         <Badge variant={row.status as "active" | "pending" | "archived"}>{row.status}</Badge>
                       </TableCell>
@@ -1106,7 +1106,7 @@ export default function StyleGuidePage() {
                 <div className="mt-8 space-y-4">
                   <div>
                     <p className="text-xs font-bold text-text-muted tracking-wider mb-1">Standard Table Guidelines</p>
-                    <p className="text-sm text-text-muted font-body">All tables share one visual language (see <code className="font-mono text-primary">DESIGN.md → Table Design Standard</code>): wrapper <code className="font-mono text-primary">rounded-2xl border border-border bg-surface</code>, header <code className="font-mono text-primary">bg-surface-2</code> with <code className="font-mono text-primary">text-[11px] font-semibold text-text-muted tracking-wider font-body</code>, body cells <code className="font-mono text-primary">text-sm text-text-muted font-body</code> (name cell <code className="font-mono text-primary">font-semibold text-text</code>), <code className="font-mono text-primary">divide-y divide-border</code> horizontal dividers only — <strong>never</strong> vertical column borders, no icons inside cells, hover <code className="font-mono text-primary">hover:bg-surface-2</code>. Padding: <code className="font-mono text-primary">px-5 py-4</code> comfortable / <code className="font-mono text-primary">px-4 py-3</code> compact.</p>
+                    <p className="text-sm text-text-muted font-body">All tables share one visual language (see <code className="font-mono text-primary">DESIGN.md → Table Design Standard</code>): wrapper <code className="font-mono text-primary">rounded-2xl border border-border bg-surface</code>, header <code className="font-mono text-primary">bg-surface-2</code> with bold near-black <code className="font-mono text-primary">text-[13px] font-bold text-text tracking-wider font-body</code>, body cells <code className="font-mono text-primary">text-sm text-text-muted font-body</code> — never bold, all columns one font size (name cell may use <code className="font-mono text-primary">text-text</code> for color), <code className="font-mono text-primary">divide-y divide-border</code> horizontal dividers only — <strong>never</strong> vertical column borders, no icons inside cells, hover <code className="font-mono text-primary">hover:bg-[#FFFDFA]</code>. Padding: <code className="font-mono text-primary">px-5 py-4</code> comfortable / <code className="font-mono text-primary">px-4 py-3</code> compact.</p>
                   </div>
                   <Table>
                     <TableHeader>
@@ -1124,7 +1124,7 @@ export default function StyleGuidePage() {
                         { date: "Apr 23, 2024", round: "Round 1", count: "15", by: "John K." },
                       ].map((row, i) => (
                         <TableRow key={i}>
-                          <TableCell className="font-semibold text-text">{row.date}</TableCell>
+                          <TableCell className="text-text">{row.date}</TableCell>
                           <TableCell>{row.round}</TableCell>
                           <TableCell className="tabular-nums">{row.count}</TableCell>
                           <TableCell className="text-right">{row.by}</TableCell>
@@ -1139,7 +1139,7 @@ export default function StyleGuidePage() {
 
         {/* Templates & Pages Section */}
         <section id="templates" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">4. Templates</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">4. Templates</h2>
           <p className="text-text-muted mb-12">Page-level layouts that articulate the underlying content structure.</p>
           <Card className="p-12 text-center border-dashed">
             <Layout className="w-12 h-12 text-border mx-auto mb-4" />
@@ -1149,7 +1149,7 @@ export default function StyleGuidePage() {
         </section>
 
         <section id="pages" className="mb-24 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-text mb-2">5. Pages</h2>
+          <h2 className="text-3xl font-extrabold text-text mb-2">5. Pages</h2>
           <p className="text-text-muted mb-12">Specific instances of templates that represent the final user experience.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="p-8 group cursor-pointer hover:border-primary transition-all shadow-sm">
@@ -1158,7 +1158,7 @@ export default function StyleGuidePage() {
                   <Monitor className="w-12 h-12" />
                 </div>
               </div>
-              <h4 className="font-bold text-text group-hover:text-primary transition-colors">Dashboard Overview</h4>
+              <h4 className="font-extrabold text-text group-hover:text-primary transition-colors">Dashboard Overview</h4>
               <p className="text-xs text-text-muted mt-1">Live analytics and project management hub.</p>
             </Card>
             <Card className="p-8 group cursor-pointer hover:border-primary transition-all shadow-sm">
@@ -1167,7 +1167,7 @@ export default function StyleGuidePage() {
                   <FileText className="w-12 h-12" />
                 </div>
               </div>
-              <h4 className="font-bold text-text group-hover:text-primary transition-colors">Project Details</h4>
+              <h4 className="font-extrabold text-text group-hover:text-primary transition-colors">Project Details</h4>
               <p className="text-xs text-text-muted mt-1">Granular floor plan and occupancy data.</p>
             </Card>
           </div>
@@ -1380,7 +1380,7 @@ function ColorBox({ hex, name, isMain }: { hex: string; name: string; isMain?: b
 function UsageGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-4">
-      <h4 className="text-xs font-bold text-text tracking-widest border-b border-border pb-2">{title}</h4>
+      <h4 className="text-xs font-extrabold text-text tracking-widest border-b border-border pb-2">{title}</h4>
       <div className="space-y-3">
         {children}
       </div>

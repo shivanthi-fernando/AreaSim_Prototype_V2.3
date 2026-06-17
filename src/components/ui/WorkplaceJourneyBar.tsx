@@ -185,7 +185,7 @@ export function WorkplaceJourneyBar({ activeStep = "1-2" }: WorkplaceJourneyBarP
       <div
         className="flex flex-col items-center justify-center pl-3 pr-6 py-1.5 text-white shrink-0"
         style={{
-          background: "#1FA7A0", // Tan/brown from screenshot
+          background: "#917963", // Tan/brown from screenshot
           clipPath: "polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%)",
           minWidth: 72,
           zIndex: 30,

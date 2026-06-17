@@ -44,7 +44,7 @@ export function EmptyState({ title, subtitle, ctaLabel, onCta, illustration }: E
       <div className="mb-6">
         {illustration ?? <DefaultIllustration />}
       </div>
-      <h3 className="text-lg font-bold text-text mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
+      <h3 className="text-lg font-extrabold text-text mb-2" style={{ fontFamily: "var(--font-manrope)" }}>
         {title}
       </h3>
       <p className="text-sm text-text-muted font-body max-w-xs leading-relaxed mb-6">

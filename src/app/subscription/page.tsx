@@ -83,7 +83,7 @@ function UpgradeModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <div className="flex items-center gap-2">
               <Gem size={18} className="text-amber-500" />
-              <span className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
+              <span className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>
                 {step === "success" ? "You're upgraded!" : "Upgrade to Professional"}
               </span>
             </div>
@@ -97,7 +97,7 @@ function UpgradeModal({ onClose }: { onClose: () => void }) {
             {step === "confirm" && (
               <div className="space-y-4">
                 <div className="rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 p-4">
-                  <p className="text-sm font-bold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Professional Plan</p>
+                  <p className="text-sm font-extrabold text-text" style={{ fontFamily: "var(--font-manrope)" }}>Professional Plan</p>
                   <p className="text-2xl font-extrabold text-text mt-1" style={{ fontFamily: "var(--font-manrope)" }}>
                     NOK 2,499 <span className="text-sm font-normal text-text-muted">/ month</span>
                   </p>
@@ -313,7 +313,7 @@ export default function SubscriptionPage() {
 
         {/* FAQ */}
         <div>
-          <h2 className="text-base font-bold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>
+          <h2 className="text-base font-extrabold text-text mb-4" style={{ fontFamily: "var(--font-manrope)" }}>
             Frequently asked questions
           </h2>
           <div className="rounded-2xl border border-border bg-surface overflow-hidden">
