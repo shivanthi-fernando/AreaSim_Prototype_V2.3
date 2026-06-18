@@ -304,10 +304,10 @@ export default function FloorCountPage() {
   const handleStartSession = () => {
     setCountingPhase("session");
     setIsRecording(true);
-    // Simulate concurrent users: first 2 rooms are already being counted by mock users
+    // Simulate concurrent users: 2 rooms are already being counted by mock users
     setRoomMeta((prev) => {
       const next = { ...prev };
-      if (rooms[0]) next[rooms[0].id] = { status: "ongoing", lockedBy: "Mikkel T." };
+      if (rooms[4]) next[rooms[4].id] = { status: "ongoing", lockedBy: "Mikkel T." };
       if (rooms[2]) next[rooms[2].id] = { status: "ongoing", lockedBy: "Sara L." };
       return next;
     });
