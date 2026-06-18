@@ -113,7 +113,7 @@ function RoundBanner({ isRecording, roundInfo }: { isRecording: boolean; roundIn
       <div className="flex items-center gap-3 w-full bg-primary/5 border border-primary/15 rounded-xl px-4 py-2.5">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
         <p className="text-xs font-semibold text-primary font-body">
-          Session active · {active.label} · {active.start} – {active.end}{roundInfo ? ` · ${roundInfo}` : ""}
+          Session active · {active.start} – {active.end}{roundInfo ? ` · ${roundInfo}` : ""}
         </p>
       </div>
     );
