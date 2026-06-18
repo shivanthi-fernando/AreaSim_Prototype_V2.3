@@ -104,7 +104,7 @@ function StatusBadge({ status }: { status: RoomStatus }) {
 }
 
 // ─── Round notification banner ────────────────────────────────────────────────
-function RoundBanner({ isRecording }: { isRecording: boolean }) {
+function RoundBanner({ isRecording, roundInfo }: { isRecording: boolean; roundInfo?: string }) {
   const active = getActiveRound();
   const next = getNextRound();
 
@@ -113,7 +113,7 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
       <div className="flex items-center gap-3 w-full bg-primary/5 border border-primary/15 rounded-xl px-4 py-2.5">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
         <p className="text-xs font-semibold text-primary font-body">
-          Session active · {active.label} · {active.start} – {active.end}
+          Session active · {active.label} · {active.start} – {active.end}{roundInfo ? ` · ${roundInfo}` : ""}
         </p>
       </div>
     );
@@ -124,7 +124,7 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
       <div className="flex items-center gap-3 w-full bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
         <Bell size={14} className="text-amber-600 shrink-0" />
         <p className="text-xs font-semibold text-amber-800 font-body">
-          {active.label} is open · {active.start} – {active.end} · Click &quot;Start session&quot; to begin
+          {active.label} is open · {active.start} – {active.end} · Click &quot;Start session&quot; to begin{roundInfo ? ` · ${roundInfo}` : ""}
         </p>
       </div>
     );
@@ -135,17 +135,17 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
       <div className="flex items-center gap-3 w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5">
         <Clock size={14} className="text-text-muted shrink-0" />
         <p className="text-xs text-text-muted font-body">
-          No round active now · {next.label} starts at {next.start}
+          No round active now · {next.label} starts at {next.start}{roundInfo ? ` · ${roundInfo}` : ""}
         </p>
       </div>
     );
   }
 
   return (
-    <div className="mx-6 mt-4 flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5">
+    <div className="flex items-center gap-3 w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5">
       <Clock size={14} className="text-text-muted shrink-0" />
       <p className="text-xs text-text-muted font-body">
-        Counting hours: 8:00 AM – 6:00 PM · 5 rounds of 2 hours each
+        Counting hours: 8:00 AM – 6:00 PM · 5 rounds of 2 hours each{roundInfo ? ` · ${roundInfo}` : ""}
       </p>
     </div>
   );
@@ -1268,7 +1268,7 @@ export default function FloorCountPage() {
                 {/* Banner + dates + round indicator — one row */}
                 <div className="flex items-center gap-4 flex-wrap">
                   <div className="flex-1 min-w-[220px]">
-                    <RoundBanner isRecording={isRecording} />
+                    <RoundBanner isRecording={isRecording} roundInfo={`${roundLabel} · Day 1 of 14`} />
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <label className="text-xs font-semibold text-[#222B27] whitespace-nowrap">Start date</label>
@@ -1292,9 +1292,6 @@ export default function FloorCountPage() {
                       />
                     </div>
                   </div>
-                  <p className="text-sm font-extrabold text-primary shrink-0" style={{ fontFamily: "var(--font-manrope)" }}>
-                    {roundLabel} · Day 1 of 14
-                  </p>
                 </div>
 
                 {/* Summary stats */}
