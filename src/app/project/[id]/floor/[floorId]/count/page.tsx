@@ -15,6 +15,7 @@ import {
   Minus,
   X,
   ClipboardList,
+  LayoutGrid,
   Clock,
   HelpCircle,
   MessageSquare,
@@ -1177,6 +1178,16 @@ export default function FloorCountPage() {
               onClick={() => router.push(`/project/${projectId}/floor/${floorId}/history`)}
             >
               Counting history
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-9 px-5"
+              icon={<LayoutGrid size={14} />}
+              onClick={() => router.push(`/project/${projectId}/session-overview`)}
+            >
+              All floors
             </Button>
 
             <AnimatePresence mode="wait">
