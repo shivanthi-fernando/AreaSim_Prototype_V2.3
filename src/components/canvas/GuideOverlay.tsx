@@ -19,7 +19,7 @@ function RoomListIllustration() {
       <text x="52" y="45" fontSize="7.5" fontWeight="700" fill="#374151">Conference Room A</text>
       <motion.g animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 0.4 }}
         style={{ transformOrigin: "222px 42px" }}>
-        <rect x="194" y="36" width="46" height="13" rx="4" fill="#0A4F6E" />
+        <rect x="194" y="36" width="46" height="13" rx="4" fill="#5D8FD1" />
         <text x="217" y="45" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Verify</text>
       </motion.g>
       {[54, 70, 86].map((y, i) => (
@@ -39,21 +39,21 @@ function DrawRoomIllustration() {
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       {[70, 140, 210].map(x => <line key={x} x1={x} y1="8" x2={x} y2="100" stroke="#E5EAF0" strokeWidth="0.8" />)}
       {[36, 72].map(y => <line key={y} x1="20" y1={y} x2="260" y2={y} stroke="#E5EAF0" strokeWidth="0.8" />)}
-      <rect x="204" y="16" width="52" height="40" rx="2" fill="rgba(10,79,110,0.05)" stroke="#0A4F6E" strokeWidth="1" strokeDasharray="4 3" />
+      <rect x="204" y="16" width="52" height="40" rx="2" fill="rgba(93,143,209,0.05)" stroke="#5D8FD1" strokeWidth="1" strokeDasharray="4 3" />
       <motion.polygon points={pts.map(p => p.join(",")).join(" ")}
-        fill="rgba(10,79,110,0.12)" stroke="#0A4F6E" strokeWidth="2"
+        fill="rgba(93,143,209,0.12)" stroke="#5D8FD1" strokeWidth="2"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 0.4, repeat: Infinity, repeatDelay: 2.5 }} />
       {pts.map((pt, i) => {
         const next = pts[(i + 1) % pts.length];
         return <motion.line key={i} x1={pt[0]} y1={pt[1]} x2={next[0]} y2={next[1]}
-          stroke="#0A4F6E" strokeWidth="2" strokeLinecap="round"
+          stroke="#5D8FD1" strokeWidth="2" strokeLinecap="round"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ delay: 0.3 + i * 0.25, duration: 0.22, repeat: Infinity, repeatDelay: 2.5 }} />;
       })}
       {pts.map((pt, i) => (
         <motion.circle key={i} cx={pt[0]} cy={pt[1]} r={i === 0 ? 5 : 3.5}
-          fill={i === 0 ? "#00C9A7" : "#0A4F6E"} stroke="white" strokeWidth="1.5"
+          fill={i === 0 ? "#58B39E" : "#5D8FD1"} stroke="white" strokeWidth="1.5"
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ delay: 0.3 + i * 0.25, duration: 0.18, type: "spring", repeat: Infinity, repeatDelay: 2.5 }} />
       ))}
@@ -65,34 +65,34 @@ function AnimatedGroupZonesIllustration() {
   return (
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <motion.rect x="22" y="18" width="88" height="72" rx="4"
-        fill="rgba(10,79,110,0.09)" stroke="#0A4F6E" strokeWidth="1.5"
+        fill="rgba(93,143,209,0.09)" stroke="#5D8FD1" strokeWidth="1.5"
         initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }} />
-      <motion.text x="66" y="58" textAnchor="middle" fontSize="8" fill="#0A4F6E" fontWeight="600"
+      <motion.text x="66" y="58" textAnchor="middle" fontSize="8" fill="#5D8FD1" fontWeight="600"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}>Office 1</motion.text>
       <motion.rect x="122" y="18" width="88" height="72" rx="4"
-        fill="rgba(245,158,11,0.10)" stroke="#F59E0B" strokeWidth="1.5"
+        fill="rgba(209,164,95,0.10)" stroke="#D1A45F" strokeWidth="1.5"
         initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.5, duration: 0.4, repeat: Infinity, repeatDelay: 2.8 }} />
-      <motion.text x="166" y="58" textAnchor="middle" fontSize="8" fill="#0A4F6E" fontWeight="600"
+      <motion.text x="166" y="58" textAnchor="middle" fontSize="8" fill="#5D8FD1" fontWeight="600"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }}>Office 2</motion.text>
-      <motion.line x1="110" y1="54" x2="122" y2="54" stroke="#00C9A7" strokeWidth="2" strokeLinecap="round"
+      <motion.line x1="110" y1="54" x2="122" y2="54" stroke="#58B39E" strokeWidth="2" strokeLinecap="round"
         initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.rect x="14" y="10" width="204" height="88" rx="8"
-        fill="transparent" stroke="#00C9A7" strokeWidth="2" strokeDasharray="8 5"
+        fill="transparent" stroke="#58B39E" strokeWidth="2" strokeDasharray="8 5"
         initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0.3] }}
         transition={{ delay: 1.4, duration: 0.5, repeat: Infinity, repeatDelay: 2.8 }} />
-      <motion.rect x="70" y="90" width="92" height="16" rx="8" fill="#F59E0B"
+      <motion.rect x="70" y="90" width="92" height="16" rx="8" fill="#D1A45F"
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.6, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2.8 }} />
       <motion.text x="116" y="101" textAnchor="middle" fontSize="7.5" fill="white" fontWeight="700"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 1.7, duration: 0.2, repeat: Infinity, repeatDelay: 2.8 }}>Zone A — Marketing</motion.text>
       <motion.rect x="222" y="28" width="46" height="52" rx="3"
-        fill="rgba(0,201,167,0.10)" stroke="#00C9A7" strokeWidth="1.2"
+        fill="rgba(88,179,158,0.10)" stroke="#58B39E" strokeWidth="1.2"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.3, repeat: Infinity, repeatDelay: 2.8 }} />
     </svg>
@@ -113,7 +113,7 @@ function GroupButtonIllustration() {
       {/* Group button pulsing */}
       <motion.g animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 1.1, repeat: Infinity, repeatDelay: 0.5 }}
         style={{ transformOrigin: "177px 42px" }}>
-        <rect x="150" y="36" width="42" height="13" rx="4" fill="#F59E0B" />
+        <rect x="150" y="36" width="42" height="13" rx="4" fill="#D1A45F" />
         <text x="171" y="45" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Group</text>
       </motion.g>
       <motion.rect x="30" y="54" width="220" height="20"
@@ -121,7 +121,7 @@ function GroupButtonIllustration() {
       <circle cx="44" cy="64" r="3.5" fill="#E5EAF0" />
       <text x="52" y="67" fontSize="7" fill="#6B7280">Conference Room B</text>
       <motion.rect x="234" y="58" width="10" height="10" rx="2"
-        stroke="#F59E0B" strokeWidth="1.5" fill="transparent"
+        stroke="#D1A45F" strokeWidth="1.5" fill="transparent"
         animate={{ opacity: [0, 1, 0] }} transition={{ delay: 1.2, duration: 1.0, repeat: Infinity, repeatDelay: 1.2 }} />
       {[74, 88].map((y, i) => (
         <g key={i}>
@@ -141,7 +141,7 @@ function CountingIllustration() {
       <text x="44" y="22" fontSize="8" fontWeight="700" fill="#0D1B2A">Rooms</text>
       <motion.g animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 1.3, repeat: Infinity, repeatDelay: 0.4 }}
         style={{ transformOrigin: "196px 27px" }}>
-        <rect x="148" y="18" width="96" height="18" rx="5" fill="#0A4F6E" />
+        <rect x="148" y="18" width="96" height="18" rx="5" fill="#5D8FD1" />
         <text x="196" y="30" textAnchor="middle" fontSize="7" fill="white" fontWeight="700">Start room counting</text>
       </motion.g>
       <rect x="30" y="52" width="220" height="52" rx="5" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
@@ -151,14 +151,14 @@ function CountingIllustration() {
           initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 + i * 0.35, duration: 0.3, type: "spring", repeat: Infinity, repeatDelay: 2.2 }}
           style={{ transformOrigin: `${70 + i * 22}px 84px` }}>
-          <circle cx={70 + i * 22} cy={79} r={7} fill="rgba(245,158,11,0.15)" stroke="#F59E0B" strokeWidth="1.2" />
-          <circle cx={70 + i * 22} cy={76} r={2.5} fill="#F59E0B" />
-          <path d={`M${63 + i * 22} 85 Q${70 + i * 22} 80 ${77 + i * 22} 85`} stroke="#F59E0B" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <circle cx={70 + i * 22} cy={79} r={7} fill="rgba(209,164,95,0.15)" stroke="#D1A45F" strokeWidth="1.2" />
+          <circle cx={70 + i * 22} cy={76} r={2.5} fill="#D1A45F" />
+          <path d={`M${63 + i * 22} 85 Q${70 + i * 22} 80 ${77 + i * 22} 85`} stroke="#D1A45F" strokeWidth="1.2" fill="none" strokeLinecap="round" />
         </motion.g>
       ))}
       <motion.g animate={{ scale: [1, 1.1, 1] }} transition={{ delay: 1.5, duration: 0.8, repeat: Infinity, repeatDelay: 1.5 }}
         style={{ transformOrigin: "210px 84px" }}>
-        <circle cx="210" cy="84" r="14" fill="#0A4F6E" />
+        <circle cx="210" cy="84" r="14" fill="#5D8FD1" />
         <text x="210" y="89" textAnchor="middle" fontSize="13" fill="white" fontWeight="800">3</text>
       </motion.g>
     </svg>
@@ -208,7 +208,7 @@ function SurveyIllustration() {
     <svg viewBox="0 0 280 108" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <motion.g animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 0.5 }}
         style={{ transformOrigin: "140px 20px" }}>
-        <rect x="84" y="10" width="112" height="20" rx="5" fill="#0A4F6E" />
+        <rect x="84" y="10" width="112" height="20" rx="5" fill="#5D8FD1" />
         <text x="140" y="23" textAnchor="middle" fontSize="8" fill="white" fontWeight="700">Conduct Survey</text>
       </motion.g>
       <rect x="22" y="38" width="236" height="62" rx="5" fill="white" stroke="#E5EAF0" strokeWidth="1.2" />
@@ -218,7 +218,7 @@ function SurveyIllustration() {
           initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 + i * 0.4, duration: 0.3, repeat: Infinity, repeatDelay: 2.5 }}>
           <motion.rect x="32" y={58 + i * 13} width="10" height="10" rx="2"
-            fill={i === 1 ? "#00C9A7" : "white"} stroke={i === 1 ? "#00C9A7" : "#C8D8E4"} strokeWidth="1.2"
+            fill={i === 1 ? "#58B39E" : "white"} stroke={i === 1 ? "#58B39E" : "#C8D8E4"} strokeWidth="1.2"
             animate={i === 1 ? { scale: [1, 1.1, 1] } : {}}
             transition={{ delay: 1.2, duration: 0.6, repeat: Infinity, repeatDelay: 2.0 }} />
           {i === 1 && (
@@ -227,7 +227,7 @@ function SurveyIllustration() {
           <rect x="48" y={62 + i * 13} width={80 - i * 14} height="5" rx="2.5" fill="#F0F4F8" />
         </motion.g>
       ))}
-      <motion.rect x="200" y="82" width="48" height="14" rx="4" fill="#F59E0B"
+      <motion.rect x="200" y="82" width="48" height="14" rx="4" fill="#D1A45F"
         animate={{ opacity: [0.7, 1, 0.7] }} transition={{ delay: 1.8, duration: 1.2, repeat: Infinity }} />
       <text x="224" y="91" textAnchor="middle" fontSize="6.5" fill="white" fontWeight="700">Send →</text>
     </svg>
@@ -377,7 +377,7 @@ export function GuideOverlay({ step, onNext, onBack, onClose }: GuideOverlayProp
         {step > 0 ? (
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] px-3 py-1.5 rounded-lg border border-[#D1D0D0] bg-white hover:border-[#b19779] transition-all"
+            className="flex items-center gap-1.5 text-xs font-semibold font-body text-[#0D1B2A] px-3 py-1.5 rounded-lg hover:bg-[#fafafa] transition-all"
           >
             <ArrowLeft size={13} /> Back
           </button>

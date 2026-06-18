@@ -1647,7 +1647,7 @@ export default function FloorCountPage() {
                     style={{ fontFamily: "var(--font-manrope)" }}
                   >
                     {selectedRoom?.name}
-                    <span className="font-normal text-text-muted"> – {selectedZone ? selectedZone.name : "Unzoned room"}</span>
+                    <span className="font-normal text-text-muted"> – {selectedZone ? selectedZone.name : "Unzoned room"} – {floor?.name}</span>
                   </h3>
                   <p
                     className="text-sm font-bold text-primary"
