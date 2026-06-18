@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Play,
   ChevronRight,
+  ChevronLeft,
   ChevronDown,
   ArrowRight,
   Check,
@@ -109,7 +110,7 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
 
   if (isRecording && active) {
     return (
-      <div className="mx-6 mt-4 flex items-center gap-3 bg-primary/5 border border-primary/15 rounded-xl px-4 py-2.5">
+      <div className="flex items-center gap-3 w-full bg-primary/5 border border-primary/15 rounded-xl px-4 py-2.5">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
         <p className="text-xs font-semibold text-primary font-body">
           Session active · {active.label} · {active.start} – {active.end}
@@ -120,7 +121,7 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
 
   if (active) {
     return (
-      <div className="mx-6 mt-4 flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
+      <div className="flex items-center gap-3 w-full bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
         <Bell size={14} className="text-amber-600 shrink-0" />
         <p className="text-xs font-semibold text-amber-800 font-body">
           {active.label} is open · {active.start} – {active.end} · Click &quot;Start session&quot; to begin
@@ -131,7 +132,7 @@ function RoundBanner({ isRecording }: { isRecording: boolean }) {
 
   if (next) {
     return (
-      <div className="mx-6 mt-4 flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5">
+      <div className="flex items-center gap-3 w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5">
         <Clock size={14} className="text-text-muted shrink-0" />
         <p className="text-xs text-text-muted font-body">
           No round active now · {next.label} starts at {next.start}
@@ -1222,11 +1223,10 @@ export default function FloorCountPage() {
         {/* ── Left panel ─────────────────────────────────────────────────────── */}
         <motion.div
           layout
-          animate={{ width: activeSection === "left" ? "100%" : "56px", opacity: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 35 }}
           className={cn(
             "flex flex-col h-full bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden",
-            activeSection === "right" && "items-center"
+            activeSection === "left" ? "flex-1 min-w-0" : "w-14 shrink-0 items-center"
           )}
         >
           {activeSection === "right" ? (
@@ -1234,6 +1234,7 @@ export default function FloorCountPage() {
               <button
                 onClick={() => setActiveSection("left")}
                 className="p-2.5 rounded-xl bg-surface-2 border border-border text-text-muted hover:text-primary transition-all"
+                title="Go to session details"
               >
                 <ChevronRight size={20} />
               </button>
@@ -1241,24 +1242,35 @@ export default function FloorCountPage() {
           ) : (
             <>
               {/* Panel header */}
-              <div className="px-6 py-5 border-b border-[#F1F5F9] flex flex-col gap-3">
-                <div className="flex items-center gap-1.5 text-xs font-body">
-                  <span className="text-text-muted">Room counting tool</span>
-                  <span className="text-text-muted">/</span>
-                  <span className="font-semibold text-text">Session details</span>
+              <div className="px-6 py-5 border-b border-[#F1F5F9] flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-1.5 text-xs font-body">
+                    <span className="text-text-muted">Room counting tool</span>
+                    <span className="text-text-muted">/</span>
+                    <span className="font-semibold text-text">Session details</span>
+                  </div>
+                  <h3 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>
+                    Session details
+                  </h3>
                 </div>
-                <h3 className="text-xl font-extrabold text-text leading-none" style={{ fontFamily: "var(--font-manrope)" }}>
-                  Session details
-                </h3>
+                {isRecording && (
+                  <Button
+                    size="md"
+                    icon={<Play size={14} />}
+                    onClick={() => { if (!selectedRoomId && rooms[0]) setSelectedRoomId(rooms[0].id); setActiveSection("right"); }}
+                  >
+                    Start room counting
+                  </Button>
+                )}
               </div>
 
-              {/* Round notification banner */}
-              <RoundBanner isRecording={isRecording} />
-
-              <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                {/* Date range + round indicator */}
-                <div className="flex items-center gap-6 py-2">
-                  <div className="flex items-center gap-3">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {/* Banner + dates + round indicator — one row */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex-1 min-w-[220px]">
+                    <RoundBanner isRecording={isRecording} />
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
                     <label className="text-xs font-semibold text-[#222B27] whitespace-nowrap">Start date</label>
                     <div style={{ width: "140px" }}>
                       <Input
@@ -1269,7 +1281,7 @@ export default function FloorCountPage() {
                       />
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 shrink-0">
                     <label className="text-xs font-semibold text-[#222B27] whitespace-nowrap">End date</label>
                     <div style={{ width: "140px" }}>
                       <Input
@@ -1280,16 +1292,14 @@ export default function FloorCountPage() {
                       />
                     </div>
                   </div>
-                  <div className="ml-auto pb-0.5">
-                    <p className="text-sm font-extrabold text-primary" style={{ fontFamily: "var(--font-manrope)" }}>
-                      {roundLabel} · Day 1 of 14
-                    </p>
-                  </div>
+                  <p className="text-sm font-extrabold text-primary shrink-0" style={{ fontFamily: "var(--font-manrope)" }}>
+                    {roundLabel} · Day 1 of 14
+                  </p>
                 </div>
 
                 {/* Summary stats */}
                 <div className="flex bg-surface-2 border border-border rounded-2xl overflow-hidden divide-x divide-border shadow-sm font-body">
-                  <div className="flex-1 p-5 flex flex-col gap-1">
+                  <div className="flex-1 px-5 py-3 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Total seats in floor</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1298,7 +1308,7 @@ export default function FloorCountPage() {
                       <span className="text-[10px] font-bold text-text-muted">Seats total</span>
                     </div>
                   </div>
-                  <div className="flex-1 p-5 flex flex-col gap-1">
+                  <div className="flex-1 px-5 py-3 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Seats used today (Avg)</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1310,7 +1320,7 @@ export default function FloorCountPage() {
                       <span className="text-[10px] font-bold text-text-muted">Occupants avg</span>
                     </div>
                   </div>
-                  <div className="flex-1 p-5 flex flex-col gap-1">
+                  <div className="flex-1 px-5 py-3 flex flex-col gap-1">
                     <span className="text-sm font-bold text-text font-body">Total floor area</span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-800 text-primary" style={{ fontFamily: "var(--font-dm-sans)", fontWeight: 800 }}>
@@ -1529,6 +1539,19 @@ export default function FloorCountPage() {
           )}
         </motion.div>
 
+        {/* ── Collapsed right strip — switch to room counting (shown in session details) ── */}
+        {activeSection === "left" && (
+          <div className="flex flex-col items-center h-full pt-6 bg-white rounded-2xl border border-[#E2E8F0] shadow-sm w-14 shrink-0">
+            <button
+              onClick={() => { if (!selectedRoomId && rooms[0]) setSelectedRoomId(rooms[0].id); setActiveSection("right"); }}
+              className="p-2.5 rounded-xl bg-surface-2 border border-border text-text-muted hover:text-primary transition-all"
+              title="Go to room counting"
+            >
+              <ChevronLeft size={20} />
+            </button>
+          </div>
+        )}
+
         {/* ── Right panel (counter) ───────────────────────────────────────────── */}
         <AnimatePresence>
           {activeSection === "right" && (
@@ -1585,7 +1608,7 @@ export default function FloorCountPage() {
                           <textarea
                             value={roomComment}
                             onChange={(e) => setRoomComment(e.target.value)}
-                            placeholder="Here you can add any observations, issues, or comments..."
+                            placeholder="Describe any observations, issues, or notes"
                             rows={3}
                             className="w-full rounded-xl border border-[#E2E8F0] bg-surface-2 px-4 py-3 text-sm text-[#222B27] font-body placeholder:text-text-muted focus:outline-none focus:border-[#139485] focus:ring-4 focus:ring-[rgba(19,148,133,0.18)] transition-all resize-none"
                           />
@@ -1620,7 +1643,7 @@ export default function FloorCountPage() {
                   </AnimatePresence>
                 </div>
 
-                <div className="text-center space-y-6">
+                <div className="text-center space-y-3">
                   {/* Room name + zone — one line, separated by a dash */}
                   <h3
                     className="text-lg font-extrabold text-text leading-none"
@@ -1633,7 +1656,7 @@ export default function FloorCountPage() {
                     className="text-sm font-bold text-primary"
                     style={{ fontFamily: "var(--font-manrope)" }}
                   >
-                    {roundLabel} · Day 1 of 14
+                    {roundLabel} · Day 1 of 14 · Room {rooms.findIndex((r) => r.id === selectedRoomId) + 1} of {rooms.length}
                   </p>
                   <div className="space-y-4">
                     <p className="text-[11px] font-bold text-text-muted tracking-widest">
